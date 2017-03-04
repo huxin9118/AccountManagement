@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/lightgray"
+    android:transitionName="sharedView">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <TabWidget
+            android:id="@+id/tabWidget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp">
+            <TextView
+                android:id="@+id/textShouru"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="   收入   "
+                android:textColor="@color/darkgray"
+                android:background="@drawable/shape_button_shouru"
+                android:layout_marginRight="-0.5dp" />
+            <TextView
+                android:id="@+id/textZhichu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="   支出   "
+                android:textColor="@color/darkgray"
+                android:background="@drawable/shape_button_zhichu"
+                android:layout_marginLeft="-0.5dp"/>
+        </TabWidget>
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="15dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_back"/>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/lightgray"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/item_icon"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"/>
+        <TextView
+            android:id="@+id/item_str"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/item_icon"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/item_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:inputType="numberDecimal"
+            android:textSize="40sp"
+            android:text="0.00"/>
+
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.swjtu.huxin.accountmanagement.view.NumKeyboardView
+        android:id="@+id/numKeyboardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"/>
+
+</LinearLayout>

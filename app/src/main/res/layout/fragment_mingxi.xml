@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/title">
+        <TextView
+            android:id="@+id/textbook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 默认账本 "
+            android:background="@drawable/shape_button_book"
+            android:layout_centerInParent="true" />
+        <ImageView
+            android:layout_width="0.5dp"
+            android:layout_height="wrap_content"
+            android:background="@color/silver"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/textbook"/>
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_action_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/fab_margin_bottom"
+        android:layout_marginRight="@dimen/fab_margin_right"
+        android:src="@drawable/ic_add_transparent"
+        android:scaleType="centerInside"
+        app:borderWidth="0dp"
+        app:backgroundTint="@color/dodgerblue"
+        app:elevation="8dp"
+        app:pressedTranslationZ="20dp"/>
+
+    <in.srain.cube.views.ptr.PtrFrameLayout
+        android:id="@+id/ptr_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title"
+        cube_ptr:ptr_resistance="1.7"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
+        cube_ptr:ptr_duration_to_close="300"
+        cube_ptr:ptr_duration_to_close_header="2000"
+        cube_ptr:ptr_keep_header_when_refresh="true"
+        cube_ptr:ptr_pull_to_fresh="false">
+        <!--
+        ptr_resistance阻尼系数 默认: 1.7f，越大，感觉下拉时越吃力。
+        ptr_ratio_of_header_height_to_refresh触发刷新时移动的位置比例 默认，1.2f，移动达到头部高度1.2倍时可触发刷新操作。
+        ptr_duration_to_close回弹延时 默认 200ms，回弹到刷新高度所用时间
+        ptr_duration_to_close_header头部回弹时间 默认1000ms
+        ptr_keep_header_when_refresh刷新是保持头部 默认值 true.
+        ptr_pull_to_fresh下拉刷新/释放刷新 默认为释放刷新
+        -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:id="@+id/header_view">
+
+                <ImageView
+                    android:id="@+id/line"
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/silver"
+                    android:layout_centerHorizontal="true"
+                    android:transitionName="sharedView"/>
+
+                <com.swjtu.huxin.accountmanagement.view.PercentageBallView
+                    android:id="@+id/ball"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <TextView
+                    android:id="@+id/zhichu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/ball"
+                    android:text="3月支出\n0.00"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
+
+                <TextView
+                    android:id="@+id/shouru"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/ball"
+                    android:text="3月收入\n0.00"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5"
+                android:cacheColorHint="@null"
+                android:scrollbars="vertical" />
+        </LinearLayout >
+
+    </in.srain.cube.views.ptr.PtrFrameLayout>
+</RelativeLayout >
