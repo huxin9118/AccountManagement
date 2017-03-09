@@ -5,15 +5,10 @@ package com.swjtu.huxin.accountmanagement.domain;
  */
 
 public class AddItem {
-    private int iconAddItem;
+    private String iconAddItem;
     private String nameAddItem;
 
     public AddItem() {
-    }
-
-    public AddItem(int IDAddItem, int iconAddItem, String nameAddItem) {
-        this.iconAddItem = iconAddItem;
-        this.nameAddItem = nameAddItem;
     }
 
     public String getNameAddItem() { return nameAddItem; }
@@ -22,11 +17,11 @@ public class AddItem {
         this.nameAddItem = nameAddItem;
     }
 
-    public int getIconAddItem() {
+    public String getIconAddItem() {
         return iconAddItem;
     }
 
-    public void setIconAddItem(int iconAddItem) {
+    public void setIconAddItem(String iconAddItem) {
         this.iconAddItem = iconAddItem;
     }
 }

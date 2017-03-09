@@ -47,8 +47,8 @@ public class ItemXmlPullParserUtils {
                             AddItem.setNameAddItem(name);
                         } else if ("icon".equals(xp.getName())) {
                             String icon = xp.nextText();
-                            int resID = context.getResources().getIdentifier(icon, "drawable", context.getPackageName());
-                            AddItem.setIconAddItem(resID);
+//                            int resID = context.getResources().getIdentifier(icon, "drawable", context.getPackageName());
+                            AddItem.setIconAddItem(icon);
                         }
                         break;
                     case XmlPullParser.END_TAG:

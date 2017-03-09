@@ -57,13 +57,6 @@ public class TimeUtils {
         return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
-    public static int getMaxMonth(Date time , int indexYear) {
-        Calendar calendar = Calendar.getInstance();// 创建一个日历对象
-        calendar.setTime(time);//初始化日历时间
-        calendar.add(Calendar.YEAR,indexYear);
-        return calendar.getActualMaximum(Calendar.MONTH);
-    }
-
     public static long getDayFirstMilliSeconds(int day,int indexMonth,int indexYear) {
         Calendar calendar = Calendar.getInstance();// 创建一个日历对象
         calendar.add(Calendar.YEAR,indexYear);
@@ -112,12 +105,26 @@ public class TimeUtils {
         return calendar.getTime().getTime();
     }
 
-    public static String getTimeYMD(Date time) {
-        Calendar calendar = Calendar.getInstance();// 创建一个日历对象
-        calendar.setTime(time);//初始化日历时间
-        return calendar.get(Calendar.YEAR) + "年" + (calendar.get(Calendar.MONTH) + 1) + "月"
-                + calendar.get(Calendar.DAY_OF_MONTH) + "日";
-    }
+//    public static String getTimeYMD(Date time) {
+//        Calendar calendar = Calendar.getInstance();// 创建一个日历对象
+//        calendar.setTime(time);//初始化日历时间
+//        return calendar.get(Calendar.YEAR) + "年" + (calendar.get(Calendar.MONTH) + 1) + "月"
+//                + calendar.get(Calendar.DAY_OF_MONTH) + "日";
+//    }
+//
+//    public static String getTimeMD(Date time) {
+//        Calendar calendar = Calendar.getInstance();// 创建一个日历对象
+//        calendar.setTime(time);//初始化日历时间
+//        return  (calendar.get(Calendar.MONTH) + 1) + "月"
+//                + calendar.get(Calendar.DAY_OF_MONTH) + "日";
+//    }
+//
+//    public static String getTimeHM(Date time) {
+//        Calendar calendar = Calendar.getInstance();// 创建一个日历对象
+//        calendar.setTime(time);//初始化日历时间
+//        return  (calendar.get(Calendar.HOUR_OF_DAY) + 1) + "月"
+//                + calendar.get(Calendar.DAY_OF_MONTH) + "日";
+//    }
 
 //    public static String getTimeYMDistance(Date oldtime , Date newtime) {
 //        if(newtime.getTime() > oldtime.getTime()) {

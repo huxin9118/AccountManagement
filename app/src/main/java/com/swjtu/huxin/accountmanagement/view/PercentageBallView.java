@@ -116,7 +116,7 @@ public class PercentageBallView extends View {
         // 内填充
         mWavePaint = new Paint();
         mWavePaint.setStrokeWidth(1.0F);
-        mWavePaint.setColor(this.getResources().getColor(R.color.dodgerblue));
+        mWavePaint.setColor(this.getResources().getColor(R.color.customBlue));
         // mWavePaint.setAlpha(mAlpha);
         mPath = new Path();
 

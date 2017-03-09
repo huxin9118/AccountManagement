@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.swjtu.huxin.accountmanagement.application.myApplication;
+import com.swjtu.huxin.accountmanagement.application.MyApplication;
 import com.swjtu.huxin.accountmanagement.domain.Account;
 
 import java.util.Map;
@@ -50,7 +50,7 @@ public class AccountDao {
         Cursor cs = db.query("account", null, "id = ?", new String[]{accountID+""}, null, null,null, "0,1");
         Account account = new Account();
         while(cs.moveToNext()){
-            myApplication app = myApplication.getApplication();
+            MyApplication app = MyApplication.getApplication();
             //获取指定列的索引值
             account.setId(cs.getInt(cs.getColumnIndex("id")));
             account.setColor(cs.getInt(cs.getColumnIndex("color")));

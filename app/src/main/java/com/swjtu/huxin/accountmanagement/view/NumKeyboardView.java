@@ -6,7 +6,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,7 +30,13 @@ public class NumKeyboardView extends RelativeLayout {
     private ArrayList<String> valueList;    //有人可能有疑问，为何这里不用数组了？
     //因为要用Adapter中适配，用数组不能往adapter中填充
 
-    private RelativeLayout layoutBack;
+    private ImageView imgBack;
+
+    private TextView account;
+    private TextView date;
+    private TextView time;
+    private Button remark;
+    private Button member;
 
     public NumKeyboardView(Context context) {
         this(context, null);
@@ -43,7 +51,13 @@ public class NumKeyboardView extends RelativeLayout {
 
         valueList = new ArrayList<>();
 
-        layoutBack = (RelativeLayout) view.findViewById(R.id.layoutBack);
+//        imgBack = (RelativeLayout) view.findViewById(R.id.imgBack);//收回键盘按键
+
+        account = (TextView) view.findViewById(R.id.account);
+        date = (TextView) view.findViewById(R.id.date);
+        time = (TextView) view.findViewById(R.id.time);
+        remark = (Button) view.findViewById(R.id.remark);
+        member = (Button) view.findViewById(R.id.member);
 
         gridView = (GridView) view.findViewById(R.id.gv_keybord);
 
@@ -54,8 +68,28 @@ public class NumKeyboardView extends RelativeLayout {
         addView(view);      //必须要，不然不显示控件
     }
 
-    public RelativeLayout getLayoutBack() {
-        return layoutBack;
+    public ImageView getImgBack() {
+        return imgBack;
+    }
+
+    public TextView getAccount() {
+        return account;
+    }
+
+    public TextView getDate() {
+        return date;
+    }
+
+    public TextView getTime() {
+        return time;
+    }
+
+    public Button getRemark() {
+        return remark;
+    }
+
+    public Button getMember() {
+        return member;
     }
 
     public ArrayList<String> getValueList() {

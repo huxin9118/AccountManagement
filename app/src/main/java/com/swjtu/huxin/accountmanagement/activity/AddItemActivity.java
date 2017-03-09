@@ -14,6 +14,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,25 +28,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 import com.swjtu.huxin.accountmanagement.adapter.BaseRecyclerViewAdapter;
-import com.swjtu.huxin.accountmanagement.application.myApplication;
+import com.swjtu.huxin.accountmanagement.application.MyApplication;
 import com.swjtu.huxin.accountmanagement.adapter.OnItemClickListener;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.domain.AddItem;
 import com.swjtu.huxin.accountmanagement.view.NumKeyboardView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 
 /**
  * Created by huxin on 2017/2/25.
  */
 
-public class AddItemActivity extends AppCompatActivity {
+public class AddItemActivity extends AppCompatActivity{
 
     private ViewPager mViewPager;
     private PagerAdapter mPagerAdapter;
-    private int tabPosition; //当前分页数
     private TextView btnShouru;
     private TextView btnZhichu;
     private ImageView btnBack;
@@ -59,10 +63,14 @@ public class AddItemActivity extends AppCompatActivity {
     private ArrayList<String> valueList;
 
     private Toast mToast;
+    private int tabPosition; //当前分页数
+    private int indexAddItem = 0; //当前选取的项目数
+    private Date timeAddItem;//当前的时间
+    private AccountRecord editRecord; //编辑记录
+    private SwitchDateTimeDialogFragment dateTimeFragment;
 
-//    public ArrayList<AddItem> shouruAddItems;
-//    public ArrayList<AddItem> zhichuAddItems;
-    public int indexAddItem = 0; //当前选取的项目数
+    public static final String DATEPICKER_TAG = "datepicker";
+    public static final String TIMEPICKER_TAG = "timepicker";
 //    public String[] nameShouru ={"工资","生活费","红包","零花钱","外快兼职","投资"};
 //    public String[] nameZhichu ={"一般","餐饮","交通","酒水饮料","水果","零食"};
 //    public int[] iconShouru ={R.drawable.icon_gongzi,R.drawable.icon_shenghuofei,R.drawable.icon_hongbao,
@@ -107,31 +115,70 @@ public class AddItemActivity extends AppCompatActivity {
             }
         });
 
-        nameAddItem = (TextView)findViewById(R.id.item_str);
-        iconAddItem = (ImageView) findViewById(R.id.item_icon);
-
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOnPageChangeListener(mPageChangeListener);
 
-        btnZhichu.performClick();//默认点击
 
+        nameAddItem = (TextView)findViewById(R.id.item_str);
+        iconAddItem = (ImageView) findViewById(R.id.item_icon);
         numAddItem = (TextView) findViewById(R.id.item_num);
 
         numKeyboardView = (NumKeyboardView) findViewById(R.id.numKeyboardView);
-        numKeyboardView.getLayoutBack().setOnClickListener(new OnClickListener() {
+//        numKeyboardView.getLayoutBack().setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {//收回键盘
+//                numKeyboardView.startAnimation(exitAnim);
+//                numKeyboardView.setVisibility(View.GONE);
+//            }
+//        });
+
+        dateTimeFragment = (SwitchDateTimeDialogFragment) getSupportFragmentManager().findFragmentByTag(DATEPICKER_TAG);
+        if(dateTimeFragment == null) {
+            dateTimeFragment = SwitchDateTimeDialogFragment.newInstance("日期时间选择","确定","取消");
+        }
+        dateTimeFragment.set24HoursMode(true);
+//        dateTimeFragment.setMinimumDateTime(new GregorianCalendar(2015, Calendar.JANUARY, 1).getTime());
+//        dateTimeFragment.setMaximumDateTime(new GregorianCalendar(2025, Calendar.DECEMBER, 31).getTime());
+//        dateTimeFragment.setDefaultDateTime(new GregorianCalendar(2017, Calendar.MARCH, 4, 15, 20).getTime());
+//        try {
+//            dateTimeFragment.setSimpleDateMonthAndDayFormat(new SimpleDateFormat("MM dd", Locale.getDefault()));
+//        } catch (SwitchDateTimeDialogFragment.SimpleDateMonthAndDayFormatException e) {
+//            e.printStackTrace();
+//        }
+
+        dateTimeFragment.setOnButtonClickListener(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
             @Override
-            public void onClick(View v) {//收回键盘
-                numKeyboardView.startAnimation(exitAnim);
-                numKeyboardView.setVisibility(View.GONE);
+            public void onPositiveButtonClick(Date date) {
+                timeAddItem = date;
+                updateView(date);
+            }
+
+            @Override
+            public void onNegativeButtonClick(Date date) {
             }
         });
-        valueList = numKeyboardView.getValueList();
 
+        numKeyboardView.getDate().setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dateTimeFragment.startAtCalendarView();
+                dateTimeFragment.show(getSupportFragmentManager(), DATEPICKER_TAG);
+            }
+        });
+
+        numKeyboardView.getTime().setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dateTimeFragment.startAtTimeView();
+                dateTimeFragment.show(getSupportFragmentManager(), DATEPICKER_TAG);
+            }
+        });
+
+        valueList = numKeyboardView.getValueList();
         gridView = numKeyboardView.getGridView();
         gridView.setOnItemClickListener(onItemClickListener);
-
         numAddItem.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,12 +190,41 @@ public class AddItemActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Intent intent = getIntent();
+        editRecord = (AccountRecord)intent.getSerializableExtra("edit");
+        if(editRecord != null){
+            nameAddItem.setText(editRecord.getRecordname());
+            int resID = getResources().getIdentifier(editRecord.getIcon(), "drawable", getPackageName());
+            iconAddItem.setBackgroundResource(resID);
+            if(Double.parseDouble(editRecord.getMoney())>0){
+                numAddItem.setText(editRecord.getMoney());
+                ItemChange(0);
+            }
+            else{
+                numAddItem.setText(editRecord.getMoney().substring(1));
+                ItemChange(1);
+            }
+            timeAddItem = new Date(editRecord.getRecordtime());
+            updateView(timeAddItem);
+        }
+        else {
+            timeAddItem = new Date();
+            updateView(timeAddItem);
+            btnZhichu.performClick();//默认点击
+        }
+    }
+
+    void updateView(Date time){
+        numKeyboardView.getDate().setText(new SimpleDateFormat("yy年MM月dd日").format(time));
+        numKeyboardView.getTime().setText(new SimpleDateFormat("HH:mm").format(time));
+        dateTimeFragment.setDefaultDateTime(time);
     }
 
     private OnClickListener mTabClickListener = new OnClickListener() {
         @Override
         public void onClick(View v){
-            myApplication app = myApplication.getApplication();
+            MyApplication app = MyApplication.getApplication();
             ArrayList<AddItem> shouruAddItems = app.getShouruAddItems();
             ArrayList<AddItem> zhichuAddItems = app.getZhichuAddItems();
             if (v == btnShouru){
@@ -166,7 +242,7 @@ public class AddItemActivity extends AppCompatActivity {
         @Override
         //页面跳转完后得到调用
         public void onPageSelected(int arg0){
-            myApplication app = myApplication.getApplication();
+            MyApplication app = MyApplication.getApplication();
             ArrayList<AddItem> shouruAddItems = app.getShouruAddItems();
             ArrayList<AddItem> zhichuAddItems = app.getZhichuAddItems();
             if(arg0 == 0){
@@ -247,20 +323,38 @@ public class AddItemActivity extends AppCompatActivity {
                     amount = "0.00";
                 }
                 if (position == 15) {      //点击确定
-                    if(!numAddItem.getText().toString().equals("0.00")) {
-                        myApplication app = myApplication.getApplication();
-                        ArrayList<AddItem> shouruAddItems = app.getShouruAddItems();
-                        ArrayList<AddItem> zhichuAddItems = app.getZhichuAddItems();
-                        AccountRecord record = new AccountRecord();
-                        if (tabPosition == 0) {//存储收入记录
-                            record.setIcon(shouruAddItems.get(indexAddItem).getIconAddItem());
-                            record.setRecordname(shouruAddItems.get(indexAddItem).getNameAddItem());
+                    if(!"0.00".equals(numAddItem.getText().toString())) {
+                        AccountRecord record;
+                        if(editRecord != null)record = editRecord;
+                        else record = new AccountRecord();
+
+                        if(indexAddItem != -1){//编辑项目改变了Icon和Recordname
+                            MyApplication app = MyApplication.getApplication();
+                            ArrayList<AddItem> shouruAddItems = app.getShouruAddItems();
+                            ArrayList<AddItem> zhichuAddItems = app.getZhichuAddItems();
+                            if (tabPosition == 0) {//存储收入记录
+                                record.setIcon(shouruAddItems.get(indexAddItem).getIconAddItem());
+                                record.setRecordname(shouruAddItems.get(indexAddItem).getNameAddItem());
+                            }
+                            else{
+                                record.setIcon(zhichuAddItems.get(indexAddItem).getIconAddItem());
+                                record.setRecordname(zhichuAddItems.get(indexAddItem).getNameAddItem());
+                            }
+                        }
+
+                        if (tabPosition == 0) {
                             record.setMoney(numAddItem.getText().toString());
-                        } else {//存储支出记录
-                            record.setIcon(zhichuAddItems.get(indexAddItem).getIconAddItem());
-                            record.setRecordname(zhichuAddItems.get(indexAddItem).getNameAddItem());
+                        } else {
                             record.setMoney("-" + numAddItem.getText().toString());
                         }
+                        record.setRecordtime(timeAddItem.getTime());
+                        record.setRemark("");
+                        MyApplication app = MyApplication.getApplication();
+                        record.setAccount(app.getAccounts().get(1));
+                        record.setAccountbook(app.getAccountBooks().get(1));
+
+                        Log.i("3: ",record.toString());
+
                         Intent intent = new Intent();
                         intent.putExtra("data", record);
                         setResult(RESULT_OK, intent);
@@ -302,34 +396,49 @@ public class AddItemActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    /**
-     *
-     * @param Text 标题栏文字
-     * @param res 标题栏ICON的资源id
-     * @param position 当前分页数（收入 | 支出）
-     */
-    public void ItemChange(String Text,int res,int position){
+    public void ItemChange(int position){
         this.tabPosition = position; //改变分页位置标记
-        this.indexAddItem = 0;//初始化当前选取的项目数
-        nameAddItem.setText(Text);
-        iconAddItem.setBackgroundResource(res);
+        this.indexAddItem = -1;//初始化当前选取的项目数
         if(position == 0){
-            btnShouru.setTextColor(getResources().getColor(R.color.dodgerblue));
+            btnShouru.setTextColor(getResources().getColor(R.color.customBlue));
             btnZhichu.setTextColor(getResources().getColor(R.color.darkgray));
         }
         else{
             btnShouru.setTextColor(getResources().getColor(R.color.darkgray));
-            btnZhichu.setTextColor(getResources().getColor(R.color.dodgerblue));
+            btnZhichu.setTextColor(getResources().getColor(R.color.customBlue));
+        }
+    }
+
+    /**
+     *
+     * @param Text 标题栏文字
+     * @param icon 标题栏ICON的资源id
+     * @param position 当前分页数（收入 | 支出）
+     */
+    public void ItemChange(String Text,String icon,int position){
+        this.tabPosition = position; //改变分页位置标记
+        this.indexAddItem = 0;//初始化当前选取的项目数
+        nameAddItem.setText(Text);
+        int resID = getResources().getIdentifier(icon, "drawable", getPackageName());
+        iconAddItem.setBackgroundResource(resID);
+        if(position == 0){
+            btnShouru.setTextColor(getResources().getColor(R.color.customBlue));
+            btnZhichu.setTextColor(getResources().getColor(R.color.darkgray));
+        }
+        else{
+            btnShouru.setTextColor(getResources().getColor(R.color.darkgray));
+            btnZhichu.setTextColor(getResources().getColor(R.color.customBlue));
         }
     }
     /**
      *
      * @param Text 标题栏文字
-     * @param res 标题栏ICON的资源id
+     * @param icon 标题栏ICON的资源id
      */
-    public void ItemChange(String Text,int res){
+    public void ItemChange(String Text,String icon){
         nameAddItem.setText(Text);
-        iconAddItem.setBackgroundResource(res);
+        int resID = getResources().getIdentifier(icon, "drawable", getPackageName());
+        iconAddItem.setBackgroundResource(resID);
     }
 
     private class MyPagerAdapter extends FragmentStatePagerAdapter
@@ -402,7 +511,7 @@ public class AddItemActivity extends AppCompatActivity {
             mRecyclerViewAdapter = new AddItemRecyclerAdapter(getContext(),mArgument);
             mRecyclerViewAdapter.setCreateViewLayout(R.layout.item_recycler_additem);
 
-            myApplication app = myApplication.getApplication();
+            MyApplication app = MyApplication.getApplication();
             final ArrayList<AddItem> shouruAddItems = app.getShouruAddItems();
             final ArrayList<AddItem> zhichuAddItems = app.getZhichuAddItems();
             mRecyclerViewAdapter.addDatas("shouru",shouruAddItems);
@@ -410,13 +519,16 @@ public class AddItemActivity extends AppCompatActivity {
 
             mRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener(){
                 @Override
-                public void onClick(View view,int position) {
-                    ((AddItemActivity)getActivity()).indexAddItem = position;
-                    if(mArgument.equals("shouru")) {
-                        ((AddItemActivity) getActivity()).ItemChange(shouruAddItems.get(position).getNameAddItem(), (shouruAddItems.get(position).getIconAddItem()));
-                    }
-                    else{
-                        ((AddItemActivity) getActivity()).ItemChange(zhichuAddItems.get(position).getNameAddItem(), (zhichuAddItems.get(position).getIconAddItem()));
+                public void onClick(View view,int pos,String viewName) {
+                    if("itemView".equals(viewName)) {
+                        ((AddItemActivity) getActivity()).indexAddItem = pos;
+                        if ("shouru".equals(mArgument)) {
+                            ((AddItemActivity) getActivity()).ItemChange(shouruAddItems.get(pos)
+                                    .getNameAddItem(), (shouruAddItems.get(pos).getIconAddItem()));
+                        } else {
+                            ((AddItemActivity) getActivity()).ItemChange(zhichuAddItems.get(pos)
+                                    .getNameAddItem(), (zhichuAddItems.get(pos).getIconAddItem()));
+                        }
                     }
                 }
             });
@@ -449,22 +561,24 @@ class AddItemRecyclerAdapter extends BaseRecyclerViewAdapter{
         Holder holder = (Holder)viewHolder;
         final int pos = getRealPosition(holder);
 
-        if(mArgument.equals("shouru")) {
+        if("shouru".equals(mArgument)) {
             ArrayList<AddItem> list = (ArrayList<AddItem>)mDatas.get("shouru");
             holder.item_str.setText(list.get(pos).getNameAddItem());
-            holder.item_icon.setBackgroundResource(list.get(pos).getIconAddItem());
+            int resID = mContent.getResources().getIdentifier(list.get(pos).getIconAddItem(), "drawable", mContent.getPackageName());
+            holder.item_icon.setBackgroundResource(resID);
         }
         else{
             ArrayList<AddItem> list = (ArrayList<AddItem>)mDatas.get("zhichu");
             holder.item_str.setText(list.get(pos).getNameAddItem());
-            holder.item_icon.setBackgroundResource(list.get(pos).getIconAddItem());
+            int resID = mContent.getResources().getIdentifier(list.get(pos).getIconAddItem(), "drawable", mContent.getPackageName());
+            holder.item_icon.setBackgroundResource(resID);
         }
 
         if( mOnItemClickListener!= null){//更换选中的项目
             holder.itemView.setOnClickListener( new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnItemClickListener.onClick(v, pos);
+                    mOnItemClickListener.onClick(v, pos, "itemView");
                 }
             });
         }
@@ -472,7 +586,7 @@ class AddItemRecyclerAdapter extends BaseRecyclerViewAdapter{
 
     @Override
     public int getItemCount() {
-        if(mArgument.equals("shouru")) {
+        if("shouru".equals(mArgument)) {
             return mDatas.get("shouru").size();
         }
         else{

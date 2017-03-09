@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.swjtu.huxin.accountmanagement.application.myApplication;
+import com.swjtu.huxin.accountmanagement.application.MyApplication;
 import com.swjtu.huxin.accountmanagement.domain.AccountBook;
 
 import java.util.Map;
@@ -47,7 +47,7 @@ public class AccountBookDao {
         Cursor cs = db.query("account_book", null, "id = ?", new String[]{AccountBookID+""}, null, null,null, "0,1");
         AccountBook book = new AccountBook();
         while(cs.moveToNext()){
-            myApplication app = myApplication.getApplication();
+            MyApplication app = MyApplication.getApplication();
             //获取指定列的索引值
             book.setId(cs.getInt(cs.getColumnIndex("id")));
             book.setBookname(cs.getString(cs.getColumnIndex("bookname")));
@@ -61,7 +61,7 @@ public class AccountBookDao {
         Cursor cs = db.query("account_book", null, null, null, null, null, null, null);
         Map<Integer, AccountBook> books = new TreeMap<Integer, AccountBook>();
         while(cs.moveToNext()){
-            myApplication app = myApplication.getApplication();
+            MyApplication app = MyApplication.getApplication();
             //获取指定列的索引值
             AccountBook book = new AccountBook();
             book.setId(cs.getInt(cs.getColumnIndex("id")));

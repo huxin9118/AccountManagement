@@ -37,9 +37,10 @@
         android:src="@drawable/ic_add_transparent"
         android:scaleType="centerInside"
         app:borderWidth="0dp"
-        app:backgroundTint="@color/dodgerblue"
+        app:backgroundTint="@color/customBlue"
         app:elevation="8dp"
-        app:pressedTranslationZ="20dp"/>
+        app:pressedTranslationZ="20dp"
+        android:transitionName="sharedView"/>
 
     <in.srain.cube.views.ptr.PtrFrameLayout
         android:id="@+id/ptr_frame"
@@ -76,8 +77,7 @@
                     android:layout_width="0.5dp"
                     android:layout_height="match_parent"
                     android:background="@color/silver"
-                    android:layout_centerHorizontal="true"
-                    android:transitionName="sharedView"/>
+                    android:layout_centerHorizontal="true"/>
 
                 <com.swjtu.huxin.accountmanagement.view.PercentageBallView
                     android:id="@+id/ball"

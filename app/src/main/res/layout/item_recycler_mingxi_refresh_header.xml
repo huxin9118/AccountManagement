@@ -24,7 +24,7 @@
         android:layout_above="@+id/transparent_area"
         android:background="@color/white"
         wave:above_wave_color="@color/dodgerblue"
-        wave:blow_wave_color="@color/aquamarine"
+        wave:blow_wave_color="@color/customBlue"
         wave:progress="80"
         wave:wave_height="little"
         wave:wave_hz="normal"

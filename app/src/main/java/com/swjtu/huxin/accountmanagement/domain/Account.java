@@ -1,12 +1,12 @@
 package com.swjtu.huxin.accountmanagement.domain;
 
-import java.math.BigDecimal;
+import java.io.Serializable;
 
 /**
  * Created by huxin on 2017/2/27.
  */
 
-public class Account {
+public class Account implements Serializable {
     int id;
     int color;
     String accountname;

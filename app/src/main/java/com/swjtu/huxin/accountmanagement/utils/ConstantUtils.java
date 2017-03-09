@@ -14,7 +14,7 @@ public class ConstantUtils {
 
     public static final int ACCOUNT_DEFAULT_COLOR_CASH = R.color.mediumpurple;
     public static final int ACCOUNT_DEFAULT_COLOR_BANK_CARD = R.color.dodgerblue;
-    public static final int ACCOUNT_DEFAULT_COLOR_CREDIT_CARD = R.color.turquoise;
+    public static final int ACCOUNT_DEFAULT_COLOR_CREDIT_CARD = R.color.customBlue;
     public static final int ACCOUNT_DEFAULT_COLOR_ALIPAY = R.color.orange;
 
     public static final int ACCOUNT_BOOK_TYPE_DEFAULT = 0;

@@ -3,9 +3,8 @@ package com.swjtu.huxin.accountmanagement.dao;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
+import com.swjtu.huxin.accountmanagement.application.MyApplication;
 
-import static com.swjtu.huxin.accountmanagement.application.myApplication.getContext;
 
 /**
  * Created by huxin on 2017/2/27.
@@ -15,7 +14,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String ACCOUNT_RECORD=
             "create table account_record ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT,"+
-                "icon INTEGER NOT NULL,"+
+                "icon VARCHAR(20) NOT NULL,"+
                 "recordname VARCHAR(10) NOT NULL,"+
                 "money VARCHAR(20) NOT NULL,"+
                 "remark VARCHAR(255) NOT NULL,"+
@@ -41,7 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * 饿汉单例模式
      * 在类加载时就完成了初始化，所以类加载较慢，但获取对象的速度快,无法自定义参数
      */
-    private static final DatabaseHelper instance = new DatabaseHelper(getContext(), "accountmanagement.db",null,1);//静态私有成员，已初始化
+    private static final DatabaseHelper instance = new DatabaseHelper(MyApplication.getContext(), "accountmanagement.db",null,1);//静态私有成员，已初始化
 
     public static DatabaseHelper getInstance(){
         return instance;

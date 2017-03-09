@@ -6,13 +6,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.swjtu.huxin.accountmanagement.application.myApplication;
+import com.swjtu.huxin.accountmanagement.application.MyApplication;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountBook;
@@ -23,6 +24,7 @@ import com.swjtu.huxin.accountmanagement.utils.ItemXmlPullParserUtils;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TreeMap;
 import java.util.Map;
@@ -49,7 +51,7 @@ public class SplashActivity extends AppCompatActivity {
         text1 = (TextView) findViewById(R.id.text1);
         text2 = (TextView) findViewById(R.id.text2);
 
-        text1.setText("我们于"+TimeUtils.getTimeYMD(firstTime)+"相遇");
+        text1.setText("我们于"+new SimpleDateFormat("yyyy年MM月dd日").format(firstTime)+"相遇");
         int dayDistance = TimeUtils.getTimeDistance(firstTime,new Date());
         if(dayDistance < 1) text2.setText("你今天刚刚开始记账");
         else text2.setText("你坚持记账 "+dayDistance+" 天了");
@@ -57,7 +59,15 @@ public class SplashActivity extends AppCompatActivity {
         rotateHandler.sendEmptyMessageDelayed(0, 1500);
         skipHandler.sendEmptyMessageDelayed(0, 3000);
 
-        myApplication app = myApplication.getApplication();
+        MyApplication app = MyApplication.getApplication();
+        DisplayMetrics metric = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+        int width = metric.widthPixels;     // 屏幕宽度（像素）
+        int height = metric.heightPixels;   // 屏幕高度（像素）
+//        float density = metric.density;      // 屏幕密度（0.75 / 1.0 / 1.5）
+//        int densityDpi = metric.densityDpi;  // 屏幕密度DPI（120 / 160 / 240）
+        app.setScreenHeight(height);
+        app.setScreenWidth(width);
         try {
             app.setShouruAddItems(ItemXmlPullParserUtils.parse(this, "shouru.xml"));
             app.setZhichuAddItems(ItemXmlPullParserUtils.parse(this, "zhichu.xml"));
@@ -175,5 +185,4 @@ public class SplashActivity extends AppCompatActivity {
             }
         }
     }
-
 }

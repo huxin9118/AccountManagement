@@ -43,7 +43,7 @@
             android:layout_marginRight="15dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/ic_back"/>
+            android:background="@drawable/ic_back_black"/>
 
     </RelativeLayout>
 
