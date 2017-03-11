@@ -50,7 +50,7 @@ public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         notifyDataSetChanged(); //刷新整个界面
     }
 
-    public List getmDatas(String key) {
+    public List getDatas(String key) {
         return mDatas.get(key);
     }
 
@@ -136,8 +136,9 @@ public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         notifyItemInserted(position);
     }
     //删除数据
-    public void removeItem(int position) {
-        mDatas.remove(position);
+    public Object removeItem(int position) {
+        Object obj = mDatas.remove(position);
         notifyItemRemoved(position);
+        return obj;
     }
 }

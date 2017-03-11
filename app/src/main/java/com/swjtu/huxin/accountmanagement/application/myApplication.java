@@ -14,13 +14,15 @@ import java.util.Map;
  * Created by huxin on 2017/2/28.
  */
 
-public class myApplication extends Application{
+public class MyApplication extends Application{
     private static Context context;
-    private static myApplication application;
+    private static MyApplication application;
     private ArrayList<AddItem> shouruAddItems;
     private ArrayList<AddItem> zhichuAddItems;
     private Map<Integer,Account> accounts;
     private Map<Integer,AccountBook> accountBooks;
+    private int screenHeight;
+    private int screenWidth;
 
     @Override
     public void onCreate() {
@@ -33,7 +35,7 @@ public class myApplication extends Application{
         return context;
     }
 
-    public static myApplication getApplication() {
+    public static MyApplication getApplication() {
         return application;
     }
 
@@ -67,5 +69,21 @@ public class myApplication extends Application{
 
     public void setAccountBooks(Map<Integer, AccountBook> accountBooks) {
         this.accountBooks = accountBooks;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
+    }
+
+    public void setScreenHeight(int screenHeight) {
+        this.screenHeight = screenHeight;
+    }
+
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public void setScreenWidth(int screenWidth) {
+        this.screenWidth = screenWidth;
     }
 }

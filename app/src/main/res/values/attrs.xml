@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="WaveProgressView">
+        <attr name="WPV_radius" format="dimension|reference" />
+        <attr name="WPV_radius_color" format="color|reference" />
+        <attr name="WPV_progress_text_color" format="color|reference" />
+        <attr name="WPV_progress_text_size" format="dimension|reference" />
+        <attr name="WPV_progress_color" format="color|reference" />
+        <attr name="WPV_progress_color_negate" format="color|reference" />
+        <attr name="WPV_progress" format="float" />
+        <attr name="WPV_maxProgress" format="float" />
+    </declare-styleable>
+
+
+</resources>

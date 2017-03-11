@@ -6,7 +6,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,7 +30,8 @@ public class NumKeyboardView extends RelativeLayout {
     private ArrayList<String> valueList;    //有人可能有疑问，为何这里不用数组了？
     //因为要用Adapter中适配，用数组不能往adapter中填充
 
-    private RelativeLayout layoutBack;
+//    private ImageView imgBack;
+
 
     public NumKeyboardView(Context context) {
         this(context, null);
@@ -43,7 +46,7 @@ public class NumKeyboardView extends RelativeLayout {
 
         valueList = new ArrayList<>();
 
-        layoutBack = (RelativeLayout) view.findViewById(R.id.layoutBack);
+//        imgBack = (RelativeLayout) view.findViewById(R.id.imgBack);//收回键盘按键
 
         gridView = (GridView) view.findViewById(R.id.gv_keybord);
 
@@ -52,10 +55,6 @@ public class NumKeyboardView extends RelativeLayout {
         setupView();
 
         addView(view);      //必须要，不然不显示控件
-    }
-
-    public RelativeLayout getLayoutBack() {
-        return layoutBack;
     }
 
     public ArrayList<String> getValueList() {

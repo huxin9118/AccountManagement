@@ -1,10 +1,12 @@
 package com.swjtu.huxin.accountmanagement.domain;
 
+import java.io.Serializable;
+
 /**
  * Created by huxin on 2017/2/27.
  */
 
-public class AccountBook {
+public class AccountBook implements Serializable {
     int id;
     String bookname;
     int type;

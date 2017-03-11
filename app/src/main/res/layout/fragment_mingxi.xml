@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+    xmlns:wpv="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -37,9 +38,10 @@
         android:src="@drawable/ic_add_transparent"
         android:scaleType="centerInside"
         app:borderWidth="0dp"
-        app:backgroundTint="@color/dodgerblue"
+        app:backgroundTint="@color/customBlue"
         app:elevation="8dp"
-        app:pressedTranslationZ="20dp"/>
+        app:pressedTranslationZ="20dp"
+        android:transitionName="sharedView"/>
 
     <in.srain.cube.views.ptr.PtrFrameLayout
         android:id="@+id/ptr_frame"
@@ -76,22 +78,27 @@
                     android:layout_width="0.5dp"
                     android:layout_height="match_parent"
                     android:background="@color/silver"
-                    android:layout_centerHorizontal="true"
-                    android:transitionName="sharedView"/>
+                    android:layout_centerHorizontal="true"/>
 
-                <com.swjtu.huxin.accountmanagement.view.PercentageBallView
-                    android:id="@+id/ball"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <com.swjtu.huxin.accountmanagement.view.WaveProgressView
+                    android:id="@+id/wpv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="10dp"
+                    wpv:WPV_progress_color="@color/customBlue"
+                    wpv:WPV_progress_color_negate="@color/orangered"
+                    wpv:WPV_progress_text_size="13sp"
+                    wpv:WPV_progress_text_color="@color/white"
+                    wpv:WPV_radius="50dp"
+                    wpv:WPV_radius_color="@color/silver" />
 
                 <TextView
                     android:id="@+id/zhichu"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_toRightOf="@+id/ball"
+                    android:layout_toRightOf="@+id/wpv"
                     android:text="3月支出\n0.00"
                     android:gravity="center"
                     android:layout_marginTop="10dp"
@@ -101,7 +108,7 @@
                     android:id="@+id/shouru"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_toLeftOf="@+id/ball"
+                    android:layout_toLeftOf="@+id/wpv"
                     android:text="3月收入\n0.00"
                     android:gravity="center"
                     android:layout_marginTop="10dp"

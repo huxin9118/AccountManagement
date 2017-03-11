@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class AccountRecord implements Serializable{
     int id;
-    int icon;
+    String icon;
     String recordname;
     String money;
     String remark;
@@ -25,11 +25,11 @@ public class AccountRecord implements Serializable{
         this.id = id;
     }
 
-    public int getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(int icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
 

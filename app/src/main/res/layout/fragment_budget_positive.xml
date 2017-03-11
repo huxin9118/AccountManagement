@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/money"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="3000.00"
+        android:textSize="35sp"
+        android:layout_marginTop="20dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="本月剩余预算"
+        android:textSize="15sp"
+        android:layout_marginBottom="20dp"/>
+
+    <com.daimajia.numberprogressbar.NumberProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+
+        custom:progress_unreached_color="@color/gainsboro"
+        custom:progress_reached_color="@color/customBlue"
+
+        custom:progress_unreached_bar_height="30dp"
+        custom:progress_reached_bar_height="30dp"
+
+        custom:progress_text_size="10sp"
+        custom:progress_text_color="#3498DB"
+        custom:progress_text_offset="1dp"
+        custom:progress_text_visibility="invisible"
+
+        custom:progress_max="100"
+        custom:progress_current="80"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="0.00"
+            android:textSize="15sp"
+            android:textColor="@color/gray"/>
+
+        <TextView
+            android:id="@+id/progress_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:text="3500.00"
+            android:textSize="15sp"
+            android:textColor="@color/gray"/>
+    </RelativeLayout>
+</LinearLayout>

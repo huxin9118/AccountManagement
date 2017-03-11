@@ -4,10 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.swjtu.huxin.accountmanagement.application.myApplication;
+import com.swjtu.huxin.accountmanagement.application.MyApplication;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
-import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
-import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +44,7 @@ public class AccountRecordDao {
         cv.put("remark", record.getRemark());
         cv.put("account_id", record.getAccount().getId());
         cv.put("member", record.getMember());
+        cv.put("recordtime", record.getRecordtime());
         //返回值是影响的行数
         return db.update("account_record", cv,"id = ?", new String[]{record.getId()+""});
     }
@@ -59,10 +58,10 @@ public class AccountRecordDao {
         Cursor cs = db.query("account_record", null, "id = ?", new String[]{recordID+""}, null, null,null, "0,1");
         AccountRecord record = new AccountRecord();
         while(cs.moveToNext()){
-            myApplication app = myApplication.getApplication();
+            MyApplication app = MyApplication.getApplication();
             //获取指定列的索引值
             record.setId(cs.getInt(cs.getColumnIndex("id")));
-            record.setIcon(cs.getInt(cs.getColumnIndex("icon")));
+            record.setIcon(cs.getString(cs.getColumnIndex("icon")));
             record.setRecordname(cs.getString(cs.getColumnIndex("recordname")));
             record.setMoney(cs.getString(cs.getColumnIndex("money")));
             record.setRemark(cs.getString(cs.getColumnIndex("remark")));
@@ -79,11 +78,11 @@ public class AccountRecordDao {
         Cursor cs = db.query("account_record", null, "recordtime between ? and ?", new String[]{firsttime+"",lasttime+""}, null, null, "recordtime desc",null);
         List<AccountRecord> records = new ArrayList<AccountRecord>();
         while(cs.moveToNext()){
-            myApplication app = myApplication.getApplication();
+            MyApplication app = MyApplication.getApplication();
             //获取指定列的索引值
             AccountRecord record = new AccountRecord();
             record.setId(cs.getInt(cs.getColumnIndex("id")));
-            record.setIcon(cs.getInt(cs.getColumnIndex("icon")));
+            record.setIcon(cs.getString(cs.getColumnIndex("icon")));
             record.setRecordname(cs.getString(cs.getColumnIndex("recordname")));
             record.setMoney(cs.getString(cs.getColumnIndex("money")));
             record.setRemark(cs.getString(cs.getColumnIndex("remark")));

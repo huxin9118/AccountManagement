@@ -1,8 +1,8 @@
 package com.swjtu.huxin.accountmanagement.activity;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Transition;
@@ -27,10 +27,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initAnim();
+//        initAnim();
         setContentView(R.layout.activity_main);
         initView();
-        setDefaultFragment();
     }
 
     private void initAnim() {
@@ -66,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
                 .initialise();
 
         bottomNavigationBar.setTabSelectedListener(this);
+
+        setDefaultFragment();
     }
 
     public void onBackPressed() {
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
     private void setDefaultFragment() {
         fragments = getFragments();
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.add(R.id.layFrame, fragments.get(0));
         transaction.commit();
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     public void onTabSelected(int position) {
         if (fragments != null) {
             if (position < fragments.size()) {
-                FragmentManager fm = getSupportFragmentManager();
+                FragmentManager fm = getFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 Fragment fragment = fragments.get(position);
                 if (fragment.isAdded()) {
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     public void onTabUnselected(int position) {
         if (fragments != null) {
             if (position < fragments.size()) {
-                FragmentManager fm = getSupportFragmentManager();
+                FragmentManager fm = getFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 Fragment fragment = fragments.get(position);
                 ft.hide(fragment);

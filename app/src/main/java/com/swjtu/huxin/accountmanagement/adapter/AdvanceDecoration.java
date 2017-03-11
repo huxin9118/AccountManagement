@@ -1,4 +1,4 @@
-package com.swjtu.huxin.accountmanagement.fragment;
+package com.swjtu.huxin.accountmanagement.adapter;
 
 import android.content.Context;
 import android.content.res.TypedArray;

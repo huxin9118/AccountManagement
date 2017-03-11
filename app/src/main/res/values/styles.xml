@@ -10,8 +10,22 @@
 
     <!-- AppCompatActivity 全屏-->
     <style name="MyFullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/dimgray</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/customBlue</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowActionBar">false</item>
+    </style>
+
+    <style name="WaveProgressViewDefault">
+        <item name="WPV_radius">55dp</item>
+        <item name="WPV_progress_text_color">#fff</item>
+        <item name="WPV_progress_text_size">20sp</item>
+        <item name="WPV_progress_color">#2fb2e8</item>
+        <item name="WPV_progress_color_negate">#FF0000</item>
+        <item name="WPV_radius_color">#C0C0C0</item>
+        <item name="WPV_progress">0</item>
+        <item name="WPV_maxProgress">100</item>
     </style>
 </resources>
