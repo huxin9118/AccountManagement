@@ -33,6 +33,9 @@
         <activity
             android:name=".activity.BudgetSettingActivity">
         </activity>
+        <activity
+            android:name=".activity.DateRangePickerActivity">
+        </activity>
     </application>
 
 </manifest>

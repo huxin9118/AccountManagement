@@ -26,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="返回"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textColor="@color/customBlue"
                 android:layout_toRightOf="@id/back" />
         </LinearLayout>
@@ -133,7 +133,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
 
         <View
             android:layout_width="match_parent"

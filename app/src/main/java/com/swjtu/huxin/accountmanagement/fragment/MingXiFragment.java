@@ -11,9 +11,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.app.Fragment;
+
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -101,9 +101,8 @@ public class MingXiFragment extends Fragment {
         if (bundle != null) mArgument = bundle.getString(ARGUMENT);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mingxi,container,false);
         //创建自定义刷新头部view
         mHeaderView = new CustomPtrHeader(getContext());
@@ -348,7 +347,7 @@ public class MingXiFragment extends Fragment {
             }
             mRecyclerViewAdapter.addItemList(mRecyclerViewAdapter.getDatas("records").size(), records);
         }
-        indexMaxDay = TimeUtils.getMaxDay(now, -1, 0);//上个月有多少天
+        indexMaxDay = TimeUtils.getMaxDay(now, -1,0);//上个月有多少天
         isShowMonth = false;
         for(int i = indexMaxDay; i >= 1; i--){
             long dayFirstMilliSeconds = TimeUtils.getDayFirstMilliSeconds(i,-1,0);
