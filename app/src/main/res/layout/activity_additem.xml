@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white">
 
-        <TabWidget
-            android:id="@+id/tabWidget"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -24,15 +23,15 @@
                 android:layout_height="wrap_content"
                 android:text="   收入   "
                 android:textColor="@color/darkgray"
-                android:background="@drawable/shape_button_shouru"/>
+                android:background="@drawable/shape_button_left_radius"/>
             <TextView
                 android:id="@+id/textZhichu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="   支出   "
                 android:textColor="@color/darkgray"
-                android:background="@drawable/shape_button_zhichu"/>
-        </TabWidget>
+                android:background="@drawable/shape_button_right_radius"/>
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/back"

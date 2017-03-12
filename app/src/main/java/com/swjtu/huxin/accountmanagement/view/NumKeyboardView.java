@@ -27,8 +27,7 @@ public class NumKeyboardView extends RelativeLayout {
 
     private GridView gridView;    //用GrideView布局键盘，其实并不是真正的键盘，只是模拟键盘的功能
 
-    private ArrayList<String> valueList;    //有人可能有疑问，为何这里不用数组了？
-    //因为要用Adapter中适配，用数组不能往adapter中填充
+    private ArrayList<String> valueList;    //因为要用Adapter中适配，用数组不能往adapter中填充
 
 //    private ImageView imgBack;
 

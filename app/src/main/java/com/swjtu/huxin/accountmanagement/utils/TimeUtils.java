@@ -16,6 +16,23 @@ public class TimeUtils {
     public static final int MINUTE = 6;
     public static final int SECOND = 7;
 
+    public static Date getDate(int year,int month,int day) {
+        Calendar calendar = Calendar.getInstance();// 创建一个日历对象
+        calendar.set(Calendar.YEAR,year);
+        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        return calendar.getTime();
+    }
+
+    public static Date getIndexDate(Date date,int indexyear,int indexmonth,int indexday) {
+        Calendar calendar = Calendar.getInstance();// 创建一个日历对象
+        calendar.setTime(date);
+        calendar.add(Calendar.YEAR,indexyear);
+        calendar.add(Calendar.MONTH, indexmonth);
+        calendar.add(Calendar.DAY_OF_MONTH, indexday);
+        return calendar.getTime();
+    }
+
     public static int getTime(Date time , int type) {
         Calendar calendar = Calendar.getInstance();// 创建一个日历对象
         calendar.setTime(time);//初始化日历时间
@@ -47,6 +64,13 @@ public class TimeUtils {
             return betweenDays + 1;	//相等说明确实跨天了
         else
             return betweenDays + 0;	//不相等说明确实未跨天
+    }
+
+    public static Date getMaxDayDate(Date time) {
+        Calendar calendar = Calendar.getInstance();// 创建一个日历对象
+        calendar.setTime(time);//初始化日历时间
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        return calendar.getTime();
     }
 
     public static int getMaxDay(Date time , int indexMonth ,int indexYear) {
@@ -97,6 +121,52 @@ public class TimeUtils {
         Calendar calendar = Calendar.getInstance();// 创建一个日历对象
         calendar.add(Calendar.YEAR,indexYear);
         calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.DAY_OF_MONTH,calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY,23);
+        calendar.set(Calendar.MINUTE,59);
+        calendar.set(Calendar.SECOND,59);
+        calendar.set(Calendar.MILLISECOND,calendar.getActualMaximum(Calendar.MILLISECOND));
+        return calendar.getTime().getTime();
+    }
+
+    public static long getWeekFirstMilliSeconds() {
+        Calendar calendar = Calendar.getInstance();// 创建一个日历对象
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
+        return calendar.getTime().getTime();
+    }
+
+    public static long getWeekLastMilliSeconds() {
+        Calendar calendar = Calendar.getInstance();// 创建一个日历对象
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        calendar.set(Calendar.HOUR_OF_DAY,23);
+        calendar.set(Calendar.MINUTE,59);
+        calendar.set(Calendar.SECOND,59);
+        calendar.set(Calendar.MILLISECOND,calendar.getActualMaximum(Calendar.MILLISECOND));
+        return calendar.getTime().getTime();
+    }
+
+    public static long getYearFirstMilliSeconds(int year) {
+        Calendar calendar = Calendar.getInstance();// 创建一个日历对象
+        calendar.set(Calendar.YEAR,year);
+        calendar.set(Calendar.MONTH, 0);
+        calendar.set(Calendar.DAY_OF_MONTH,1);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
+        return calendar.getTime().getTime();
+    }
+
+    public static long getYearLastMilliSeconds(int year) {
+        Calendar calendar = Calendar.getInstance();// 创建一个日历对象
+        calendar.set(Calendar.YEAR,year);
+        calendar.set(Calendar.MONTH, 11);
         calendar.set(Calendar.DAY_OF_MONTH,calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         calendar.set(Calendar.HOUR_OF_DAY,23);
         calendar.set(Calendar.MINUTE,59);

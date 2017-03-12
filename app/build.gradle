@@ -32,4 +32,5 @@ dependencies {
     compile 'com.github.john990:WaveView:v0.9'
     compile 'com.github.Kunzisoft:Android-SwitchDateTimePicker:1.5'
     compile 'com.daimajia.numberprogressbar:library:1.4@aar'
+    compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
 }

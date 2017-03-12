@@ -1,8 +1,9 @@
 package com.swjtu.huxin.accountmanagement.activity;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Transition;
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
 
     private void setDefaultFragment() {
         fragments = getFragments();
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.add(R.id.layFrame, fragments.get(0));
         transaction.commit();
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     public void onTabSelected(int position) {
         if (fragments != null) {
             if (position < fragments.size()) {
-                FragmentManager fm = getFragmentManager();
+                FragmentManager fm = getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 Fragment fragment = fragments.get(position);
                 if (fragment.isAdded()) {
@@ -120,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationB
     public void onTabUnselected(int position) {
         if (fragments != null) {
             if (position < fragments.size()) {
-                FragmentManager fm = getFragmentManager();
+                FragmentManager fm = getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 Fragment fragment = fragments.get(position);
                 ft.hide(fragment);
