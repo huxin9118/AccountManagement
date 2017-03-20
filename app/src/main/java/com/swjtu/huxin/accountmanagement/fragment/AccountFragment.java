@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.swjtu.huxin.accountmanagement.R;
 
-public class GengDuoFragment extends Fragment {
+public class AccountFragment extends Fragment {
 
     private String mArgument;
     public static final String ARGUMENT = "argument";
@@ -28,7 +28,7 @@ public class GengDuoFragment extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_gengduo,container,false);
+        View view = inflater.inflate(R.layout.fragment_account,container,false);
         return view;
     }
 
@@ -38,10 +38,10 @@ public class GengDuoFragment extends Fragment {
      * @param argument
      * @return
      */
-    public static GengDuoFragment newInstance(String argument) {
+    public static AccountFragment newInstance(String argument) {
         Bundle bundle = new Bundle();
         bundle.putString(ARGUMENT, argument);
-        GengDuoFragment contentFragment = new GengDuoFragment();
+        AccountFragment contentFragment = new AccountFragment();
         contentFragment.setArguments(bundle);
         return contentFragment;
     }

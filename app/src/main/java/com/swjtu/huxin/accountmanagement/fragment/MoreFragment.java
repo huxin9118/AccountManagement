@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.swjtu.huxin.accountmanagement.R;
 
-public class ZhangHuFragment extends Fragment {
+public class MoreFragment extends Fragment {
 
     private String mArgument;
     public static final String ARGUMENT = "argument";
@@ -28,7 +28,7 @@ public class ZhangHuFragment extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_zhanghu,container,false);
+        View view = inflater.inflate(R.layout.fragment_more,container,false);
         return view;
     }
 
@@ -38,10 +38,10 @@ public class ZhangHuFragment extends Fragment {
      * @param argument
      * @return
      */
-    public static ZhangHuFragment newInstance(String argument) {
+    public static MoreFragment newInstance(String argument) {
         Bundle bundle = new Bundle();
         bundle.putString(ARGUMENT, argument);
-        ZhangHuFragment contentFragment = new ZhangHuFragment();
+        MoreFragment contentFragment = new MoreFragment();
         contentFragment.setArguments(bundle);
         return contentFragment;
     }

@@ -1,6 +1,5 @@
 package com.swjtu.huxin.accountmanagement.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.R;
-import com.swjtu.huxin.accountmanagement.activity.DateRangePickerActivity;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 
 import java.util.Date;
@@ -19,7 +17,7 @@ import java.util.Date;
  * Created by huxin on 2017/3/11.
  */
 
-public class TuBiaoTabDuiBiFragment extends Fragment
+public class ChartTabContrastFragment extends Fragment
 {
     private String mArgument;
     public static final String ARGUMENT = "argument";
@@ -30,10 +28,10 @@ public class TuBiaoTabDuiBiFragment extends Fragment
     private Date start;
     private Date end;
 
-    public static TuBiaoTabDuiBiFragment newInstance(String argument) {
+    public static ChartTabContrastFragment newInstance(String argument) {
         Bundle bundle = new Bundle();
         bundle.putString(ARGUMENT, argument);
-        TuBiaoTabDuiBiFragment contentFragment = new TuBiaoTabDuiBiFragment();
+        ChartTabContrastFragment contentFragment = new ChartTabContrastFragment();
         contentFragment.setArguments(bundle);
         return contentFragment;
     }
@@ -41,7 +39,7 @@ public class TuBiaoTabDuiBiFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_tubiao_tab_duibi,container,false);
+        View view = inflater.inflate(R.layout.fragment_chart_tab_contrast,container,false);
 
         left = (ImageView) view.findViewById(R.id.date_left);
         right = (ImageView) view.findViewById(R.id.date_right);

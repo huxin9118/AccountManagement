@@ -6,7 +6,8 @@
     <color name="transparent">#00000000</color>
     <color name="customBlue">#2fb2e8</color>
     <color name="listBackgrount">#F0F0F0</color>
-    <color name="listLine">#DDDDDD</color>
+    <color name="listLine">#DDDDDDDD</color>
+    <color name="colorLine">#66DDDDDD</color>
 
     <color name="white">#FFFFFF</color> <!--白色 -->
     <color name="ivory">#FFFFF0</color> <!--象牙色 -->

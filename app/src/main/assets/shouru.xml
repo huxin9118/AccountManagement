@@ -3,61 +3,76 @@
     <item>
         <name>工资</name>
         <icon>icon_gongzi</icon>
+        <color>#6b83b7</color>
     </item>
     <item>
         <name>生活费</name>
         <icon>icon_shenghuofei</icon>
+        <color>#d1b95d</color>
     </item>
     <item>
         <name>红包</name>
         <icon>icon_hongbao</icon>
+        <color>#e05b27</color>
     </item>
     <item>
         <name>零花钱</name>
         <icon>icon_linghuaqian</icon>
+        <color>#889174</color>
     </item>
     <item>
         <name>外快兼职</name>
         <icon>icon_waikuaijianzhi</icon>
+        <color>#5fb0c5</color>
     </item>
     <item>
         <name>投资</name>
         <icon>icon_touzi</icon>
+        <color>#cc6603</color>
     </item>
     <item>
         <name>奖金</name>
         <icon>icon_jiangjin</icon>
+        <color>#ed9241</color>
     </item>
     <item>
         <name>报销</name>
         <icon>icon_baoxiao</icon>
+        <color>#6666aa</color>
     </item>
     <item>
         <name>借钱</name>
         <icon>icon_jieqian</icon>
+        <color>#be7676</color>
     </item>
     <item>
         <name>退款</name>
         <icon>icon_tuikuan</icon>
+        <color>#bb49c5</color>
     </item>
     <item>
         <name>支付宝</name>
         <icon>icon_zhifubao</icon>
+        <color>#2dc0fc</color>
     </item>
     <item>
         <name>娱乐收入</name>
         <icon>icon_yuleshouru</icon>
+        <color>#056d4e</color>
     </item>
     <item>
         <name>转账</name>
         <icon>icon_zhuanzhang</icon>
+        <color>#df476c</color>
     </item>
     <item>
         <name>保险</name>
         <icon>icon_baoxian</icon>
+        <color>#008e56</color>
     </item>
     <item>
         <name>其它</name>
         <icon>icon_qita</icon>
+        <color>#3ea6d6</color>
     </item>
 </root>

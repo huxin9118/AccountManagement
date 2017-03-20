@@ -75,7 +75,7 @@ public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(mHeaderView != null && viewType == TYPE_HEADER) return new Holder(mHeaderView, viewType);
         if(mFooterView != null && viewType == TYPE_FOOTER) return new Holder(mFooterView, viewType);
-        View layout = mInflater.inflate(R.layout.item_recycler_mingxi_day, parent, false);
+        View layout = mInflater.inflate(mCreateViewLayout, parent, false);
         return new Holder(layout, viewType);
     }
 
@@ -86,20 +86,25 @@ public class BaseRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        if(getItemViewType(position) == TYPE_HEADER || getItemViewType(position) == TYPE_FOOTER) return;
         Holder holder = (Holder)viewHolder;
         final int pos = getRealPosition(holder);
+        if(getItemViewType(position) == TYPE_HEADER || getItemViewType(position) == TYPE_FOOTER) return;
+        if(getItemViewType(position) == TYPE_NORMAL) {
 
+        }
     }
 
     /**
      * 绑定item布局中的控件
      * 自定义的ViewHolder，持有每个item的的所有界面元素
      */
-    public class Holder extends RecyclerView.ViewHolder {
+    static class Holder extends RecyclerView.ViewHolder {
         public Holder(View itemView, int viewType) {
             super(itemView);
             if(viewType == TYPE_HEADER || viewType == TYPE_FOOTER) return;
+            if(viewType == TYPE_NORMAL) {
+
+            }
         }
     }
 

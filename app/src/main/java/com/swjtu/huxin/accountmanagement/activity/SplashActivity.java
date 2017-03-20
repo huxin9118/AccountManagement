@@ -69,8 +69,8 @@ public class SplashActivity extends AppCompatActivity {
         app.setScreenHeight(height);
         app.setScreenWidth(width);
         try {
-            app.setShouruAddItems(ItemXmlPullParserUtils.parse(this, "shouru.xml"));
-            app.setZhichuAddItems(ItemXmlPullParserUtils.parse(this, "zhichu.xml"));
+            app.setShouruAddItems(ItemXmlPullParserUtils.parseAddItemList(this, "shouru.xml"));
+            app.setZhichuAddItems(ItemXmlPullParserUtils.parseAddItemList(this, "zhichu.xml"));
         }
         catch (Exception e){
             e.printStackTrace();

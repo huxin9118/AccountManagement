@@ -18,14 +18,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.swjtu.huxin.accountmanagement.activity.BudgetActivity;
 import com.swjtu.huxin.accountmanagement.adapter.BaseRecyclerViewAdapter;
@@ -48,7 +46,7 @@ import java.util.List;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 
-public class MingXiFragment extends Fragment {
+public class DetailFragment extends Fragment {
 
     private String mArgument;
     public static final String ARGUMENT = "argument";
@@ -61,7 +59,7 @@ public class MingXiFragment extends Fragment {
     private TextView txtShouru;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private MingXiRecyclerAdapter mRecyclerViewAdapter;
+    private DetailRecyclerAdapter mRecyclerViewAdapter;
     private CustomPtrHeader mHeaderView;
     private FloatingActionButton mFloatingActionButton;
     private boolean isBudget;
@@ -85,10 +83,10 @@ public class MingXiFragment extends Fragment {
      * @param argument
      * @return
      */
-    public static MingXiFragment newInstance(String argument) {
+    public static DetailFragment newInstance(String argument) {
         Bundle bundle = new Bundle();
         bundle.putString(ARGUMENT, argument);
-        MingXiFragment contentFragment = new MingXiFragment();
+        DetailFragment contentFragment = new DetailFragment();
         contentFragment.setArguments(bundle);
         return contentFragment;
     }
@@ -153,7 +151,6 @@ public class MingXiFragment extends Fragment {
         mFloatingActionButton.setVisibility(View.INVISIBLE);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        //设置固定大小
         //创建线性布局
         mLayoutManager = new LinearLayoutManager(getContext());
         //垂直方向
@@ -161,10 +158,9 @@ public class MingXiFragment extends Fragment {
         //给RecyclerView设置布局管理器
         mRecyclerView.setLayoutManager(mLayoutManager);
         //创建适配器，并且设置
-        mRecyclerViewAdapter = new MingXiRecyclerAdapter(getContext());
-        mRecyclerViewAdapter.setCreateViewLayout(R.layout.item_recycler_mingxi);
+        mRecyclerViewAdapter = new DetailRecyclerAdapter(getContext());
 
-        View header = inflater.inflate(R.layout.item_recycler_mingxi_header, container, false);
+        View header = inflater.inflate(R.layout.item_recycler_detail_header, container, false);
         mRecyclerViewAdapter.setHeaderView(header);
         ImageView imgHeader = (ImageView)header.findViewById(R.id.item_icon);
         imgHeader.setOnClickListener(new View.OnClickListener(){
@@ -178,7 +174,7 @@ public class MingXiFragment extends Fragment {
         });
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userData", Context.MODE_PRIVATE);
-        View footer = inflater.inflate(R.layout.item_recycler_mingxi_footer, container, false);
+        View footer = inflater.inflate(R.layout.item_recycler_detail_footer, container, false);
         mRecyclerViewAdapter.setFooterView(footer);
         long firstTimeMilliSeconds = sharedPreferences.getLong("firstTime", System.currentTimeMillis());
         firstTime = new Date(firstTimeMilliSeconds);
@@ -264,7 +260,6 @@ public class MingXiFragment extends Fragment {
                     if(Monthmoney[0].equals("0.00")&& Monthmoney[1].equals("0.00")) {
                         mRecyclerViewAdapter.removeItem(pos - 2);
                     }
-
                     updateHeader();
                     updateWAV();
                 }
@@ -323,7 +318,7 @@ public class MingXiFragment extends Fragment {
         for(int i = indexMaxDay; i >= 1; i--){
             long dayFirstMilliSeconds = TimeUtils.getDayFirstMilliSeconds(i,0,0);
             long dayLastMilliSeconds = TimeUtils.getDayLastMilliSeconds(i,0,0);
-            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds);
+            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds,null);
 
             if(records.size()>0) {//这一天有记录
                 String[] money = accountRecordService.getDayMoneyByRecords(records);
@@ -352,7 +347,7 @@ public class MingXiFragment extends Fragment {
         for(int i = indexMaxDay; i >= 1; i--){
             long dayFirstMilliSeconds = TimeUtils.getDayFirstMilliSeconds(i,-1,0);
             long dayLastMilliSeconds = TimeUtils.getDayLastMilliSeconds(i,-1,0);
-            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds);
+            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds,null);
 
             if(records.size()>0) {
                 String[] money = accountRecordService.getDayMoneyByRecords(records);
@@ -532,7 +527,7 @@ public class MingXiFragment extends Fragment {
     }
 }
 
-class MingXiRecyclerAdapter extends BaseRecyclerViewAdapter{
+class DetailRecyclerAdapter extends BaseRecyclerViewAdapter{
 //    private boolean isFirstBindBottomItem = true;//是否第一次绑定底部的View
     public final static int TYPE_DAY = 3;
     public final static int TYPE_MONTH = 4;
@@ -541,7 +536,7 @@ class MingXiRecyclerAdapter extends BaseRecyclerViewAdapter{
     private View edit;
     private Context mContext;
 
-    public MingXiRecyclerAdapter(Context context){
+    public DetailRecyclerAdapter(Context context){
         super(context);
         mContext = context;
         mDatas.put("records",new ArrayList<AccountRecord>());
@@ -552,9 +547,7 @@ class MingXiRecyclerAdapter extends BaseRecyclerViewAdapter{
         if(mHeaderView != null && position == 0) return TYPE_HEADER;
         if(mFooterView != null && position == getItemCount() - 1)return TYPE_FOOTER;
 
-        int pos;
-        if(mHeaderView == null) pos = position;
-        else pos = position - 1;
+        int pos = mHeaderView == null ? position : position - 1;
         if("MONTH".equals(((AccountRecord)mDatas.get("records").get(pos)).getRecordname()))
             return TYPE_MONTH;
         if("DAY".equals(((AccountRecord)mDatas.get("records").get(pos)).getRecordname()))
@@ -567,14 +560,14 @@ class MingXiRecyclerAdapter extends BaseRecyclerViewAdapter{
         if(viewType == TYPE_HEADER) return new Holder(mHeaderView, viewType);
         if(viewType == TYPE_FOOTER) return new Holder(mFooterView, viewType);
         if(viewType == TYPE_DAY) {
-            View layout = mInflater.inflate(R.layout.item_recycler_mingxi_day, parent, false);
+            View layout = mInflater.inflate(R.layout.item_recycler_detail_day, parent, false);
             return new Holder(layout, viewType);
         }
         if(viewType == TYPE_MONTH) {
-            View layout = mInflater.inflate(R.layout.item_recycler_mingxi_month, parent, false);
+            View layout = mInflater.inflate(R.layout.item_recycler_detail_month, parent, false);
             return new Holder(layout, viewType);
         }
-        View layout = mInflater.inflate(mCreateViewLayout, parent, false);
+        View layout = mInflater.inflate(R.layout.item_recycler_detail, parent, false);
         return new Holder(layout, viewType);
     }
 
@@ -704,23 +697,23 @@ class MingXiRecyclerAdapter extends BaseRecyclerViewAdapter{
         public ImageView item_delete;
         public ImageView item_edit;
         public TextView day_text;
-        public Holder(View view, int viewType) {
-            super(view);
+        public Holder(View itemView, int viewType) {
+            super(itemView);
             if(viewType == TYPE_HEADER || viewType == TYPE_FOOTER) return;
             if(viewType == TYPE_NORMAL) {
-                item_left = (TextView) view.findViewById(R.id.item_left);
-                item_right = (TextView) view.findViewById(R.id.item_right);
-                item_icon = (ImageView) view.findViewById(R.id.item_icon);
-                item_delete = (ImageView) view.findViewById(R.id.item_delete);
-                item_edit = (ImageView) view.findViewById(R.id.item_edit);
+                item_left = (TextView) itemView.findViewById(R.id.item_left);
+                item_right = (TextView) itemView.findViewById(R.id.item_right);
+                item_icon = (ImageView) itemView.findViewById(R.id.item_icon);
+                item_delete = (ImageView) itemView.findViewById(R.id.item_delete);
+                item_edit = (ImageView) itemView.findViewById(R.id.item_edit);
             }
             if(viewType == TYPE_DAY) {
-                item_left = (TextView) view.findViewById(R.id.item_left);
-                item_right = (TextView) view.findViewById(R.id.item_right);
-                day_text = (TextView) view.findViewById(R.id.text);
+                item_left = (TextView) itemView.findViewById(R.id.item_left);
+                item_right = (TextView) itemView.findViewById(R.id.item_right);
+                day_text = (TextView) itemView.findViewById(R.id.text);
             }
             if(viewType == TYPE_MONTH) {
-                day_text = (TextView) view.findViewById(R.id.text);
+                day_text = (TextView) itemView.findViewById(R.id.text);
             }
         }
     }
@@ -756,7 +749,7 @@ class MingXiRecyclerAdapter extends BaseRecyclerViewAdapter{
     public void addItemList(int pos, List<AccountRecord> records) {
         mDatas.get("records").addAll(pos, records);
         int position = mHeaderView==null?pos:pos+1;
-        int itemCount = mDatas.get("records").size();
+        int itemCount = mDatas.get("records").size() - pos;;
         notifyItemRangeInserted(position,records.size()); //多项插入动画
         notifyItemRangeChanged(position, itemCount);
     }

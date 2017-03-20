@@ -36,6 +36,9 @@
         <activity
             android:name=".activity.DateRangePickerActivity">
         </activity>
+        <activity
+            android:name=".activity.ChartDetailActivity">
+        </activity>
     </application>
 
 </manifest>

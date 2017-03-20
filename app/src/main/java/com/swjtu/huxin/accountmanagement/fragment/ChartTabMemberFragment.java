@@ -20,7 +20,7 @@ import java.util.Date;
  * Created by huxin on 2017/3/11.
  */
 
-public class TuBiaoTabChengYuanFragment extends Fragment
+public class ChartTabMemberFragment extends Fragment
 {
     private String mArgument;
     public static final String ARGUMENT = "argument";
@@ -31,10 +31,10 @@ public class TuBiaoTabChengYuanFragment extends Fragment
     private Date start;
     private Date end;
 
-    public static TuBiaoTabChengYuanFragment newInstance(String argument) {
+    public static ChartTabMemberFragment newInstance(String argument) {
         Bundle bundle = new Bundle();
         bundle.putString(ARGUMENT, argument);
-        TuBiaoTabChengYuanFragment contentFragment = new TuBiaoTabChengYuanFragment();
+        ChartTabMemberFragment contentFragment = new ChartTabMemberFragment();
         contentFragment.setArguments(bundle);
         return contentFragment;
     }
@@ -42,7 +42,7 @@ public class TuBiaoTabChengYuanFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_tubiao_tab_fenlei,container,false);
+        View view = inflater.inflate(R.layout.fragment_chart_tab_member,container,false);
 
         left = (ImageView) view.findViewById(R.id.date_left);
         right = (ImageView) view.findViewById(R.id.date_right);

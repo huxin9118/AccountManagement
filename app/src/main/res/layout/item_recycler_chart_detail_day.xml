@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="35dp"
+    android:background="@color/listBackgrount">
+
+    <TextView
+        android:id="@+id/day_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/item_icon"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="3月20日"
+        android:textSize="15sp"
+        android:textColor="@color/gray"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/listLine"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.R;
 
-public class TuBiaoFragment extends Fragment {
+public class ChartFragment extends Fragment {
 
     private String mArgument;
     public static final String ARGUMENT = "argument";
@@ -36,7 +36,7 @@ public class TuBiaoFragment extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tubiao,container,false);
+        View view = inflater.inflate(R.layout.fragment_chart,container,false);
 
         btnTab[0] = (TextView)view.findViewById(R.id.textFenlei);
         btnTab[1] = (TextView)view.findViewById(R.id.textQushi);
@@ -110,13 +110,13 @@ public class TuBiaoFragment extends Fragment {
         {
             switch (position){
                 case 0:
-                    return TuBiaoTabFenLeiFragment.newInstance("");
+                    return ChartTabSortFragment.newInstance("");
                 case 1:
-                    return TuBiaoTabQuShiFragment.newInstance("");
+                    return ChartTabTrendFragment.newInstance("");
                 case 2:
-                    return TuBiaoTabDuiBiFragment.newInstance("");
+                    return ChartTabContrastFragment.newInstance("");
                 default:
-                    return TuBiaoTabChengYuanFragment.newInstance("");
+                    return ChartTabMemberFragment.newInstance("");
             }
         }
         @Override
@@ -132,10 +132,10 @@ public class TuBiaoFragment extends Fragment {
      * @param argument
      * @return
      */
-    public static TuBiaoFragment newInstance(String argument) {
+    public static ChartFragment newInstance(String argument) {
         Bundle bundle = new Bundle();
         bundle.putString(ARGUMENT, argument);
-        TuBiaoFragment contentFragment = new TuBiaoFragment();
+        ChartFragment contentFragment = new ChartFragment();
         contentFragment.setArguments(bundle);
         return contentFragment;
     }

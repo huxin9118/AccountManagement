@@ -3,129 +3,161 @@
     <item>
         <name>一般</name>
         <icon>icon_yiban</icon>
+        <color>#3ea6d6</color>
     </item>
     <item>
         <name>餐饮</name>
         <icon>icon_canyin</icon>
+		<color>#b5ba3e</color>
     </item>
     <item>
         <name>交通</name>
         <icon>icon_jiaotong</icon>
+		<color>#f39c12</color>
     </item>
     <item>
         <name>超市</name>
         <icon>icon_chaoshi</icon>
+		<color>#e7c03e</color>
     </item>
     <item>
         <name>酒水饮料</name>
         <icon>icon_jiushui</icon>
+		<color>#b42712</color>
     </item>
     <item>
         <name>水果</name>
         <icon>icon_shuiguo</icon>
+		<color>#6faa70</color>
     </item>
     <item>
         <name>零食</name>
         <icon>icon_lingshi</icon>
+		<color>#ef417a</color>
     </item>
     <item>
         <name>买菜</name>
         <icon>icon_maicai</icon>
+		<color>#5dbf92</color>
     </item>
     <item>
         <name>衣服鞋包</name>
         <icon>icon_yifu</icon>
+		<color>#fd557d</color>
     </item>
     <item>
         <name>生活用品</name>
         <icon>icon_shenghuoyongpin</icon>
+		<color>#09ace9</color>
     </item>
     <item>
         <name>话费</name>
         <icon>icon_huafei</icon>
+		<color>#b485b0</color>
     </item>
     <item>
         <name>网费</name>
         <icon>icon_wangfei</icon>
+		<color>#cc5151</color>
     </item>
     <item>
         <name>护肤彩妆</name>
         <icon>icon_huazhuangpin</icon>
+		<color>#d36aa8</color>
     </item>
     <item>
         <name>房租</name>
         <icon>icon_fangzu</icon>
+		<color>#ad234b</color>
     </item>
     <item>
         <name>电影</name>
         <icon>icon_dianying</icon>
+		<color>#926550</color>
     </item>
     <item>
         <name>网购</name>
         <icon>icon_wanggou</icon>
+		<color>#5c9b8c</color>
     </item>
     <item>
         <name>红包</name>
         <icon>icon_hongbao</icon>
+		<color>#e05b27</color>
     </item>
     <item>
         <name>药品</name>
         <icon>icon_yaoping</icon>
+		<color>#d53062</color>
     </item>
     <item>
         <name>学费</name>
         <icon>icon_xuefei</icon>
+		<color>#0088b0</color>
     </item>
     <item>
         <name>按揭</name>
         <icon>icon_anjie</icon>
+		<color>#3aab7c</color>
     </item>
     <item>
         <name>转账</name>
         <icon>icon_zhuanzhang</icon>
+		<color>#df476c</color>
     </item>
     <item>
         <name>宝宝</name>
         <icon>icon_baobao</icon>
+		<color>#4978d0</color>
     </item>
     <item>
         <name>保险</name>
         <icon>icon_baoxian</icon>
+		<color>#008e56</color>
     </item>
     <item>
         <name>彩礼</name>
         <icon>icon_caili</icon>
+		<color>#df3c3c</color>
     </item>
     <item>
         <name>伴侣</name>
         <icon>icon_banlv</icon>
+		<color>#e2728e</color>
     </item>
     <item>
         <name>人情往来</name>
         <icon>icon_renqingwanglai</icon>
+		<color>#dba7bc</color>
     </item>
     <item>
         <name>借钱</name>
         <icon>icon_jieqian</icon>
+		<color>#be7676</color>
     </item>
     <item>
         <name>旅游度假</name>
         <icon>icon_lvyoudujia</icon>
+		<color>#706faa</color>
     </item>
     <item>
         <name>运动健身</name>
-        <icon>ic_yundongjianshen</icon>
+        <icon>icon_yundongjianshen</icon>
+		<color>#de9eee</color>
     </item>
     <item>
         <name>宠物</name>
         <icon>icon_chongwu</icon>
+		<color>#a1b2a5</color>
     </item>
     <item>
         <name>书籍</name>
         <icon>icon_shuji</icon>
+		<color>#9e7866</color>
     </item>
     <item>
         <name>家具</name>
         <icon>icon_jiajiu</icon>
+		<color>#b36a66</color>
     </item>
 </root>

@@ -25,10 +25,17 @@ public class ConstantUtils {
     public static final String ACCOUNT_RECORD_MEMBER_FATHER = "爸爸";
     public static final String ACCOUNT_RECORD_MEMBER_MOTHER = "妈妈";
 
-//    public static final int ACCOUNT_RECORD_TYPE_NORMAL = 0;
-//    public static final int ACCOUNT_RECORD_TYPE_DAY_LAST = 1;
-//    public static final int ACCOUNT_RECORD_TYPE_DAY_FIRST = 2;
-//    public static final int ACCOUNT_RECORD_TYPE_MONTH_LAST = 3;
-//    public static final int ACCOUNT_RECORD_TYPE_MONTH_FIRST = 4;
-
+    public static final String ACCOUNT_RECORD_COLOR_1 = "#9361a2";
+    public static final String ACCOUNT_RECORD_COLOR_2 = "#ab92ed";
+    public static final String ACCOUNT_RECORD_COLOR_3 = "#5b7ed5";
+    public static final String ACCOUNT_RECORD_COLOR_4 = "#5d9cec";
+    public static final String ACCOUNT_RECORD_COLOR_5 = "#519ddd";
+    public static final String ACCOUNT_RECORD_COLOR_6 = "#2fb2e8";
+    public static final String ACCOUNT_RECORD_COLOR_7 = "#45bdb3";
+    public static final String ACCOUNT_RECORD_COLOR_8 = "#45bc80";
+    public static final String ACCOUNT_RECORD_COLOR_9 = "#9fbd45";
+    public static final String ACCOUNT_RECORD_COLOR_10 = "#f3bd5d";
+    public static final String ACCOUNT_RECORD_COLOR_11 = "#f3955d";
+    public static final String ACCOUNT_RECORD_COLOR_12 = "#ea7067";
+    public static final String ACCOUNT_RECORD_COLOR_13 = "#ec87bf";
 }

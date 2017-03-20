@@ -8,6 +8,7 @@ import com.swjtu.huxin.accountmanagement.application.MyApplication;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -74,8 +75,12 @@ public class AccountRecordDao {
         return record;
     }
 
-    public List<AccountRecord> getListByTime(long firsttime,long lasttime){
-        Cursor cs = db.query("account_record", null, "recordtime between ? and ?", new String[]{firsttime+"",lasttime+""}, null, null, "recordtime desc",null);
+    public List<AccountRecord> getListByTime(long firsttime,long lasttime,String recordname){
+        Cursor cs;
+        if(recordname == null)
+            cs = db.query("account_record", null, "recordtime between ? and ?", new String[]{firsttime+"",lasttime+""}, null, null, "recordtime desc",null);
+        else
+            cs = db.query("account_record", null, "recordname = ? and recordtime between ? and ?", new String[]{recordname,firsttime+"",lasttime+""}, null, null, "recordtime desc",null);
         List<AccountRecord> records = new ArrayList<AccountRecord>();
         while(cs.moveToNext()){
             MyApplication app = MyApplication.getApplication();
@@ -94,5 +99,49 @@ public class AccountRecordDao {
         }
         cs.close();
         return records;
+    }
+
+    public List<String> getMoneyListByTime(long firsttime,long lasttime){
+        Cursor cs = db.query("account_record", new String[]{"money"}, "recordtime between ? and ?", new String[]{firsttime+"",lasttime+""}, null, null, "recordtime desc",null);
+        List<String> MoneyList = new ArrayList<String>();
+        while(cs.moveToNext()){
+            MoneyList.add(cs.getString(cs.getColumnIndex("money")));
+        }
+        cs.close();
+        return MoneyList;
+    }
+
+    public List<AccountRecord> getListGroupByRecordname(Date firsttime, Date lasttime, boolean isPositive){
+        String sql;
+        if(isPositive)
+            sql = "SELECT recordname ,icon,SUM(money) money FROM account_record WHERE money > 0 AND recordtime between ? and ? GROUP BY recordname";
+        else
+            sql = "SELECT recordname ,icon,SUM(money) money FROM account_record WHERE money < 0 AND recordtime between ? and ? GROUP BY recordname";
+        Cursor cs = db.rawQuery(sql, new String[]{firsttime.getTime()+"",lasttime.getTime()+""});
+        List<AccountRecord> records = new ArrayList<AccountRecord>();
+        while(cs.moveToNext()){
+            //获取指定列的索引值
+            AccountRecord record = new AccountRecord();
+            record.setIcon(cs.getString(cs.getColumnIndex("icon")));
+            record.setRecordname(cs.getString(cs.getColumnIndex("recordname")));
+            record.setMoney(cs.getString(cs.getColumnIndex("money")));
+            records.add(record);
+        }
+        cs.close();
+        return records;
+    }
+
+    public String getMoneyByRecordname(Date firsttime, Date lasttime, boolean isPositive,String recordname){
+        String sql;
+        if(isPositive)
+            sql = "SELECT recordname ,icon,SUM(money) money FROM account_record WHERE recordname = ? AND money > 0 AND recordtime between ? and ?";
+        else
+            sql = "SELECT recordname ,icon,SUM(money) money FROM account_record WHERE recordname = ? AND money < 0 AND recordtime between ? and ?";
+        Cursor cs = db.rawQuery(sql, new String[]{recordname,firsttime.getTime()+"",lasttime.getTime()+""});
+        AccountRecord record = new AccountRecord();
+        cs.moveToNext();
+        String money = cs.getString(cs.getColumnIndex("money"));
+        cs.close();
+        return money;
     }
 }

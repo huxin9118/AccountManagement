@@ -45,7 +45,7 @@ public class CustomPtrHeader extends FrameLayout implements PtrUIHandler {
      * 初始化
      */
     private void init() {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.item_recycler_mingxi_refresh_header, this);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.item_recycler_detail_refresh_header, this);
         wave_view = (WaveView) view.findViewById(R.id.wave_view);
     }
 

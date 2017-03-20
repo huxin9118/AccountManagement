@@ -88,8 +88,8 @@ public class DateRangePickerActivity extends AppCompatActivity {
                     showToast("结束时间要大于开始时间哦~", Toast.LENGTH_SHORT);
                 }
                 else {
-                    start = startDatePicker.getValue();
-                    end = endDatePicker.getValue();
+                    start = new Date(TimeUtils.getDateFirstMilliSeconds(startDatePicker.getValue()));
+                    end = new Date(TimeUtils.getDateLastMilliSeconds(endDatePicker.getValue()));
                     Intent intent = new Intent();
                     intent.putExtra("start", start);
                     intent.putExtra("end", end);
