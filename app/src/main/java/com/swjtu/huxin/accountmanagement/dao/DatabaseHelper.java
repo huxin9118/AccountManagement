@@ -25,7 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String ACCOUNT =
             "create table account ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT,"+
-                "color INTEGER NOT NULL,"+
+                "color VARCHAR(10) NOT NULL,"+
                 "accountname VARCHAR(20) NOT NULL,"+
                 "type INTEGER NOT NULL,"+
                 "money VARCHAR(20) NOT NULL)";

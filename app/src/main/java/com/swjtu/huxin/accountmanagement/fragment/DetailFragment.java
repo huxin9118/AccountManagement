@@ -318,7 +318,7 @@ public class DetailFragment extends Fragment {
         for(int i = indexMaxDay; i >= 1; i--){
             long dayFirstMilliSeconds = TimeUtils.getDayFirstMilliSeconds(i,0,0);
             long dayLastMilliSeconds = TimeUtils.getDayLastMilliSeconds(i,0,0);
-            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds,null);
+            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds,null,null);
 
             if(records.size()>0) {//这一天有记录
                 String[] money = accountRecordService.getDayMoneyByRecords(records);
@@ -347,7 +347,7 @@ public class DetailFragment extends Fragment {
         for(int i = indexMaxDay; i >= 1; i--){
             long dayFirstMilliSeconds = TimeUtils.getDayFirstMilliSeconds(i,-1,0);
             long dayLastMilliSeconds = TimeUtils.getDayLastMilliSeconds(i,-1,0);
-            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds,null);
+            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds,null,null);
 
             if(records.size()>0) {
                 String[] money = accountRecordService.getDayMoneyByRecords(records);

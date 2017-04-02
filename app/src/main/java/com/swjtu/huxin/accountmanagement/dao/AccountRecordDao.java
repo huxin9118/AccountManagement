@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.swjtu.huxin.accountmanagement.application.MyApplication;
+import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 
 import java.util.ArrayList;
@@ -75,12 +76,14 @@ public class AccountRecordDao {
         return record;
     }
 
-    public List<AccountRecord> getListByTime(long firsttime,long lasttime,String recordname){
-        Cursor cs;
-        if(recordname == null)
-            cs = db.query("account_record", null, "recordtime between ? and ?", new String[]{firsttime+"",lasttime+""}, null, null, "recordtime desc",null);
-        else
-            cs = db.query("account_record", null, "recordname = ? and recordtime between ? and ?", new String[]{recordname,firsttime+"",lasttime+""}, null, null, "recordtime desc",null);
+    public List<AccountRecord> getListByTime(long firsttime,long lasttime,String recordname,Account account){
+        String sql = "SELECT * FROM account_record WHERE recordtime between ? and ?";
+        if(recordname != null)
+            sql = sql + " AND recordname = '" + recordname + "'";
+        if(account != null)
+            sql = sql + " AND account_id = " + account.getId();
+        sql = sql +" ORDER BY recordtime desc";
+        Cursor cs = db.rawQuery(sql, new String[]{firsttime+"",lasttime+""});
         List<AccountRecord> records = new ArrayList<AccountRecord>();
         while(cs.moveToNext()){
             MyApplication app = MyApplication.getApplication();
@@ -114,9 +117,9 @@ public class AccountRecordDao {
     public List<AccountRecord> getListGroupByRecordname(Date firsttime, Date lasttime, boolean isPositive){
         String sql;
         if(isPositive)
-            sql = "SELECT recordname ,icon,SUM(money) money FROM account_record WHERE money > 0 AND recordtime between ? and ? GROUP BY recordname";
+            sql = "SELECT recordname ,icon,SUM(money) money FROM account_record WHERE money > 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY recordtime desc";
         else
-            sql = "SELECT recordname ,icon,SUM(money) money FROM account_record WHERE money < 0 AND recordtime between ? and ? GROUP BY recordname";
+            sql = "SELECT recordname ,icon,SUM(money) money FROM account_record WHERE money < 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY recordtime desc";
         Cursor cs = db.rawQuery(sql, new String[]{firsttime.getTime()+"",lasttime.getTime()+""});
         List<AccountRecord> records = new ArrayList<AccountRecord>();
         while(cs.moveToNext()){
@@ -131,17 +134,39 @@ public class AccountRecordDao {
         return records;
     }
 
-    public String getMoneyByRecordname(Date firsttime, Date lasttime, boolean isPositive,String recordname){
-        String sql;
-        if(isPositive)
-            sql = "SELECT recordname ,icon,SUM(money) money FROM account_record WHERE recordname = ? AND money > 0 AND recordtime between ? and ?";
-        else
-            sql = "SELECT recordname ,icon,SUM(money) money FROM account_record WHERE recordname = ? AND money < 0 AND recordtime between ? and ?";
+    public String getRangeTotalMoneyByRecordname(Date firsttime, Date lasttime,String recordname){
+        String sql = "SELECT SUM(money) money FROM account_record WHERE recordname = ? AND recordtime between ? and ?";
         Cursor cs = db.rawQuery(sql, new String[]{recordname,firsttime.getTime()+"",lasttime.getTime()+""});
-        AccountRecord record = new AccountRecord();
         cs.moveToNext();
         String money = cs.getString(cs.getColumnIndex("money"));
         cs.close();
+        if(money == null) return "0.00";
+        return money;
+    }
+
+    public String getTotalMoneyByAccount(Account account){
+        String sql = "SELECT SUM(money) money FROM account_record WHERE recordtime <= ?";
+        if(account != null)
+            sql = sql + " AND account_id = " + account.getId();
+        Cursor cs = db.rawQuery(sql, new String[]{new Date().getTime()+""});
+        cs.moveToNext();
+        String money = cs.getString(cs.getColumnIndex("money"));
+        cs.close();
+        if(money == null) return "0.00";
+        return money;
+    }
+
+    public String getRangeTotalMoneyByAccount(Date firsttime, Date lasttime,Account Account,boolean isPositive){
+        String sql;
+        if(isPositive)
+            sql = "SELECT SUM(money) money FROM account_record WHERE money > 0 AND account_id = ? AND recordtime between ? and ?";
+        else
+            sql = "SELECT SUM(money) money FROM account_record WHERE money < 0 AND account_id = ? AND recordtime between ? and ?";
+        Cursor cs = db.rawQuery(sql, new String[]{Account.getId()+"",firsttime.getTime()+"",lasttime.getTime()+""});
+        cs.moveToNext();
+        String money = cs.getString(cs.getColumnIndex("money"));
+        cs.close();
+        if(money == null) return "0.00";
         return money;
     }
 }

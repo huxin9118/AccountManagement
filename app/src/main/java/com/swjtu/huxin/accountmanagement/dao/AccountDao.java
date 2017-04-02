@@ -53,7 +53,7 @@ public class AccountDao {
             MyApplication app = MyApplication.getApplication();
             //获取指定列的索引值
             account.setId(cs.getInt(cs.getColumnIndex("id")));
-            account.setColor(cs.getInt(cs.getColumnIndex("color")));
+            account.setColor(cs.getString(cs.getColumnIndex("color")));
             account.setAccountname(cs.getString(cs.getColumnIndex("accountname")));
             account.setMoney(cs.getString(cs.getColumnIndex("money")));
             account.setType(cs.getInt(cs.getColumnIndex("type")));
@@ -69,7 +69,7 @@ public class AccountDao {
             //获取指定列的索引值
             Account account = new Account();
             account.setId(cs.getInt(cs.getColumnIndex("id")));
-            account.setColor(cs.getInt(cs.getColumnIndex("color")));
+            account.setColor(cs.getString(cs.getColumnIndex("color")));
             account.setAccountname(cs.getString(cs.getColumnIndex("accountname")));
             account.setMoney(cs.getString(cs.getColumnIndex("money")));
             account.setType(cs.getInt(cs.getColumnIndex("type")));

@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.swjtu.huxin.accountmanagement.dao.AccountRecordDao;
 import com.swjtu.huxin.accountmanagement.dao.DatabaseHelper;
+import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 
@@ -49,10 +50,10 @@ public class AccountRecordService {
         return record;
     }
 
-    public List<AccountRecord> getAccountRecordListByTime(long firsttime, long lasttime,String recordname){
+    public List<AccountRecord> getAccountRecordListByTime(long firsttime, long lasttime, String recordname, Account account){
         SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
-        List<AccountRecord> records = dao.getListByTime(firsttime,lasttime,recordname);
+        List<AccountRecord> records = dao.getListByTime(firsttime,lasttime,recordname,account);
         db.close();
         return records;
     }
@@ -104,7 +105,7 @@ public class AccountRecordService {
         return new String[]{numShouru.toString(),numZhichu.negate().toString()};
     }
 
-    public double getRangeTotalMoneyByTime(Date start, Date end,boolean isPositive){
+    public BigDecimal getRangeTotalMoneyByTime(Date start, Date end,boolean isPositive){
         long firstMilliSeconds = start.getTime();
         long lastMilliSeconds = end.getTime();
         List<String> MoneyList = getMoneyByTime(firstMilliSeconds,lastMilliSeconds);
@@ -116,12 +117,12 @@ public class AccountRecordService {
             if(!isPositive && money.doubleValue() < 0) numZhichu = numZhichu.add(money);
         }
         if(isPositive)
-            return numShouru.doubleValue();
+            return numShouru;
         else
-            return numZhichu.doubleValue();
+            return numZhichu;
     }
 
-    public List<AccountRecord> getMoneyGroupByRecordname(Date firsttime, Date lasttime,boolean isPositive){
+    public List<AccountRecord> getAccountRecordListGroupByRecordname(Date firsttime, Date lasttime,boolean isPositive){
         SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
         List<AccountRecord> records = dao.getListGroupByRecordname(firsttime,lasttime,isPositive);
@@ -129,10 +130,26 @@ public class AccountRecordService {
         return records;
     }
 
-    public String getMoneyByRecordname(Date firsttime, Date lasttime,boolean isPositive,String recordname){
+    public String getRangeTotalMoneyByRecordname(Date firsttime, Date lasttime, String recordname){
         SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
-        String money = dao.getMoneyByRecordname(firsttime,lasttime,isPositive,recordname);
+        String money = dao.getRangeTotalMoneyByRecordname(firsttime,lasttime,recordname);
+        db.close();
+        return money;
+    }
+
+    public String getTotalMoneyByAccount(Account Account){
+        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        AccountRecordDao dao = new AccountRecordDao(db);
+        String money = dao.getTotalMoneyByAccount(Account);
+        db.close();
+        return money;
+    }
+
+    public String getRangeTotalMoneyByAccount(Date firsttime, Date lasttime,Account Account,boolean isPositive){
+        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        AccountRecordDao dao = new AccountRecordDao(db);
+        String money = dao.getRangeTotalMoneyByAccount(firsttime,lasttime,Account,isPositive);
         db.close();
         return money;
     }

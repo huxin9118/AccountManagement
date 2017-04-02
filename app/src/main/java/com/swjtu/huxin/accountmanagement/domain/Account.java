@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class Account implements Serializable {
     int id;
-    int color;
+    String color;
     String accountname;
     int type;
     String money;
@@ -21,11 +21,11 @@ public class Account implements Serializable {
         this.id = id;
     }
 
-    public int getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setColor(String color) {
         this.color = color;
     }
 

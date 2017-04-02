@@ -62,7 +62,6 @@ public class ItemXmlPullParserUtils {
                 //获得下一个节点的信息
                 evtType = xp.next();
             }
-            in.close();
             return AddItems;
         } catch (Exception e) {
             throw new Exception("xml parse filed!");
@@ -102,7 +101,6 @@ public class ItemXmlPullParserUtils {
                 //获得下一个节点的信息
                 evtType = xp.next();
             }
-            in.close();
             throw new Exception("xml parse filed!");
         } catch (Exception e) {
             throw new Exception("xml parse filed!");

@@ -3,11 +3,31 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
     <color name="transparent">#00000000</color>
+
     <color name="customBlue">#2fb2e8</color>
     <color name="listBackgrount">#F0F0F0</color>
     <color name="listLine">#DDDDDDDD</color>
     <color name="colorLine">#66DDDDDD</color>
+
+    <color name="shouru">#5cc5ac</color>
+    <color name="zhichu">#2fb2e8</color>
+    <color name="jieyu">#ff6b6b</color>
+
+    <color name="account_color_0">#9361a2</color>
+    <color name="account_color_1">#ab92ed</color>
+    <color name="account_color_2">#5b7ed5</color>
+    <color name="account_color_3">#5d9cec</color>
+    <color name="account_color_4">#519ddd</color>
+    <color name="account_color_5">#2fb2e8</color>
+    <color name="account_color_6">#45bdb3</color>
+    <color name="account_color_7">#45bc80</color>
+    <color name="account_color_8">#9fbd45</color>
+    <color name="account_color_9">#f3bd5d</color>
+    <color name="account_color_10">#f3955d</color>
+    <color name="account_color_11">#ea7067</color>
+    <color name="account_color_12">#ec87bf</color>
 
     <color name="white">#FFFFFF</color> <!--白色 -->
     <color name="ivory">#FFFFF0</color> <!--象牙色 -->

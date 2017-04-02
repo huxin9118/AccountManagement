@@ -144,7 +144,7 @@ public class ChartTabSortFragment extends Fragment
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerViewAdapter = new ChartTabSortRecyclerAdapter(getContext());
-        mRecyclerViewAdapter.setCreateViewLayout(R.layout.item_recycler_sort);
+        mRecyclerViewAdapter.setCreateViewLayout(R.layout.item_recycler_chart_tab_sort);
 
         mRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener(){
             @Override
@@ -318,8 +318,8 @@ public class ChartTabSortFragment extends Fragment
 
     private void updateData(){
         AccountRecordService accountRecordService = new AccountRecordService();
-        records = accountRecordService.getMoneyGroupByRecordname(start,end,isShouru);
-        totalMoney = accountRecordService.getRangeTotalMoneyByTime(start,end,isShouru);
+        records = accountRecordService.getAccountRecordListGroupByRecordname(start,end,isShouru);
+        totalMoney = accountRecordService.getRangeTotalMoneyByTime(start,end,isShouru).doubleValue();
         if(records.size() == 0){
             empty.setVisibility(View.VISIBLE);
         }

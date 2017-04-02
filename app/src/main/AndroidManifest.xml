@@ -39,6 +39,9 @@
         <activity
             android:name=".activity.ChartDetailActivity">
         </activity>
+        <activity
+            android:name=".activity.AccountDetailActivity">
+        </activity>
     </application>
 
 </manifest>

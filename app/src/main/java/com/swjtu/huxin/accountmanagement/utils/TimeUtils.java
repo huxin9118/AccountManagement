@@ -70,6 +70,10 @@ public class TimeUtils {
         Calendar calendar = Calendar.getInstance();// 创建一个日历对象
         calendar.setTime(time);//初始化日历时间
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY,23);
+        calendar.set(Calendar.MINUTE,59);
+        calendar.set(Calendar.SECOND,59);
+        calendar.set(Calendar.MILLISECOND,calendar.getActualMaximum(Calendar.MILLISECOND));
         return calendar.getTime();
     }
 

@@ -18,11 +18,13 @@ import android.widget.TextView;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.adapter.BaseRecyclerViewAdapter;
 import com.swjtu.huxin.accountmanagement.adapter.OnItemClickListener;
+import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
 import com.swjtu.huxin.accountmanagement.utils.ItemXmlPullParserUtils;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,33 +35,35 @@ import java.util.List;
  * Created by huxin on 2017/3/19.
  */
 
-public class ChartDetailActivity extends AppCompatActivity{
+public class AccountDetailActivity extends AppCompatActivity{
     private LinearLayout background;
 
     private LinearLayout back;
-    private TextView backText;
     private TextView title;
+    private TextView setting;
 
     private ImageView left;
     private ImageView right;
-    private TextView datePicker;
+    private TextView month;
+    private TextView dateRange;
     private Date start;
     private Date end;
 
-    private TextView text;
-    private TextView money;
+    private TextView numShouru;
+    private TextView numZhichu;
+    private TextView numJieyu;
 
-    private AccountRecord record;
+    private Account account;
 
     private LinearLayout empty;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private ChartDetailRecyclerAdapter mRecyclerViewAdapter;
+    private AccountDetailRecyclerAdapter mRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chart_detail);
+        setContentView(R.layout.activity_account_detail);
         initView();
     }
 
@@ -67,7 +71,6 @@ public class ChartDetailActivity extends AppCompatActivity{
         background = (LinearLayout) findViewById(R.id.background);
 
         back = (LinearLayout) findViewById(R.id.back);
-        backText = (TextView) findViewById(R.id.back_text);
         title = (TextView) findViewById(R.id.title);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +81,13 @@ public class ChartDetailActivity extends AppCompatActivity{
 
         left = (ImageView) findViewById(R.id.date_left);
         right = (ImageView) findViewById(R.id.date_right);
-        datePicker = (TextView) findViewById(R.id.date_picker);
+        month = (TextView) findViewById(R.id.date_picker);
+        dateRange = (TextView) findViewById(R.id.date_Range);
+        start = new Date(TimeUtils.getMonthFirstMilliSeconds(TimeUtils.getTime(new Date(),TimeUtils.MONTH),0));
+        end = new Date(TimeUtils.getMonthLastMilliSeconds(TimeUtils.getTime(new Date(),TimeUtils.MONTH),0));
+        month.setText(new SimpleDateFormat("MM").format(start));
+        dateRange.setText(new SimpleDateFormat("yyyy.M.d").format(start) + "~" + new SimpleDateFormat("M.d").format(end));
+        updateDateRangeChange();
 
         left.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +95,8 @@ public class ChartDetailActivity extends AppCompatActivity{
                 start = TimeUtils.getIndexDate(start,0,-1,0);
                 end = TimeUtils.getIndexDate(end,0,-1,0);
                 end = TimeUtils.getMaxDayDate(end);
-                updateDatePickerText();
+                month.setText(new SimpleDateFormat("MM").format(start));
+                dateRange.setText(new SimpleDateFormat("yyyy.M.d").format(start) + "~" + new SimpleDateFormat("M.d").format(end));
                 updateDateRangeChange();
                 updateData();
             }
@@ -98,44 +108,31 @@ public class ChartDetailActivity extends AppCompatActivity{
                 start = TimeUtils.getIndexDate(start,0,1,0);
                 end = TimeUtils.getIndexDate(end,0,1,0);
                 end = TimeUtils.getMaxDayDate(end);
-                updateDatePickerText();
+                month.setText(new SimpleDateFormat("MM").format(start));
+                dateRange.setText(new SimpleDateFormat("yyyy.M.d").format(start) + "~" + new SimpleDateFormat("M.d").format(end));
                 updateDateRangeChange();
                 updateData();
             }
         });
 
-        text = (TextView) findViewById(R.id.text);
-        money = (TextView) findViewById(R.id.money);
-
         Intent intent = getIntent();
-        start = (Date)intent.getSerializableExtra("start");
-        end = (Date)intent.getSerializableExtra("end");
-        updateDatePickerText();
-        updateDateRangeChange();
-        backText.setText(intent.getStringExtra("back"));
-        record = (AccountRecord) intent.getSerializableExtra("record");
-        title.setText(record.getRecordname()+"明细");
-        try {
-            if (Double.parseDouble(record.getMoney()) > 0) {
-                text.setText("收入");
-                money.setText(new DecimalFormat("0.00").format(Double.parseDouble(record.getMoney())));
-                background.setBackgroundColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(this, "shouru.xml", record.getIcon())));
-            } else {
-                text.setText("支出");
-                money.setText(new DecimalFormat("0.00").format(Double.parseDouble(record.getMoney())*-1));
-                background.setBackgroundColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(this, "zhichu.xml", record.getIcon())));
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        account = (Account) intent.getSerializableExtra("account");
+        title.setText(account.getAccountname());
+        background.setBackgroundColor(Color.parseColor(account.getColor()));
+
+        numShouru = (TextView) findViewById(R.id.numShouru);
+        numZhichu = (TextView) findViewById(R.id.numZhichu);
+        numJieyu = (TextView) findViewById(R.id.numJieyu);
+        AccountRecordService accountRecordService = new AccountRecordService();
+        String totalMoney = accountRecordService.getTotalMoneyByAccount(account);
+        numJieyu.setText(new BigDecimal(account.getMoney()).add(new BigDecimal(totalMoney)).toString());
 
         empty = (LinearLayout) findViewById(R.id.empty);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerViewAdapter = new ChartDetailRecyclerAdapter(this);
+        mRecyclerViewAdapter = new AccountDetailRecyclerAdapter(this);
         initRecyclerViewData(false);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());//添加/删除item默认的动画效果
@@ -151,35 +148,7 @@ public class ChartDetailActivity extends AppCompatActivity{
                 }
             }
         });
-    }
-
-    private void updateDatePickerText(){
-        if(TimeUtils.getTime(start,TimeUtils.YEAR) != TimeUtils.getTime(end,TimeUtils.YEAR)) {
-            datePicker.setText(new SimpleDateFormat("yyyy年MM月dd日").format(start) + "~" + new SimpleDateFormat("yyyy年MM月dd日").format(end));
-        }
-        else{
-            if(TimeUtils.getTime(start,TimeUtils.YEAR) == TimeUtils.getTime(new Date(),TimeUtils.YEAR)){
-                if (TimeUtils.getTime(start, TimeUtils.MONTH) != TimeUtils.getTime(end, TimeUtils.MONTH)) {
-                    datePicker.setText(new SimpleDateFormat("MM月dd日").format(start) + "~" + new SimpleDateFormat("MM月dd日").format(end));
-                }
-                else{
-                    if (TimeUtils.getTime(start, TimeUtils.DAY) != TimeUtils.getTime(end, TimeUtils.DAY)) {
-                        datePicker.setText(new SimpleDateFormat("MM月dd日").format(start) + "~" + new SimpleDateFormat("dd日").format(end));
-                    }
-                    else{
-                        datePicker.setText(new SimpleDateFormat("MM月dd日").format(start));
-                    }
-                }
-            }
-            else {
-                if (TimeUtils.getTime(start, TimeUtils.MONTH) != TimeUtils.getTime(end, TimeUtils.MONTH)) {
-                    datePicker.setText(new SimpleDateFormat("yyyy年MM月dd日").format(start) + "~" + new SimpleDateFormat("MM月dd日").format(end));
-                }
-                else{
-                    datePicker.setText(new SimpleDateFormat("yyyy年MM月dd日").format(start) + "~" + new SimpleDateFormat("dd日").format(end));
-                }
-            }
-        }
+        updateData();
     }
 
     private void updateDateRangeChange(){
@@ -200,7 +169,7 @@ public class ChartDetailActivity extends AppCompatActivity{
             long dayFirstMilliSeconds = TimeUtils.getDateFirstMilliSeconds(time);
             long dayLastMilliSeconds = TimeUtils.getDateLastMilliSeconds(time);
             while (dayFirstMilliSeconds >= start.getTime()) {
-                records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds, dayLastMilliSeconds, record.getRecordname(),null);
+                records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds, dayLastMilliSeconds, null, account);
                 if (records.size() > 0) {//这一天有记录
                     AccountRecord recordDay = new AccountRecord();
                     recordDay.setRecordname("DAY");
@@ -218,25 +187,26 @@ public class ChartDetailActivity extends AppCompatActivity{
 
     private void updateData(){
         AccountRecordService accountRecordService = new AccountRecordService();
-        String totalMoney = accountRecordService.getRangeTotalMoneyByRecordname(start, end, record.getRecordname());
-        if("0.00".equals(totalMoney)) {
+        String shouru = accountRecordService.getRangeTotalMoneyByAccount(start,end,account,true);
+        String zhichu = accountRecordService.getRangeTotalMoneyByAccount(start,end,account,false);
+        numShouru.setText(new DecimalFormat("0.00").format(Double.valueOf(shouru)));
+        numZhichu.setText(new DecimalFormat("0.00").format(Double.valueOf(zhichu) * -1));
+        if("0.00".equals(shouru) && "0.00".equals(zhichu)) {
             empty.setVisibility(View.VISIBLE);
-            money.setText("0.00");
             initRecyclerViewData(true);
         }
         else {
             empty.setVisibility(View.GONE);
-            money.setText(new DecimalFormat("0.00").format(Double.parseDouble(totalMoney)));
             initRecyclerViewData(false);
         }
     }
 }
 
-class ChartDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
+class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
     private Context mContext;
     public final static int TYPE_DAY = 3;
 
-    public ChartDetailRecyclerAdapter(Context context) {
+    public AccountDetailRecyclerAdapter(Context context) {
         super(context);
         mContext = context;
     }
