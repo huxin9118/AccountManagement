@@ -26,6 +26,7 @@ import com.swjtu.huxin.accountmanagement.adapter.BaseRecyclerViewAdapter;
 import com.swjtu.huxin.accountmanagement.application.MyApplication;
 import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
+import com.swjtu.huxin.accountmanagement.service.AccountService;
 import com.swjtu.huxin.accountmanagement.utils.ConstantUtils;
 
 import java.math.BigDecimal;
@@ -139,6 +140,7 @@ class AccountRecyclerAdapter extends BaseRecyclerViewAdapter {
             holder.item_money.setText(new BigDecimal(account.getMoney()).add(new BigDecimal(totalMoney)).toString());
 
             holder.item_back.setCardBackgroundColor(Color.parseColor(account.getColor()));
+
             holder.item_icon.setBackgroundResource(getIconByType(account.getType()));
             holder.item_text.setText(account.getAccountname());
             holder.itemView.setOnClickListener(new View.OnClickListener() {

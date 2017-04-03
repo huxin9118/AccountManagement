@@ -24,10 +24,16 @@ import com.swjtu.huxin.accountmanagement.utils.ItemXmlPullParserUtils;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 
 import java.lang.ref.WeakReference;
+import java.text.Collator;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.Map;
+import java.util.TreeSet;
 
 /**
  * Created by huxin on 2017/2/28.
@@ -89,21 +95,25 @@ public class SplashActivity extends AppCompatActivity {
             Map<Integer, Account> accounts = new TreeMap<Integer, Account>();
             Account cash = new Account();
             cash.setAccountname("现金");
+            cash.setAccountdetail("生活费");
             cash.setColor(ConstantUtils.ACCOUNT_COLOR[5]);
             cash.setType(ConstantUtils.ACCOUNT_TYPE_CASH);
             cash.setMoney("0.00");
             Account bankcard = new Account();
             bankcard.setAccountname("储蓄卡");
+            bankcard.setAccountdetail("未知");
             bankcard.setColor(ConstantUtils.ACCOUNT_COLOR[4]);
             bankcard.setType(ConstantUtils.ACCOUNT_TYPE_BANK_CARD);
             bankcard.setMoney("0.00");
             Account creditcard = new Account();
             creditcard.setAccountname("信用卡");
+            creditcard.setAccountdetail("未知");
             creditcard.setColor(ConstantUtils.ACCOUNT_COLOR[6]);
             creditcard.setType(ConstantUtils.ACCOUNT_TYPE_CREDIT_CARD);
             creditcard.setMoney("0.00");
             Account alipay = new Account();
             alipay.setAccountname("支付宝");
+            alipay.setAccountdetail("未知");
             alipay.setColor(ConstantUtils.ACCOUNT_COLOR[3]);
             alipay.setType(ConstantUtils.ACCOUNT_TYPE_ALIPAY);
             alipay.setMoney("0.00");
@@ -121,6 +131,15 @@ public class SplashActivity extends AppCompatActivity {
             accounts.put(creditcardID,creditcard);
             accounts.put(alipayID,alipay);
             app.setAccounts(accounts);
+
+            Set<String> member = new TreeSet<String>();
+            member.add("我");
+            member.add("爸爸");
+            member.add("妈妈");
+            SharedPreferences sharedPreferences = this.getSharedPreferences("userData", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putStringSet("member",member);
+            app.setMembers(member);
         }
         else{
             Map<Integer, AccountBook> books = new TreeMap<Integer, AccountBook>();
@@ -132,6 +151,22 @@ public class SplashActivity extends AppCompatActivity {
             AccountService accountService = new AccountService();
             accounts = accountService.getAccountMap();
             app.setAccounts(accounts);
+
+            SharedPreferences sharedPreferences = this.getSharedPreferences("userData", MODE_PRIVATE);
+            Set<String> defaultMember = new TreeSet<String>();
+            defaultMember.add("我");
+            defaultMember.add("爸爸");
+            defaultMember.add("妈妈");
+            Set<String> member = sharedPreferences.getStringSet("member",defaultMember);
+            Set<String> sortMember = new TreeSet<String>(new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    Collator instance = Collator.getInstance(Locale.CHINA);
+                    return instance.compare(o1, o2);
+                }
+            });
+            sortMember.addAll(member);
+            app.setMembers(sortMember);
         }
     }
 

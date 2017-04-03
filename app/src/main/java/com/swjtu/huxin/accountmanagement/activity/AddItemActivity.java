@@ -2,6 +2,7 @@ package com.swjtu.huxin.accountmanagement.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,9 +26,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,13 +41,22 @@ import com.swjtu.huxin.accountmanagement.adapter.BaseRecyclerViewAdapter;
 import com.swjtu.huxin.accountmanagement.application.MyApplication;
 import com.swjtu.huxin.accountmanagement.adapter.OnItemClickListener;
 import com.swjtu.huxin.accountmanagement.R;
+import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.domain.AddItem;
+import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
+import com.swjtu.huxin.accountmanagement.utils.ConstantUtils;
+import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 import com.swjtu.huxin.accountmanagement.view.NumKeyboardView;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -77,6 +92,14 @@ public class AddItemActivity extends AppCompatActivity{
     private TextView btnTime;
     private Button btnRemark;
     private Button btnMember;
+    private int selectAccount;
+    private String selectMember;
+    private String remark;
+
+    private PopupWindow accountPopupWindow;
+    private PopupWindow remarkPopupWindow;
+    private PopupWindow memberPopupWindow;
+
     public static final String DATEPICKER_TAG = "datepicker";
 
     private boolean isFloatingActionButton;
@@ -146,10 +169,30 @@ public class AddItemActivity extends AppCompatActivity{
 //        });
 
         btnAccount = (TextView) findViewById(R.id.account);
+        btnAccount.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopupWindow(accountPopupWindow);
+            }
+        });
+        btnRemark = (Button) findViewById(R.id.remark);
+        btnRemark.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopupWindow(remarkPopupWindow);
+            }
+        });
+        btnMember = (Button) findViewById(R.id.member);
+        btnMember.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopupWindow(memberPopupWindow);
+            }
+        });
+
+
         btnDate = (TextView) findViewById(R.id.date);
         btnTime = (TextView) findViewById(R.id.time);
-        btnRemark = (Button) findViewById(R.id.remark);
-        btnMember = (Button) findViewById(R.id.member);
 
         dateTimeFragment = (SwitchDateTimeDialogFragment) getSupportFragmentManager().findFragmentByTag(DATEPICKER_TAG);
         if(dateTimeFragment == null) {
@@ -168,8 +211,13 @@ public class AddItemActivity extends AppCompatActivity{
         dateTimeFragment.setOnButtonClickListener(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
             @Override
             public void onPositiveButtonClick(Date date) {
-                timeAddItem = date;
-                updateBtnTime(date);
+                if(date.getTime() > new Date().getTime()){
+                    showToast("不能选取未来的时间哦~~",Toast.LENGTH_SHORT);
+                }
+                else {
+                    timeAddItem = date;
+                    updateBtnDateAndTime(date);
+                }
             }
 
             @Override
@@ -180,6 +228,11 @@ public class AddItemActivity extends AppCompatActivity{
         btnDate.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                dateTimeFragment.setDefaultYear(TimeUtils.getTime(timeAddItem,TimeUtils.YEAR));
+                dateTimeFragment.setDefaultMonth(TimeUtils.getTime(timeAddItem,TimeUtils.MONTH)-1);
+                dateTimeFragment.setDefaultDay(TimeUtils.getTime(timeAddItem,TimeUtils.DAY));
+                dateTimeFragment.setDefaultHourOfDay(TimeUtils.getTime(timeAddItem,TimeUtils.HOUR));
+                dateTimeFragment.setDefaultMinute(TimeUtils.getTime(timeAddItem,TimeUtils.MINUTE));
                 dateTimeFragment.startAtCalendarView();
                 dateTimeFragment.show(getSupportFragmentManager(), DATEPICKER_TAG);
             }
@@ -188,6 +241,11 @@ public class AddItemActivity extends AppCompatActivity{
         btnTime.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                dateTimeFragment.setDefaultYear(TimeUtils.getTime(timeAddItem,TimeUtils.YEAR));
+                dateTimeFragment.setDefaultMonth(TimeUtils.getTime(timeAddItem,TimeUtils.MONTH));
+                dateTimeFragment.setDefaultDay(TimeUtils.getTime(timeAddItem,TimeUtils.DAY));
+                dateTimeFragment.setDefaultHourOfDay(TimeUtils.getTime(timeAddItem,TimeUtils.HOUR));
+                dateTimeFragment.setDefaultMinute(TimeUtils.getTime(timeAddItem,TimeUtils.MINUTE));
                 dateTimeFragment.startAtTimeView();
                 dateTimeFragment.show(getSupportFragmentManager(), DATEPICKER_TAG);
             }
@@ -228,19 +286,56 @@ public class AddItemActivity extends AppCompatActivity{
                 ItemChange(1);
             }
             timeAddItem = new Date(editRecord.getRecordtime());
-            updateBtnTime(timeAddItem);
+            updateBtnDateAndTime(timeAddItem);
+            Account account = editRecord.getAccount();
+            btnAccount.setText(account.getAccountname());
+            selectAccount = account.getId();
+
+            selectMember = editRecord.getMember();
+            remark = editRecord.getRemark();
+            updateBtnMember();
+            updateBtnMember();
         }
         else {
             timeAddItem = new Date();
-            updateBtnTime(timeAddItem);
+            updateBtnDateAndTime(timeAddItem);
+
+            SharedPreferences sharedPreferences = this.getSharedPreferences("userData", MODE_PRIVATE);
+            selectAccount = sharedPreferences.getInt("defaultAccount", 1);
+            MyApplication app = MyApplication.getApplication();
+            Account account = app.getAccounts().get(selectAccount);
+            btnAccount.setText(account.getAccountname());
+
+            selectMember = "";
+            remark = "";
+            updateBtnMember();
+            updateBtnRemark();
+
             btnZhichu.performClick();//默认点击
         }
+        dateTimeFragment.setDefaultDateTime(timeAddItem);
+        initAccountPopupWindow();
+        initMemberPopupWindow();
+        initRemarkPopupWindow();
     }
 
-    void updateBtnTime(Date time){
+    private void updateBtnDateAndTime(Date time){
         btnDate.setText(new SimpleDateFormat("yy年MM月dd日").format(time));
         btnTime.setText(new SimpleDateFormat("HH:mm").format(time));
-        dateTimeFragment.setDefaultDateTime(time);
+    }
+
+    private void updateBtnMember(){
+        if("".equals(selectMember))
+            btnMember.setBackgroundResource(R.drawable.ic_chengyuan);
+        else
+            btnMember.setBackgroundResource(R.drawable.ic_chengyuan_blue);
+    }
+
+    private void updateBtnRemark(){
+        if("".equals(remark))
+            btnRemark.setBackgroundResource(R.drawable.ic_beizhu);
+        else
+            btnRemark.setBackgroundResource(R.drawable.ic_beizhu_blue);
     }
 
     private OnClickListener mTabClickListener = new OnClickListener() {
@@ -370,9 +465,10 @@ public class AddItemActivity extends AppCompatActivity{
                             record.setMoney("-" + numAddItem.getText().toString());
                         }
                         record.setRecordtime(timeAddItem.getTime());
-                        record.setRemark("");
+                        record.setRemark(remark);
+                        record.setMember(selectMember);
                         MyApplication app = MyApplication.getApplication();
-                        record.setAccount(app.getAccounts().get(1));
+                        record.setAccount(app.getAccounts().get(selectAccount));
                         record.setAccountbook(app.getAccountBooks().get(1));
 
                         Log.i("3: ",record.toString());
@@ -391,6 +487,169 @@ public class AddItemActivity extends AppCompatActivity{
             numAddItem.setText(amount);
         }
     };
+
+    //一定要在selectAccount完成初始化后再调用该方法
+    private void initAccountPopupWindow() {
+        View contentView = LayoutInflater.from(AddItemActivity.this).inflate(R.layout.popupwindow_account, null);
+        accountPopupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+        //设置各个控件的点击响应
+        ListView list = (ListView)contentView.findViewById(R.id.list);
+
+        AccountRecordService accountRecordService = new AccountRecordService();
+        MyApplication app = MyApplication.getApplication();
+        final List<Account> accounts = new ArrayList<Account>(app.getAccounts().values());
+        final List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+        for(int i = 0; i < accounts.size(); i++) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("item_icon", getIconByType(accounts.get(i).getType()));
+            map.put("item_text", accounts.get(i).getAccountname());
+            String totalMoney = accountRecordService.getTotalMoneyByAccount(accounts.get(i));
+            map.put("item_money", new BigDecimal(accounts.get(i).getMoney()).add(new BigDecimal(totalMoney)).toString());
+            Log.i("111", selectAccount+"=="+i);
+            if(selectAccount == accounts.get(i).getId())
+                map.put("item_selector", R.drawable.ic_selector_blue);
+            else
+                map.put("item_selector", null);
+            data.add(map);
+        }
+
+        final SimpleAdapter simpleAdapter = new SimpleAdapter(this, data, R.layout.item_list_account,
+                new String[]{"item_icon", "item_text","item_money","item_selector"}, new int[]{R.id.item_icon,
+                R.id.item_text,R.id.item_money,R.id.item_selector});
+        list.setAdapter(simpleAdapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                for(int i = 0; i < data.size(); i++) {
+                    if(position == i)
+                        data.get(i).put("item_selector", R.drawable.ic_selector_blue);
+                    else
+                        data.get(i).put("item_selector", null);
+                }
+                simpleAdapter.notifyDataSetChanged();
+                accountPopupWindow.dismiss();
+
+                selectAccount = accounts.get(position).getId();
+                SharedPreferences sharedPreferences = getSharedPreferences("userData", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("defaultAccount",selectAccount);
+                editor.apply();
+                btnAccount.setText(accounts.get(position).getAccountname());
+            }
+        });
+
+        list.setDivider(null);//去除分割线
+
+        View outOfWindow = (View)contentView.findViewById(R.id.outof_popup_window);
+        outOfWindow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                accountPopupWindow.dismiss();
+            }
+        });
+    }
+    private void initMemberPopupWindow() {
+        View contentView = LayoutInflater.from(AddItemActivity.this).inflate(R.layout.popupwindow_member, null);
+        memberPopupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+        //设置各个控件的点击响应
+        ListView list = (ListView)contentView.findViewById(R.id.list);
+
+        AccountRecordService accountRecordService = new AccountRecordService();
+        MyApplication app = MyApplication.getApplication();
+        final List<String> members = new ArrayList<String>(app.getMembers());
+        final List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+        for(int i = 0; i < members.size(); i++) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("item_text", members.get(i));
+            if(editRecord != null && editRecord.getMember().equals(members.get(i)))
+                map.put("item_selector", R.drawable.ic_selector_blue);
+            else
+                map.put("item_selector", null);
+            data.add(map);
+        }
+
+        final SimpleAdapter simpleAdapter = new SimpleAdapter(this, data, R.layout.item_list_member,
+                new String[]{"item_text","item_selector"}, new int[]{R.id.item_text,R.id.item_selector});
+        list.setAdapter(simpleAdapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(selectMember.equals(members.get(position))){
+                    data.get(position).put("item_selector", null);
+                    selectMember = "";
+                }
+                else {
+                    for (int i = 0; i < data.size(); i++) {
+                        if (position == i)
+                            data.get(i).put("item_selector", R.drawable.ic_selector_blue);
+                        else
+                            data.get(i).put("item_selector", null);
+                    }
+                    selectMember = members.get(position);
+                }
+                simpleAdapter.notifyDataSetChanged();
+                memberPopupWindow.dismiss();
+
+                updateBtnMember();
+            }
+        });
+
+        list.setDivider(null);//去除分割线
+
+        View outOfWindow = (View)contentView.findViewById(R.id.outof_popup_window);
+        outOfWindow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                memberPopupWindow.dismiss();
+            }
+        });
+    }
+    private void initRemarkPopupWindow() {
+        View contentView = LayoutInflater.from(AddItemActivity.this).inflate(R.layout.popupwindow_remark, null);
+        remarkPopupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+        //设置各个控件的点击响应
+        final EditText editText =  (EditText)contentView.findViewById(R.id.editText);
+        ImageView close =  (ImageView)contentView.findViewById(R.id.close);
+        ImageView ok =  (ImageView)contentView.findViewById(R.id.ok);
+        close.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                remarkPopupWindow.dismiss();
+            }
+        });
+        ok.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                remark = editText.getText().toString();
+            }
+        });
+
+        View outOfWindow = (View)contentView.findViewById(R.id.outof_popup_window);
+        outOfWindow.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                remarkPopupWindow.dismiss();
+            }
+        });
+    }
+
+    private void showPopupWindow(PopupWindow popupWindow) {
+        View rootview = LayoutInflater.from(AddItemActivity.this).inflate(R.layout.activity_additem, null);
+        popupWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
+    }
+
+    private int getIconByType(int type){
+        switch (type) {
+            case ConstantUtils.ACCOUNT_TYPE_CASH:return R.drawable.ic_cash_gray;
+            case ConstantUtils.ACCOUNT_TYPE_BANK_CARD:return R.drawable.ic_bank_card_gray;
+            case ConstantUtils.ACCOUNT_TYPE_CREDIT_CARD:return R.drawable.ic_credit_card_gray;
+            case ConstantUtils.ACCOUNT_TYPE_ALIPAY:return R.drawable.ic_alipay_gray;
+            default:return -1;
+        }
+    }
+
 
     /**
      * 显示Toast，解决重复弹出问题
@@ -419,9 +678,13 @@ public class AddItemActivity extends AppCompatActivity{
         super.onBackPressed();
     }
 
+    /**
+     * edit记录初始化Tab分页时调用
+     * @param position 当前分页数（收入 | 支出）
+     */
     public void ItemChange(int position){
         this.tabPosition = position; //改变分页位置标记
-        this.indexAddItem = -1;//初始化当前选取的项目数
+        this.indexAddItem = -1;//edit记录时将其特殊化为-1，表示未修改过记录
         if(position == 0){
             btnShouru.setTextColor(getResources().getColor(R.color.customBlue));
             btnZhichu.setTextColor(getResources().getColor(R.color.darkgray));
@@ -433,7 +696,7 @@ public class AddItemActivity extends AppCompatActivity{
     }
 
     /**
-     *
+     * 改变tab分页时调用
      * @param Text 标题栏文字
      * @param icon 标题栏ICON的资源id
      * @param position 当前分页数（收入 | 支出）
@@ -454,7 +717,7 @@ public class AddItemActivity extends AppCompatActivity{
         }
     }
     /**
-     *
+     * 选择AddItem项目时调用
      * @param Text 标题栏文字
      * @param icon 标题栏ICON的资源id
      */

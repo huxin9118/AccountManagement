@@ -45,15 +45,14 @@
                 android:textColor="@color/white"
                 android:layout_centerInParent="true" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/setting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="设置"
-                android:textSize="18sp"
-                android:textColor="@color/white"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@drawable/ic_shezhi_white"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true" />
+
 
         </RelativeLayout>
 

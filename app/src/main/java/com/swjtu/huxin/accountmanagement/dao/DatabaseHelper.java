@@ -20,13 +20,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "remark VARCHAR(255) NOT NULL,"+
                 "account_id INTEGER NOT NULL,"+
                 "accountbook_id INTEGER NOT NULL,"+
-                "member VARCHAR(20) DEFAULT '我',"+
+                "member VARCHAR(20) NOT NULL,"+
                 "recordtime TIMESTAMP NOT NULL)";
     private static final String ACCOUNT =
             "create table account ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT,"+
                 "color VARCHAR(10) NOT NULL,"+
                 "accountname VARCHAR(20) NOT NULL,"+
+                "accountdetail VARCHAR(50) NOT NULL,"+
                 "type INTEGER NOT NULL,"+
                 "money VARCHAR(20) NOT NULL)";
 

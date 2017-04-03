@@ -10,6 +10,7 @@ public class Account implements Serializable {
     int id;
     String color;
     String accountname;
+    String accountdetail;
     int type;
     String money;
 
@@ -35,6 +36,14 @@ public class Account implements Serializable {
 
     public void setAccountname(String accountname) {
         this.accountname = accountname;
+    }
+
+    public String getAccountdetail() {
+        return accountdetail;
+    }
+
+    public void setAccountdetail(String accountdetail) {
+        this.accountdetail = accountdetail;
     }
 
     public int getType() {

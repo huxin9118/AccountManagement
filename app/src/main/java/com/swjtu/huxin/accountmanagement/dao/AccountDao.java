@@ -25,6 +25,7 @@ public class AccountDao {
         ContentValues cv = new ContentValues();
         cv.put("color", account.getColor());
         cv.put("accountname", account.getAccountname());
+        cv.put("accountdetail", account.getAccountdetail());
         cv.put("money", account.getMoney());
         cv.put("type", account.getType());
         //返回值是改行的主键，如果出错返回-1
@@ -36,6 +37,7 @@ public class AccountDao {
         ContentValues cv = new ContentValues();
         cv.put("color", account.getColor());
         cv.put("accountname", account.getAccountname());
+        cv.put("accountdetail", account.getAccountdetail());
         cv.put("money", account.getMoney());
         //返回值是影响的行数
         return db.update("account", cv,"id = ?", new String[]{account.getId()+""});
@@ -55,6 +57,7 @@ public class AccountDao {
             account.setId(cs.getInt(cs.getColumnIndex("id")));
             account.setColor(cs.getString(cs.getColumnIndex("color")));
             account.setAccountname(cs.getString(cs.getColumnIndex("accountname")));
+            account.setAccountdetail(cs.getString(cs.getColumnIndex("accountdetail")));
             account.setMoney(cs.getString(cs.getColumnIndex("money")));
             account.setType(cs.getInt(cs.getColumnIndex("type")));
         }
@@ -71,6 +74,7 @@ public class AccountDao {
             account.setId(cs.getInt(cs.getColumnIndex("id")));
             account.setColor(cs.getString(cs.getColumnIndex("color")));
             account.setAccountname(cs.getString(cs.getColumnIndex("accountname")));
+            account.setAccountdetail(cs.getString(cs.getColumnIndex("accountdetail")));
             account.setMoney(cs.getString(cs.getColumnIndex("money")));
             account.setType(cs.getInt(cs.getColumnIndex("type")));
             accounts.put(cs.getInt(cs.getColumnIndex("id")), account);

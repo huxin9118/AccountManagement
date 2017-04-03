@@ -40,7 +40,7 @@ public class AccountDetailActivity extends AppCompatActivity{
 
     private LinearLayout back;
     private TextView title;
-    private TextView setting;
+    private ImageView setting;
 
     private ImageView left;
     private ImageView right;
@@ -76,6 +76,13 @@ public class AccountDetailActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 finish();
+            }
+        });
+        setting = (ImageView) findViewById(R.id.setting);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
 

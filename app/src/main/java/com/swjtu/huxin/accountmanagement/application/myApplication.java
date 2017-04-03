@@ -9,6 +9,7 @@ import com.swjtu.huxin.accountmanagement.domain.AddItem;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by huxin on 2017/2/28.
@@ -21,6 +22,7 @@ public class MyApplication extends Application{
     private ArrayList<AddItem> zhichuAddItems;
     private Map<Integer,Account> accounts;
     private Map<Integer,AccountBook> accountBooks;
+    private Set<String> members;
     private int screenHeight;
     private int screenWidth;
 
@@ -69,6 +71,14 @@ public class MyApplication extends Application{
 
     public void setAccountBooks(Map<Integer, AccountBook> accountBooks) {
         this.accountBooks = accountBooks;
+    }
+
+    public Set<String> getMembers() {
+        return members;
+    }
+
+    public void setMembers(Set<String> members) {
+        this.members = members;
     }
 
     public int getScreenHeight() {
