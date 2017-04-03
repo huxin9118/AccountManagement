@@ -294,7 +294,7 @@ public class AddItemActivity extends AppCompatActivity{
             selectMember = editRecord.getMember();
             remark = editRecord.getRemark();
             updateBtnMember();
-            updateBtnMember();
+            updateBtnRemark();
         }
         else {
             timeAddItem = new Date();
@@ -611,18 +611,23 @@ public class AddItemActivity extends AppCompatActivity{
         remarkPopupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
         //设置各个控件的点击响应
         final EditText editText =  (EditText)contentView.findViewById(R.id.editText);
+        editText.setText(remark);
+        editText.setSelection(remark.length());
         ImageView close =  (ImageView)contentView.findViewById(R.id.close);
         ImageView ok =  (ImageView)contentView.findViewById(R.id.ok);
         close.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 remarkPopupWindow.dismiss();
+                updateBtnRemark();
             }
         });
         ok.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                remark = editText.getText().toString();
+                remark = editText.getText().toString().trim();
+                remarkPopupWindow.dismiss();
+                updateBtnRemark();
             }
         });
 

@@ -593,9 +593,13 @@ class DetailRecyclerAdapter extends BaseRecyclerViewAdapter{
             if (num.doubleValue() > 0) {//收入
                 holder.item_left.setText(num + " " + ((AccountRecord) mDatas.get("records").get(pos)).getRecordname());
                 holder.item_right.setText("");
+                holder.item_remark_left.setText(((AccountRecord) mDatas.get("records").get(pos)).getRemark());
+                holder.item_remark_right.setText("");
             } else {
                 holder.item_left.setText("");
                 holder.item_right.setText(((AccountRecord) mDatas.get("records").get(pos)).getRecordname() + " " + num.negate());
+                holder.item_remark_left.setText("");
+                holder.item_remark_right.setText(((AccountRecord) mDatas.get("records").get(pos)).getRemark());
             }
             int resID = mContent.getResources().getIdentifier(((AccountRecord) mDatas.get("records").get(pos)).getIcon(), "drawable", mContent.getPackageName());
             holder.item_icon.setBackgroundResource(resID);
@@ -693,6 +697,8 @@ class DetailRecyclerAdapter extends BaseRecyclerViewAdapter{
     static class Holder extends RecyclerView.ViewHolder {
         public TextView item_left;
         public TextView item_right;
+        public TextView item_remark_left;
+        public TextView item_remark_right;
         public ImageView item_icon;
         public ImageView item_delete;
         public ImageView item_edit;
@@ -706,6 +712,8 @@ class DetailRecyclerAdapter extends BaseRecyclerViewAdapter{
                 item_icon = (ImageView) itemView.findViewById(R.id.item_icon);
                 item_delete = (ImageView) itemView.findViewById(R.id.item_delete);
                 item_edit = (ImageView) itemView.findViewById(R.id.item_edit);
+                item_remark_left = (TextView) itemView.findViewById(R.id.item_remark_left);
+                item_remark_right = (TextView) itemView.findViewById(R.id.item_remark_right);
             }
             if(viewType == TYPE_DAY) {
                 item_left = (TextView) itemView.findViewById(R.id.item_left);
