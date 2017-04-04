@@ -24,6 +24,7 @@ import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.utils.ConstantUtils;
 import com.swjtu.huxin.accountmanagement.view.NumKeyboardView;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /**
@@ -53,6 +54,7 @@ public class AccountSettingActivity extends BaseAppCompatActivity {
     private Animation exitAnim;
     private LinearLayout keyNumBoard;
     private TextView keyNum;
+    private TextView keySymbol;
     private LinearLayout keyTextBoard;
     private TextView keyLabel;
     private EditText keyText;
@@ -112,6 +114,8 @@ public class AccountSettingActivity extends BaseAppCompatActivity {
         title.setText(getTypeTextByType(account.getType()));
 
         keyNum = (TextView) findViewById(R.id.key_num);
+        keySymbol = (TextView) findViewById(R.id.key_symbol);
+        keySymbol.setVisibility(View.GONE);
         keyNumBoard = (LinearLayout)findViewById(R.id.key_num_board);
         numKeyboardView = (NumKeyboardView) findViewById(R.id.numKeyboardView);
         keyNumBoard.setVisibility(View.GONE);
@@ -178,6 +182,7 @@ public class AccountSettingActivity extends BaseAppCompatActivity {
                                     keyTextBoard.setVisibility(View.GONE);
                                 }
                                 textName.setText(v.getText());
+                                account.setAccountname(v.getText().toString());
                                 return true;
                             }
                             return false;
@@ -226,6 +231,7 @@ public class AccountSettingActivity extends BaseAppCompatActivity {
                                     keyTextBoard.setVisibility(View.GONE);
                                 }
                                 textDetail2.setText(v.getText());
+                                account.setAccountdetail(v.getText().toString());
                                 return true;
                             }
                             return false;
@@ -289,49 +295,96 @@ public class AccountSettingActivity extends BaseAppCompatActivity {
     private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         private boolean isInteger = true;//是否输入整数
         private int numDecimal = 0;//已输入的小数位数
-
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            String amount = keyNum.getText().toString().trim();
+            String amount;
+            if(numKeyboardView.isZero()) {
+                amount = "0.00";
+                numKeyboardView.setZero(false);
+            }
+            else {
+                amount = keyNum.getText().toString().trim();
+            }
             if (position < 14 && position != 3 && position != 7 && position != 11 && position != 12) {    //点击0~9按钮
-                if (isInteger) {
-                    if (amount.charAt(0) == '0') {
+                if(isInteger) {
+                    if(amount.charAt(0) == '0'){
                         amount = valueList.get(position) + amount.substring(1);
-                    } else {
-                        amount = amount.substring(0, amount.length() - 3) + valueList.get(position) + amount.substring(amount.length() - 3);
                     }
-                } else {
-                    if (numDecimal == 0) {
-                        amount = amount.substring(0, amount.length() - 2) + valueList.get(position) + "0";
+                    else{
+                        amount = amount.substring(0,amount.length()-3) + valueList.get(position) + amount.substring(amount.length()-3);
+                    }
+                }
+                else{
+                    if(numDecimal == 0){
+                        amount = amount.substring(0,amount.length()-2) + valueList.get(position) + "0";
                         numDecimal++;
-                    } else if (numDecimal == 1) {
-                        amount = amount.substring(0, amount.length() - 1) + valueList.get(position);
+                    }
+                    else if(numDecimal == 1){
+                        amount = amount.substring(0,amount.length()-1) + valueList.get(position);
                         numDecimal++;
                     }
                 }
-            } else {
+            }
+            else {
+                if (position == 7) {      //点击+
+                    if(numKeyboardView.isAddSymbol()){
+                        keySymbol.setVisibility(View.GONE);
+                        numKeyboardView.changeBtnOK();
+                        numKeyboardView.setAddSymbol(false);
+                        numKeyboardView.setZero(false);
+                    }
+                    else {
+                        keySymbol.setText("+");
+                        keySymbol.setVisibility(View.VISIBLE);
+                        numKeyboardView.changeBtnEqual();
+                        numKeyboardView.setAddSymbol(true);
+                        numKeyboardView.setZero(true);
+                        numKeyboardView.setOldAmount(amount);
+                    }
+                    return;
+                }
+                if (position == 11) {      //点击—
+                    if(numKeyboardView.isSubtractSymbol()){
+                        keySymbol.setVisibility(View.GONE);
+                        numKeyboardView.changeBtnOK();
+                        numKeyboardView.setSubtractSymbol(false);
+                        numKeyboardView.setZero(false);
+                    }
+                    else {
+                        keySymbol.setText("-");
+                        keySymbol.setVisibility(View.VISIBLE);
+                        numKeyboardView.changeBtnEqual();
+                        numKeyboardView.setSubtractSymbol(true);
+                        numKeyboardView.setZero(true);
+                        numKeyboardView.setOldAmount(amount);
+                    }
+                    return;
+                }
                 if (position == 14) {      //点击小数点
-                    isInteger = isInteger == true ? false : true;
+                    isInteger = isInteger==true?false:true;
                 }
                 if (position == 3) {      //点击退格键
-                    if (isInteger) {
-                        if (amount.charAt(0) != '0') {
+                    if(isInteger){
+                        if(amount.charAt(0) != '0'){
                             amount = amount.substring(0, amount.length() - 4) + amount.substring(amount.length() - 3);
                         }
-                        if (amount.length() == 3) {
-                            amount = "0" + amount;
+                        if(amount.length() == 3){
+                            amount = "0"+amount;
                         }
-                        if (amount.length() == 4 && amount.charAt(0) == '0' && numDecimal != 0) {
+                        if(amount.length() == 4 && amount.charAt(0) == '0' && numDecimal != 0){
                             isInteger = false;
                         }
-                    } else {
+                    }
+                    else{
                         if (numDecimal == 0) {
                             isInteger = true;
-                        } else if (numDecimal == 1) {
-                            amount = amount.substring(0, amount.length() - 2) + "00";
+                        }
+                        else if(numDecimal == 1){
+                            amount = amount.substring(0,amount.length()-2) + "00";
                             numDecimal--;
-                        } else if (numDecimal == 2) {
-                            amount = amount.substring(0, amount.length() - 1) + "0";
+                        }
+                        else if(numDecimal == 2){
+                            amount = amount.substring(0,amount.length()-1) + "0";
                             numDecimal--;
                         }
                     }
@@ -340,10 +393,24 @@ public class AccountSettingActivity extends BaseAppCompatActivity {
                     amount = "0.00";
                 }
                 if (position == 15) {      //点击确定
-                    textMoney.setText(keyNum.getText());
-                    account.setMoney(keyNum.getText().toString());
-                    keyNumBoard.startAnimation(exitAnim);
-                    keyNumBoard.setVisibility(View.GONE);
+                    if(numKeyboardView.isAddSymbol()){
+                        amount = (new BigDecimal(numKeyboardView.getOldAmount()).add(new BigDecimal(amount))).toString();
+                        keySymbol.setVisibility(View.GONE);
+                        numKeyboardView.changeBtnOK();
+                        numKeyboardView.setAddSymbol(false);
+                    }
+                    else if(numKeyboardView.isSubtractSymbol()){
+                        amount = (new BigDecimal(numKeyboardView.getOldAmount()).subtract(new BigDecimal(amount))).toString();
+                        keySymbol.setVisibility(View.GONE);
+                        numKeyboardView.changeBtnOK();
+                        numKeyboardView.setSubtractSymbol(false);
+                    }
+                    else {
+                        textMoney.setText(keyNum.getText());
+                        account.setMoney(keyNum.getText().toString());
+                        keyNumBoard.startAnimation(exitAnim);
+                        keyNumBoard.setVisibility(View.GONE);
+                    }
                 }
             }
             keyNum.setText(amount);

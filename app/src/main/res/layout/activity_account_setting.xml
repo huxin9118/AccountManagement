@@ -350,6 +350,17 @@
                 android:textSize="20sp"
                 android:textColor="@color/gray"
                 android:text="0.00"/>
+            <TextView
+                android:id="@+id/key_symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/key_num"
+                android:inputType="numberDecimal"
+                android:textSize="20sp"
+                android:textColor="@color/darkgray"
+                android:text="+"/>
         </RelativeLayout>
 
 

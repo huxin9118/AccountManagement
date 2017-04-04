@@ -28,9 +28,12 @@ public class NumKeyboardView extends RelativeLayout {
     private GridView gridView;    //用GrideView布局键盘，其实并不是真正的键盘，只是模拟键盘的功能
 
     private ArrayList<String> valueList;    //因为要用Adapter中适配，用数组不能往adapter中填充
+    private KeyBoardAdapter keyBoardAdapter;
 
-//    private ImageView imgBack;
-
+    private String oldAmount;
+    private boolean isAddSymbol;
+    private boolean isSubtractSymbol;
+    private boolean isZero;
 
     public NumKeyboardView(Context context) {
         this(context, null);
@@ -73,18 +76,60 @@ public class NumKeyboardView extends RelativeLayout {
         return gridView;
     }
 
-    private void setupView() {
+    public void changeBtnOK(){
+        keyBoardAdapter.changeBtnOK();
+    }
 
-        KeyBoardAdapter keyBoardAdapter = new KeyBoardAdapter(context, valueList);
+    public void changeBtnEqual(){
+        keyBoardAdapter.changeBtnEqual();
+    }
+
+    public String getBtnText(){
+        return keyBoardAdapter.getBtnText();
+    }
+
+    private void setupView() {
+        keyBoardAdapter = new KeyBoardAdapter(context, valueList);
         gridView.setAdapter(keyBoardAdapter);
+    }
+
+    public String getOldAmount() {
+        return oldAmount;
+    }
+
+    public void setOldAmount(String oldAmount) {
+        this.oldAmount = oldAmount;
+    }
+
+    public boolean isAddSymbol() {
+        return isAddSymbol;
+    }
+
+    public void setAddSymbol(boolean addSymbol) {
+        isAddSymbol = addSymbol;
+    }
+
+    public boolean isSubtractSymbol() {
+        return isSubtractSymbol;
+    }
+
+    public void setSubtractSymbol(boolean subtractSymbol) {
+        isSubtractSymbol = subtractSymbol;
+    }
+
+    public boolean isZero() {
+        return isZero;
+    }
+
+    public void setZero(boolean zero) {
+        isZero = zero;
     }
 }
 
 class KeyBoardAdapter extends BaseAdapter {
-
-
     private Context mContext;
     private ArrayList<String> valueList;
+    private TextView ok;
 
     public KeyBoardAdapter(Context mContext, ArrayList<String> valueList) {
         this.mContext = mContext;
@@ -131,6 +176,7 @@ class KeyBoardAdapter extends BaseAdapter {
             viewHolder.btnKey.setVisibility(View.VISIBLE);
             viewHolder.btnKey.setText(valueList.get(position));
             viewHolder.btnKey.setBackgroundColor(Color.parseColor("#e0e0e0"));
+            if(position == 15)ok = viewHolder.btnKey;
         }
         else {
             viewHolder.imgDelete.setVisibility(View.INVISIBLE);
@@ -139,6 +185,19 @@ class KeyBoardAdapter extends BaseAdapter {
         }
         return convertView;
     }
+
+    public void changeBtnOK(){
+        ok.setText("确定");
+    }
+
+    public void changeBtnEqual(){
+        ok.setText("=");
+    }
+
+    public String getBtnText(){
+        return ok.getText().toString();
+    }
+
 
     /**
      * 存放控件

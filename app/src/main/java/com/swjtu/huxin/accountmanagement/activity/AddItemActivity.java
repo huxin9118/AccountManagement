@@ -73,6 +73,7 @@ public class AddItemActivity extends BaseAppCompatActivity {
     private TextView nameAddItem;
     private ImageView iconAddItem;
     private TextView numAddItem;
+    private TextView symbolAddItem;
     private LinearLayout keyboard;
     private NumKeyboardView numKeyboardView;
     private GridView gridView;
@@ -156,6 +157,8 @@ public class AddItemActivity extends BaseAppCompatActivity {
         nameAddItem = (TextView)findViewById(R.id.item_str);
         iconAddItem = (ImageView) findViewById(R.id.item_icon);
         numAddItem = (TextView) findViewById(R.id.item_num);
+        symbolAddItem = (TextView) findViewById(R.id.item_symbol);
+        symbolAddItem.setVisibility(View.GONE);
 
         keyboard = (LinearLayout)findViewById(R.id.keybord);
         numKeyboardView = (NumKeyboardView) findViewById(R.id.numKeyboardView);
@@ -386,7 +389,14 @@ public class AddItemActivity extends BaseAppCompatActivity {
         private int numDecimal = 0;//已输入的小数位数
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            String amount = numAddItem.getText().toString().trim();
+            String amount;
+            if(numKeyboardView.isZero()) {
+                amount = "0.00";
+                numKeyboardView.setZero(false);
+            }
+            else {
+                amount = numAddItem.getText().toString().trim();
+            }
             if (position < 14 && position != 3 && position != 7 && position != 11 && position != 12) {    //点击0~9按钮
                 if(isInteger) {
                     if(amount.charAt(0) == '0'){
@@ -408,6 +418,40 @@ public class AddItemActivity extends BaseAppCompatActivity {
                 }
             }
             else {
+                if (position == 7) {      //点击+
+                    if(numKeyboardView.isAddSymbol()){
+                        symbolAddItem.setVisibility(View.GONE);
+                        numKeyboardView.changeBtnOK();
+                        numKeyboardView.setAddSymbol(false);
+                        numKeyboardView.setZero(false);
+                    }
+                    else {
+                        symbolAddItem.setText("+");
+                        symbolAddItem.setVisibility(View.VISIBLE);
+                        numKeyboardView.changeBtnEqual();
+                        numKeyboardView.setAddSymbol(true);
+                        numKeyboardView.setZero(true);
+                        numKeyboardView.setOldAmount(amount);
+                    }
+                    return;
+                }
+                if (position == 11) {      //点击—
+                    if(numKeyboardView.isSubtractSymbol()){
+                        symbolAddItem.setVisibility(View.GONE);
+                        numKeyboardView.changeBtnOK();
+                        numKeyboardView.setSubtractSymbol(false);
+                        numKeyboardView.setZero(false);
+                    }
+                    else {
+                        symbolAddItem.setText("-");
+                        symbolAddItem.setVisibility(View.VISIBLE);
+                        numKeyboardView.changeBtnEqual();
+                        numKeyboardView.setSubtractSymbol(true);
+                        numKeyboardView.setZero(true);
+                        numKeyboardView.setOldAmount(amount);
+                    }
+                    return;
+                }
                 if (position == 14) {      //点击小数点
                     isInteger = isInteger==true?false:true;
                 }
@@ -441,47 +485,59 @@ public class AddItemActivity extends BaseAppCompatActivity {
                     amount = "0.00";
                 }
                 if (position == 15) {      //点击确定
-                    if(!"0.00".equals(numAddItem.getText().toString())) {
-                        AccountRecord record;
-                        if(editRecord != null)record = editRecord;
-                        else record = new AccountRecord();
-
-                        if(indexAddItem != -1){//编辑项目改变了Icon和Recordname
-                            MyApplication app = MyApplication.getApplication();
-                            ArrayList<AddItem> shouruAddItems = app.getShouruAddItems();
-                            ArrayList<AddItem> zhichuAddItems = app.getZhichuAddItems();
-                            if (tabPosition == 0) {//存储收入记录
-                                record.setIcon(shouruAddItems.get(indexAddItem).getIconAddItem());
-                                record.setRecordname(shouruAddItems.get(indexAddItem).getNameAddItem());
-                            }
-                            else{
-                                record.setIcon(zhichuAddItems.get(indexAddItem).getIconAddItem());
-                                record.setRecordname(zhichuAddItems.get(indexAddItem).getNameAddItem());
-                            }
-                        }
-
-                        if (tabPosition == 0) {
-                            record.setMoney(numAddItem.getText().toString());
-                        } else {
-                            record.setMoney("-" + numAddItem.getText().toString());
-                        }
-                        record.setRecordtime(timeAddItem.getTime());
-                        record.setRemark(remark);
-                        record.setMember(selectMember);
-                        MyApplication app = MyApplication.getApplication();
-                        record.setAccount(app.getAccounts().get(selectAccount));
-                        record.setAccountbook(app.getAccountBooks().get(1));
-
-                        Log.i("3: ",record.toString());
-
-                        Intent intent = new Intent();
-                        intent.putExtra("data", record);
-                        intent.putExtra("isFloatingActionButton",isFloatingActionButton);
-                        setResult(RESULT_OK, intent);
-                        finishAfterTransition();//带动画的退出
+                    if(numKeyboardView.isAddSymbol()){
+                        amount = (new BigDecimal(numKeyboardView.getOldAmount()).add(new BigDecimal(amount))).toString();
+                        symbolAddItem.setVisibility(View.GONE);
+                        numKeyboardView.changeBtnOK();
+                        numKeyboardView.setAddSymbol(false);
                     }
-                    else{//输入金额为0
-                        showToast("收入/支出金额不能为0", Toast.LENGTH_SHORT);
+                    else if(numKeyboardView.isSubtractSymbol()){
+                        amount = (new BigDecimal(numKeyboardView.getOldAmount()).subtract(new BigDecimal(amount))).toString();
+                        symbolAddItem.setVisibility(View.GONE);
+                        numKeyboardView.changeBtnOK();
+                        numKeyboardView.setSubtractSymbol(false);
+                    }
+                    else{
+                        if (!"0.00".equals(numAddItem.getText().toString())) {
+                            AccountRecord record;
+                            if (editRecord != null) record = editRecord;
+                            else record = new AccountRecord();
+
+                            if (indexAddItem != -1) {//编辑项目改变了Icon和Recordname
+                                MyApplication app = MyApplication.getApplication();
+                                ArrayList<AddItem> shouruAddItems = app.getShouruAddItems();
+                                ArrayList<AddItem> zhichuAddItems = app.getZhichuAddItems();
+                                if (tabPosition == 0) {//存储收入记录
+                                    record.setIcon(shouruAddItems.get(indexAddItem).getIconAddItem());
+                                    record.setRecordname(shouruAddItems.get(indexAddItem).getNameAddItem());
+                                } else {
+                                    record.setIcon(zhichuAddItems.get(indexAddItem).getIconAddItem());
+                                    record.setRecordname(zhichuAddItems.get(indexAddItem).getNameAddItem());
+                                }
+                            }
+
+                            if (tabPosition == 0) {
+                                record.setMoney(numAddItem.getText().toString());
+                            } else {
+                                record.setMoney("-" + numAddItem.getText().toString());
+                            }
+                            record.setRecordtime(timeAddItem.getTime());
+                            record.setRemark(remark);
+                            record.setMember(selectMember);
+                            MyApplication app = MyApplication.getApplication();
+                            record.setAccount(app.getAccounts().get(selectAccount));
+                            record.setAccountbook(app.getAccountBooks().get(1));
+
+                            Log.i("3: ", record.toString());
+
+                            Intent intent = new Intent();
+                            intent.putExtra("data", record);
+                            intent.putExtra("isFloatingActionButton", isFloatingActionButton);
+                            setResult(RESULT_OK, intent);
+                            finishAfterTransition();//带动画的退出
+                        } else {//输入金额为0
+                            showToast("收入/支出金额不能为0", Toast.LENGTH_SHORT);
+                        }
                     }
                 }
             }
