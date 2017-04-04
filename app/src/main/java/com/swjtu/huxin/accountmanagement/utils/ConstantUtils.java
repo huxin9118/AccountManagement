@@ -11,6 +11,7 @@ public class ConstantUtils {
     public static final int ACCOUNT_TYPE_BANK_CARD = 1;
     public static final int ACCOUNT_TYPE_CREDIT_CARD = 2;
     public static final int ACCOUNT_TYPE_ALIPAY = 3;
+    public static final int ACCOUNT_TYPE_WECHAT = 4;
 
     public static final int ACCOUNT_BOOK_TYPE_DEFAULT = 0;
     public static final int ACCOUNT_BOOK_TYPE_BUSINESS = 1;

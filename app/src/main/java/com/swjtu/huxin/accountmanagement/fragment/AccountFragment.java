@@ -14,6 +14,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,9 @@ import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.activity.AccountDetailActivity;
-import com.swjtu.huxin.accountmanagement.adapter.BaseRecyclerViewAdapter;
-import com.swjtu.huxin.accountmanagement.application.MyApplication;
+import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
+import com.swjtu.huxin.accountmanagement.base.OnItemClickListener;
+import com.swjtu.huxin.accountmanagement.base.MyApplication;
 import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
 import com.swjtu.huxin.accountmanagement.service.AccountService;
@@ -32,7 +34,6 @@ import com.swjtu.huxin.accountmanagement.utils.ConstantUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class AccountFragment extends Fragment {
 
@@ -44,6 +45,7 @@ public class AccountFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private AccountRecyclerAdapter mRecyclerViewAdapter;
+    private int indexItem = -1; //当前选取的项目数
 
     /**
      * 传入需要的参数，设置给arguments
@@ -79,6 +81,16 @@ public class AccountFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerViewAdapter = new AccountRecyclerAdapter(getContext());
         mRecyclerViewAdapter.setCreateViewLayout(R.layout.item_recycler_account);
+        mRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onClick(View view, int pos, String viewName) {
+                indexItem = pos;
+                Account account = (Account) mRecyclerViewAdapter.getDatas("accounts").get(pos);
+                Intent intent = new Intent(getActivity(), AccountDetailActivity.class);
+                intent.putExtra("account", account);
+                startActivityForResult(intent,1);
+            }
+        });
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());//添加/删除item默认的动画效果
         initRecyclerViewData();
@@ -98,6 +110,22 @@ public class AccountFragment extends Fragment {
 
         mRecyclerViewAdapter.addDatas("accounts",accounts);
         mRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        switch (requestCode) {
+            case 1:
+                if(resultCode == getActivity().RESULT_OK){
+                    Account account = (Account) intent.getSerializableExtra("account");
+                    mRecyclerViewAdapter.getDatas("accounts").set(indexItem,account);
+                    mRecyclerViewAdapter.notifyDataSetChanged();
+                    MyApplication app = MyApplication.getApplication();
+                    app.getAccounts().put(account.getId(),account);
+                    AccountService accountService = new AccountService();
+                    accountService.updateAccount(account);
+                }
+        }
     }
 
 }
@@ -143,12 +171,12 @@ class AccountRecyclerAdapter extends BaseRecyclerViewAdapter {
 
             holder.item_icon.setBackgroundResource(getIconByType(account.getType()));
             holder.item_text.setText(account.getAccountname());
+            holder.item_detail1.setText(getDetail1ByType(account.getType()));
+            holder.item_detail2.setText(account.getAccountdetail());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, AccountDetailActivity.class);
-                    intent.putExtra("account", account);
-                    mContext.startActivity(intent);
+                    mOnItemClickListener.onClick(v,pos,"itemView");
                 }
             });
         }
@@ -160,7 +188,19 @@ class AccountRecyclerAdapter extends BaseRecyclerViewAdapter {
             case ConstantUtils.ACCOUNT_TYPE_BANK_CARD:return R.drawable.ic_bank_card;
             case ConstantUtils.ACCOUNT_TYPE_CREDIT_CARD:return R.drawable.ic_credit_card;
             case ConstantUtils.ACCOUNT_TYPE_ALIPAY:return R.drawable.ic_alipay;
+            case ConstantUtils.ACCOUNT_TYPE_WECHAT:return R.drawable.ic_wechat;
             default:return -1;
+        }
+    }
+
+    private String getDetail1ByType(int type){
+        switch (type) {
+            case ConstantUtils.ACCOUNT_TYPE_CASH:return "现金类型：";
+            case ConstantUtils.ACCOUNT_TYPE_BANK_CARD:return "发卡行：";
+            case ConstantUtils.ACCOUNT_TYPE_CREDIT_CARD:return "发卡行：";
+            case ConstantUtils.ACCOUNT_TYPE_ALIPAY:return "账号：";
+            case ConstantUtils.ACCOUNT_TYPE_WECHAT:return "账号：";
+            default:return "";
         }
     }
 
@@ -169,6 +209,8 @@ class AccountRecyclerAdapter extends BaseRecyclerViewAdapter {
         public ImageView item_icon;
         public TextView item_text;
         public TextView item_money;
+        public TextView item_detail1;
+        public TextView item_detail2;
         public Holder(View itemView, int viewType) {
             super(itemView);
             if(viewType == TYPE_HEADER || viewType == TYPE_FOOTER) return;
@@ -177,6 +219,8 @@ class AccountRecyclerAdapter extends BaseRecyclerViewAdapter {
                 item_icon = (ImageView) itemView.findViewById(R.id.item_icon);
                 item_text = (TextView) itemView.findViewById(R.id.item_text);
                 item_money = (TextView) itemView.findViewById(R.id.item_money);
+                item_detail1 = (TextView) itemView.findViewById(R.id.item_detail1);
+                item_detail2 = (TextView) itemView.findViewById(R.id.item_detail2);
             }
         }
     }

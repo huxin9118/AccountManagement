@@ -16,8 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.R;
-import com.swjtu.huxin.accountmanagement.adapter.BaseRecyclerViewAdapter;
-import com.swjtu.huxin.accountmanagement.adapter.OnItemClickListener;
+import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
+import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
+import com.swjtu.huxin.accountmanagement.base.OnItemClickListener;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
 import com.swjtu.huxin.accountmanagement.utils.ItemXmlPullParserUtils;
@@ -33,7 +34,7 @@ import java.util.List;
  * Created by huxin on 2017/3/19.
  */
 
-public class ChartDetailActivity extends AppCompatActivity{
+public class ChartDetailActivity extends BaseAppCompatActivity {
     private LinearLayout background;
 
     private LinearLayout back;

@@ -1,4 +1,4 @@
-package com.swjtu.huxin.accountmanagement.adapter;
+package com.swjtu.huxin.accountmanagement.base;
 
 import android.widget.NumberPicker;
 

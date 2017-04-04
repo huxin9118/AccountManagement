@@ -14,10 +14,12 @@ import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.swjtu.huxin.accountmanagement.R;
+import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.view.NumKeyboardView;
 
 import java.util.ArrayList;
@@ -26,10 +28,10 @@ import java.util.ArrayList;
  * Created by huxin on 2017/3/11.
  */
 
-public class BudgetSettingActivity extends AppCompatActivity {
+public class BudgetSettingActivity extends BaseAppCompatActivity {
 
     private LinearLayout btnBack;
-    private LinearLayout btnEnter;
+    private RelativeLayout btnEnter;
     private TextView textEnter;
     private TextView btnMoney;
     private SwitchCompat switchCompat;
@@ -42,7 +44,6 @@ public class BudgetSettingActivity extends AppCompatActivity {
     private NumKeyboardView numKeyboardView;
     private ArrayList<String> valueList;
     private GridView gridView;
-    private Toast mToast;
 
 
     @Override
@@ -61,7 +62,7 @@ public class BudgetSettingActivity extends AppCompatActivity {
     private void initView() {
 
         btnBack = (LinearLayout) findViewById(R.id.back);
-        btnEnter = (LinearLayout) findViewById(R.id.enter);
+        btnEnter = (RelativeLayout) findViewById(R.id.enter);
         textEnter = (TextView) findViewById(R.id.enter_text);
         btnMoney = (TextView) findViewById(R.id.money);
         switchCompat = (SwitchCompat) findViewById(R.id.switchCompat);
@@ -85,8 +86,7 @@ public class BudgetSettingActivity extends AppCompatActivity {
         });
 
         keyNum = (TextView) findViewById(R.id.key_num);
-        keyNum.setText(totalMoney);
-        keyboard = (LinearLayout)findViewById(R.id.keybord);
+        keyboard = (LinearLayout)findViewById(R.id.keyboard);
         numKeyboardView = (NumKeyboardView) findViewById(R.id.numKeyboardView);
         keyboard.setVisibility(View.GONE);
 
@@ -97,6 +97,7 @@ public class BudgetSettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(keyboard.getVisibility() !=  View.VISIBLE){//是否弹出键盘
+                    keyNum.setText(totalMoney);
                     numKeyboardView.setFocusable(true);
                     numKeyboardView.setFocusableInTouchMode(true);
                     keyboard.startAnimation(enterAnim);
@@ -201,27 +202,6 @@ public class BudgetSettingActivity extends AppCompatActivity {
         }
     };
 
-    /**
-     * 显示Toast，解决重复弹出问题
-     */
-    public void showToast(String text , int time) {
-        if(mToast == null) {
-            mToast = Toast.makeText(getApplicationContext(), text, time);
-        } else {
-            mToast.setText(text);
-            mToast.setDuration(Toast.LENGTH_SHORT);
-        }
-        mToast.show();
-    }
-
-    /**
-     * 隐藏Toast
-     */
-    public void cancelToast() {
-        if (mToast != null) {
-            mToast.cancel();
-        }
-    }
 
     public void onBackPressed() {
         cancelToast();

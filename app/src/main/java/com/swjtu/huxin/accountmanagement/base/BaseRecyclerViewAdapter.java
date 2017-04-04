@@ -1,12 +1,10 @@
-package com.swjtu.huxin.accountmanagement.adapter;
+package com.swjtu.huxin.accountmanagement.base;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.swjtu.huxin.accountmanagement.R;
 
 import java.util.HashMap;
 import java.util.List;

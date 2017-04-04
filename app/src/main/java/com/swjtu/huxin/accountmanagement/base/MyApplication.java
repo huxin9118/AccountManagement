@@ -1,4 +1,4 @@
-package com.swjtu.huxin.accountmanagement.application;
+package com.swjtu.huxin.accountmanagement.base;
 
 import android.app.Application;
 import android.content.Context;

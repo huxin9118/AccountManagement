@@ -3,7 +3,7 @@ package com.swjtu.huxin.accountmanagement.dao;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.swjtu.huxin.accountmanagement.application.MyApplication;
+import com.swjtu.huxin.accountmanagement.base.MyApplication;
 
 
 /**

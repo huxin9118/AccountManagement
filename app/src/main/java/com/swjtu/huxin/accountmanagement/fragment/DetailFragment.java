@@ -26,9 +26,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.activity.BudgetActivity;
-import com.swjtu.huxin.accountmanagement.adapter.BaseRecyclerViewAdapter;
-import com.swjtu.huxin.accountmanagement.adapter.OnItemClickListener;
-import com.swjtu.huxin.accountmanagement.application.MyApplication;
+import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
+import com.swjtu.huxin.accountmanagement.base.OnItemClickListener;
+import com.swjtu.huxin.accountmanagement.base.MyApplication;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.activity.AddItemActivity;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;

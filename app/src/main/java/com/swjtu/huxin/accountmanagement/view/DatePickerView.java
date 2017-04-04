@@ -9,7 +9,7 @@ import android.widget.NumberPicker;
 import java.util.Date;
 
 import com.swjtu.huxin.accountmanagement.R;
-import com.swjtu.huxin.accountmanagement.adapter.OnDatePickerChangedListener;
+import com.swjtu.huxin.accountmanagement.base.OnDatePickerChangedListener;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 
 /**

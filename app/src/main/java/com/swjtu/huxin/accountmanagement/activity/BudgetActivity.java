@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.swjtu.huxin.accountmanagement.R;
+import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.fragment.BudgetFragment;
 
 import java.math.BigDecimal;
@@ -19,7 +20,7 @@ import java.math.BigDecimal;
  * Created by huxin on 2017/3/9.
  */
 
-public class BudgetActivity extends AppCompatActivity {
+public class BudgetActivity extends BaseAppCompatActivity {
     private BigDecimal totalMoney;
     private BigDecimal remainingMoney;
 

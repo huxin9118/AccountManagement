@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.R;
-import com.swjtu.huxin.accountmanagement.adapter.BaseRecyclerViewAdapter;
+import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
 import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 

@@ -9,6 +9,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,11 +17,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.R;
-import com.swjtu.huxin.accountmanagement.adapter.BaseRecyclerViewAdapter;
-import com.swjtu.huxin.accountmanagement.adapter.OnItemClickListener;
+import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
+import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
+import com.swjtu.huxin.accountmanagement.base.OnItemClickListener;
 import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
+import com.swjtu.huxin.accountmanagement.utils.ConstantUtils;
 import com.swjtu.huxin.accountmanagement.utils.ItemXmlPullParserUtils;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 
@@ -35,7 +38,7 @@ import java.util.List;
  * Created by huxin on 2017/3/19.
  */
 
-public class AccountDetailActivity extends AppCompatActivity{
+public class AccountDetailActivity extends BaseAppCompatActivity {
     private LinearLayout background;
 
     private LinearLayout back;
@@ -75,14 +78,19 @@ public class AccountDetailActivity extends AppCompatActivity{
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.putExtra("account", account);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
         setting = (ImageView) findViewById(R.id.setting);
-        back.setOnClickListener(new View.OnClickListener() {
+        setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+            Intent intent = new Intent(AccountDetailActivity.this,AccountSettingActivity.class);
+            intent.putExtra("account",account);
+            startActivityForResult(intent,1);
             }
         });
 
@@ -124,7 +132,7 @@ public class AccountDetailActivity extends AppCompatActivity{
 
         Intent intent = getIntent();
         account = (Account) intent.getSerializableExtra("account");
-        title.setText(account.getAccountname());
+        title.setText(getTypeTextByType(account.getType()));
         background.setBackgroundColor(Color.parseColor(account.getColor()));
 
         numShouru = (TextView) findViewById(R.id.numShouru);
@@ -194,17 +202,53 @@ public class AccountDetailActivity extends AppCompatActivity{
 
     private void updateData(){
         AccountRecordService accountRecordService = new AccountRecordService();
-        String shouru = accountRecordService.getRangeTotalMoneyByAccount(start,end,account,true);
-        String zhichu = accountRecordService.getRangeTotalMoneyByAccount(start,end,account,false);
-        numShouru.setText(new DecimalFormat("0.00").format(Double.valueOf(shouru)));
-        numZhichu.setText(new DecimalFormat("0.00").format(Double.valueOf(zhichu) * -1));
+        String shouru = new DecimalFormat("0.00").format(Double.valueOf(accountRecordService.getRangeTotalMoneyByAccount(start,end,account,true)));
+        String zhichu = new DecimalFormat("0.00").format(Double.valueOf(accountRecordService.getRangeTotalMoneyByAccount(start,end,account,false)));
         if("0.00".equals(shouru) && "0.00".equals(zhichu)) {
+            numShouru.setText("0.00");
+            numZhichu.setText("0.00");
             empty.setVisibility(View.VISIBLE);
             initRecyclerViewData(true);
         }
         else {
+            numShouru.setText(shouru);
+            numZhichu.setText(zhichu.substring(1));
             empty.setVisibility(View.GONE);
             initRecyclerViewData(false);
+        }
+    }
+
+    private String getTypeTextByType(int type){
+        switch (type) {
+            case ConstantUtils.ACCOUNT_TYPE_CASH:return "现金";
+            case ConstantUtils.ACCOUNT_TYPE_BANK_CARD:return "储蓄卡";
+            case ConstantUtils.ACCOUNT_TYPE_CREDIT_CARD:return "信用卡";
+            case ConstantUtils.ACCOUNT_TYPE_ALIPAY:return "支付宝";
+            case ConstantUtils.ACCOUNT_TYPE_WECHAT:return "微信钱包";
+            default:return "";
+        }
+    }
+
+    public void onBackPressed() {
+        Log.i("000", "onActivityResult: "+"asfafafasfs");
+        cancelToast();
+        Intent intent = new Intent();
+        intent.putExtra("account", account);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        switch (requestCode) {
+            case 1:
+                if(resultCode == RESULT_OK){
+                    account = (Account) intent.getSerializableExtra("account");
+                    background.setBackgroundColor(Color.parseColor(account.getColor()));
+                    AccountRecordService accountRecordService = new AccountRecordService();
+                    String totalMoney = accountRecordService.getTotalMoneyByAccount(account);
+                    numJieyu.setText(new BigDecimal(account.getMoney()).add(new BigDecimal(totalMoney)).toString());
+                }
         }
     }
 }

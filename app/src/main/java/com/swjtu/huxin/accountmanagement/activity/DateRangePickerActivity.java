@@ -3,7 +3,6 @@ package com.swjtu.huxin.accountmanagement.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -11,7 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.swjtu.huxin.accountmanagement.R;
-import com.swjtu.huxin.accountmanagement.adapter.OnDatePickerChangedListener;
+import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
+import com.swjtu.huxin.accountmanagement.base.OnDatePickerChangedListener;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 import com.swjtu.huxin.accountmanagement.view.DatePickerView;
 
@@ -21,8 +21,7 @@ import java.util.Date;
  * Created by huxin on 2017/3/12.
  */
 
-public class DateRangePickerActivity extends AppCompatActivity {
-    private Toast mToast;
+public class DateRangePickerActivity extends BaseAppCompatActivity {
 
     private LinearLayout back;
     private TextView backText;
@@ -146,30 +145,4 @@ public class DateRangePickerActivity extends AppCompatActivity {
         endDatePicker.setValue(end);
     }
 
-    /**
-     * 显示Toast，解决重复弹出问题
-     */
-    public void showToast(String text , int time) {
-        if(mToast == null) {
-            mToast = Toast.makeText(getApplicationContext(), text, time);
-        } else {
-            mToast.setText(text);
-            mToast.setDuration(Toast.LENGTH_SHORT);
-        }
-        mToast.show();
-    }
-
-    /**
-     * 隐藏Toast
-     */
-    public void cancelToast() {
-        if (mToast != null) {
-            mToast.cancel();
-        }
-    }
-
-    public void onBackPressed() {
-        cancelToast();
-        super.onBackPressed();
-    }
 }

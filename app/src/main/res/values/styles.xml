@@ -9,13 +9,14 @@
     </style>
 
     <!-- AppCompatActivity 全屏-->
-    <style name="MyFullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="MyTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/dimgray</item>
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/customBlue</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowActionBar">false</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <!--<item name="android:windowNoTitle">true</item>-->
+        <!--<item name="android:windowFullscreen">true</item>-->
+        <!--<item name="android:windowActionBar">false</item>-->
     </style>
 
     <style name="WaveProgressViewDefault">

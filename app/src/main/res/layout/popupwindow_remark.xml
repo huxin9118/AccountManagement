@@ -42,10 +42,9 @@
                 android:layout_weight="1"
                 android:src="@drawable/ic_ok_circle"/>
         </LinearLayout>
-
     </LinearLayout>
 
-    <View
+    <ScrollView
         android:id="@+id/outof_popup_window"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -81,6 +81,7 @@
         android:background="@color/listLine"/>
 
     <RelativeLayout
+        android:id="@+id/enter"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:padding="15dp"
@@ -94,7 +95,6 @@
             android:textSize="16sp"/>
 
         <LinearLayout
-            android:id="@+id/enter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -129,7 +129,7 @@
         android:background="@color/listBackgrount"/>
 
     <LinearLayout
-        android:id="@+id/keybord"
+        android:id="@+id/keyboard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">

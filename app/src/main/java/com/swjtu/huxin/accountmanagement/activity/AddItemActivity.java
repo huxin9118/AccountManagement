@@ -37,9 +37,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
-import com.swjtu.huxin.accountmanagement.adapter.BaseRecyclerViewAdapter;
-import com.swjtu.huxin.accountmanagement.application.MyApplication;
-import com.swjtu.huxin.accountmanagement.adapter.OnItemClickListener;
+import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
+import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
+import com.swjtu.huxin.accountmanagement.base.MyApplication;
+import com.swjtu.huxin.accountmanagement.base.OnItemClickListener;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
@@ -56,14 +57,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 /**
  * Created by huxin on 2017/2/25.
  */
 
-public class AddItemActivity extends AppCompatActivity{
+public class AddItemActivity extends BaseAppCompatActivity {
 
     private ViewPager mViewPager;
     private PagerAdapter mPagerAdapter;
@@ -80,7 +80,6 @@ public class AddItemActivity extends AppCompatActivity{
     private Animation exitAnim;
     private ArrayList<String> valueList;
 
-    private Toast mToast;
     private int tabPosition; //当前分页数
     private int indexAddItem = 0; //当前选取的项目数
     private Date timeAddItem;//当前的时间
@@ -279,10 +278,12 @@ public class AddItemActivity extends AppCompatActivity{
             iconAddItem.setBackgroundResource(resID);
             if(Double.parseDouble(editRecord.getMoney())>0){
                 numAddItem.setText(editRecord.getMoney());
+                mViewPager.setCurrentItem(0);
                 ItemChange(0);
             }
             else{
                 numAddItem.setText(editRecord.getMoney().substring(1));
+                mViewPager.setCurrentItem(1);
                 ItemChange(1);
             }
             timeAddItem = new Date(editRecord.getRecordtime());
@@ -505,7 +506,6 @@ public class AddItemActivity extends AppCompatActivity{
             map.put("item_text", accounts.get(i).getAccountname());
             String totalMoney = accountRecordService.getTotalMoneyByAccount(accounts.get(i));
             map.put("item_money", new BigDecimal(accounts.get(i).getMoney()).add(new BigDecimal(totalMoney)).toString());
-            Log.i("111", selectAccount+"=="+i);
             if(selectAccount == accounts.get(i).getId())
                 map.put("item_selector", R.drawable.ic_selector_blue);
             else
@@ -619,6 +619,7 @@ public class AddItemActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 remarkPopupWindow.dismiss();
+                editText.setText(remark);
                 updateBtnRemark();
             }
         });
@@ -627,6 +628,7 @@ public class AddItemActivity extends AppCompatActivity{
             public void onClick(View v) {
                 remark = editText.getText().toString().trim();
                 remarkPopupWindow.dismiss();
+                editText.setText(remark);
                 updateBtnRemark();
             }
         });
@@ -651,36 +653,9 @@ public class AddItemActivity extends AppCompatActivity{
             case ConstantUtils.ACCOUNT_TYPE_BANK_CARD:return R.drawable.ic_bank_card_gray;
             case ConstantUtils.ACCOUNT_TYPE_CREDIT_CARD:return R.drawable.ic_credit_card_gray;
             case ConstantUtils.ACCOUNT_TYPE_ALIPAY:return R.drawable.ic_alipay_gray;
+            case ConstantUtils.ACCOUNT_TYPE_WECHAT:return R.drawable.ic_wechat_gray;
             default:return -1;
         }
-    }
-
-
-    /**
-     * 显示Toast，解决重复弹出问题
-     */
-    public void showToast(String text , int time) {
-        if(mToast == null) {
-            mToast = Toast.makeText(getApplicationContext(), text, time);
-        } else {
-            mToast.setText(text);
-            mToast.setDuration(Toast.LENGTH_SHORT);
-        }
-        mToast.show();
-    }
-
-    /**
-     * 隐藏Toast
-     */
-    public void cancelToast() {
-        if (mToast != null) {
-            mToast.cancel();
-        }
-    }
-
-    public void onBackPressed() {
-        cancelToast();
-        super.onBackPressed();
     }
 
     /**

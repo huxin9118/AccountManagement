@@ -7,12 +7,12 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".application.MyApplication"
+        android:name=".base.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/MyFullScreenTheme">
+        android:theme="@style/MyTheme">
         <activity
             android:name=".activity.SplashActivity">
             <intent-filter>
@@ -31,6 +31,7 @@
             android:name=".activity.BudgetActivity">
         </activity>
         <activity
+            android:windowSoftInputMode="adjustResize"
             android:name=".activity.BudgetSettingActivity">
         </activity>
         <activity
@@ -41,6 +42,13 @@
         </activity>
         <activity
             android:name=".activity.AccountDetailActivity">
+        </activity>
+        <activity
+            android:windowSoftInputMode="adjustResize"
+            android:name=".activity.AccountSettingActivity">
+        </activity>
+        <activity
+            android:name=".activity.AccountSelectColorActivity">
         </activity>
     </application>
 

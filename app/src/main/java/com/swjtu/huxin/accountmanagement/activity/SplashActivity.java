@@ -13,7 +13,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.swjtu.huxin.accountmanagement.application.MyApplication;
+import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
+import com.swjtu.huxin.accountmanagement.base.MyApplication;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountBook;
@@ -30,7 +31,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.Map;
 import java.util.TreeSet;
@@ -39,7 +39,7 @@ import java.util.TreeSet;
  * Created by huxin on 2017/2/28.
  */
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseAppCompatActivity {
     private Handler rotateHandler = new RotateHandler(this);
     private Handler skipHandler = new SkipHandler(this);
     public ImageView imgXiaolian;
@@ -117,15 +117,23 @@ public class SplashActivity extends AppCompatActivity {
             alipay.setColor(ConstantUtils.ACCOUNT_COLOR[3]);
             alipay.setType(ConstantUtils.ACCOUNT_TYPE_ALIPAY);
             alipay.setMoney("0.00");
+            Account wechat = new Account();
+            wechat.setAccountname("微信钱包");
+            wechat.setAccountdetail("未知");
+            wechat.setColor(ConstantUtils.ACCOUNT_COLOR[7]);
+            wechat.setType(ConstantUtils.ACCOUNT_TYPE_WECHAT);
+            wechat.setMoney("0.00");
             AccountService AccountService = new AccountService();
             int cashID = (int)AccountService.addAccount(cash);
             int bankcardID = (int)AccountService.addAccount(bankcard);
             int creditcardID = (int)AccountService.addAccount(creditcard);
             int alipayID = (int)AccountService.addAccount(alipay);
+            int wechatID = (int)AccountService.addAccount(wechat);
             cash.setId(cashID);
             bankcard.setId(bankcardID);
             creditcard.setId(creditcardID);
             alipay.setId(alipayID);
+            wechat.setId(wechatID);
             accounts.put(cashID,cash);
             accounts.put(bankcardID,bankcard);
             accounts.put(creditcardID,creditcard);

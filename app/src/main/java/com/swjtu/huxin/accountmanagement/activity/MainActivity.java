@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.swjtu.huxin.accountmanagement.R;
+import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.fragment.MoreFragment;
 import com.swjtu.huxin.accountmanagement.fragment.DetailFragment;
 import com.swjtu.huxin.accountmanagement.fragment.ChartFragment;
@@ -21,7 +22,7 @@ import com.swjtu.huxin.accountmanagement.fragment.AccountFragment;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationBar.OnTabSelectedListener{
+public class MainActivity extends BaseAppCompatActivity implements BottomNavigationBar.OnTabSelectedListener{
 //    private ArrayList<Fragment> fragments;
     private long exitTime = 0;
 
