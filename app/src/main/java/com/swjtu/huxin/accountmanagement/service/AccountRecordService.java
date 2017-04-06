@@ -50,10 +50,10 @@ public class AccountRecordService {
         return record;
     }
 
-    public List<AccountRecord> getAccountRecordListByTime(long firsttime, long lasttime, String recordname, Account account){
+    public List<AccountRecord> getAccountRecordListByTime(long firsttime, long lasttime, String recordname, Account account,String member){
         SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
-        List<AccountRecord> records = dao.getListByTime(firsttime,lasttime,recordname,account);
+        List<AccountRecord> records = dao.getListByTime(firsttime,lasttime,recordname,account,member);
         db.close();
         return records;
     }
@@ -126,6 +126,14 @@ public class AccountRecordService {
         SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
         List<AccountRecord> records = dao.getListGroupByRecordname(firsttime,lasttime,isPositive);
+        db.close();
+        return records;
+    }
+
+    public List<AccountRecord> getAccountRecordListGroupByMember(Date firsttime, Date lasttime,boolean isPositive){
+        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        AccountRecordDao dao = new AccountRecordDao(db);
+        List<AccountRecord> records = dao.getListGroupByMember(firsttime,lasttime,isPositive);
         db.close();
         return records;
     }

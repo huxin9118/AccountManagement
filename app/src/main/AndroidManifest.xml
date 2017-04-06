@@ -25,13 +25,13 @@
             android:name=".activity.MainActivity">
         </activity>
         <activity
+            android:windowSoftInputMode="adjustResize"
             android:name=".activity.AddItemActivity">
         </activity>
         <activity
             android:name=".activity.BudgetActivity">
         </activity>
         <activity
-            android:windowSoftInputMode="adjustResize"
             android:name=".activity.BudgetSettingActivity">
         </activity>
         <activity

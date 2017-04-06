@@ -76,12 +76,14 @@ public class AccountRecordDao {
         return record;
     }
 
-    public List<AccountRecord> getListByTime(long firsttime,long lasttime,String recordname,Account account){
+    public List<AccountRecord> getListByTime(long firsttime,long lasttime,String recordname,Account account,String member){
         String sql = "SELECT * FROM account_record WHERE recordtime between ? and ?";
         if(recordname != null)
             sql = sql + " AND recordname = '" + recordname + "'";
         if(account != null)
             sql = sql + " AND account_id = " + account.getId();
+        if(member != null)
+            sql = sql + " AND member = '" + member + "'";
         sql = sql +" ORDER BY recordtime desc";
         Cursor cs = db.rawQuery(sql, new String[]{firsttime+"",lasttime+""});
         List<AccountRecord> records = new ArrayList<AccountRecord>();
@@ -117,9 +119,9 @@ public class AccountRecordDao {
     public List<AccountRecord> getListGroupByRecordname(Date firsttime, Date lasttime, boolean isPositive){
         String sql;
         if(isPositive)
-            sql = "SELECT recordname ,icon,SUM(money) money FROM account_record WHERE money > 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY recordtime desc";
+            sql = "SELECT recordname ,icon,SUM(money) money ,COUNT(money) counts FROM account_record WHERE money > 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY recordname";
         else
-            sql = "SELECT recordname ,icon,SUM(money) money FROM account_record WHERE money < 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY recordtime desc";
+            sql = "SELECT recordname ,icon,SUM(money) money ,COUNT(money) counts FROM account_record WHERE money < 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY recordname";
         Cursor cs = db.rawQuery(sql, new String[]{firsttime.getTime()+"",lasttime.getTime()+""});
         List<AccountRecord> records = new ArrayList<AccountRecord>();
         while(cs.moveToNext()){
@@ -127,6 +129,26 @@ public class AccountRecordDao {
             AccountRecord record = new AccountRecord();
             record.setIcon(cs.getString(cs.getColumnIndex("icon")));
             record.setRecordname(cs.getString(cs.getColumnIndex("recordname")));
+            record.setMoney(cs.getString(cs.getColumnIndex("money")));
+            record.setId(cs.getInt(cs.getColumnIndex("counts")));
+            records.add(record);
+        }
+        cs.close();
+        return records;
+    }
+
+    public List<AccountRecord> getListGroupByMember(Date firsttime, Date lasttime, boolean isPositive){
+        String sql;
+        if(isPositive)
+            sql = "SELECT member ,SUM(money) money FROM account_record WHERE money > 0 AND recordtime between ? and ? GROUP BY member ORDER BY member";
+        else
+            sql = "SELECT member ,SUM(money) money FROM account_record WHERE money < 0 AND recordtime between ? and ? GROUP BY member ORDER BY member";
+        Cursor cs = db.rawQuery(sql, new String[]{firsttime.getTime()+"",lasttime.getTime()+""});
+        List<AccountRecord> records = new ArrayList<AccountRecord>();
+        while(cs.moveToNext()){
+            //获取指定列的索引值
+            AccountRecord record = new AccountRecord();
+            record.setMember(cs.getString(cs.getColumnIndex("member")));
             record.setMoney(cs.getString(cs.getColumnIndex("money")));
             records.add(record);
         }

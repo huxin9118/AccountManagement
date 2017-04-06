@@ -9,15 +9,34 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"/>
-    <TextView
-        android:id="@+id/item_name"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/icon_yiban"/>
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
         android:layout_toRightOf="@id/item_icon"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:textSize="16sp"/>
+        android:layout_marginLeft="10dp">
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="现金"
+            android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/item_remark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="备注"
+            android:textColor="@color/darkgray"
+            android:textSize="12sp"
+            android:maxWidth="200dp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/item_money"

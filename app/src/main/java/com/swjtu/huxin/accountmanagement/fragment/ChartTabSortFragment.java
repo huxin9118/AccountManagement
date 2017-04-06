@@ -151,6 +151,7 @@ public class ChartTabSortFragment extends Fragment
             public void onClick(View view,int pos,String viewName) {
                 if ("itemView".equals(viewName)) {
                     Intent intent = new Intent(getActivity(), ChartDetailActivity.class);
+                    intent.putExtra("from","tab_sort");
                     intent.putExtra("back", "分类");
                     intent.putExtra("start", start);
                     intent.putExtra("end",end);
@@ -214,7 +215,7 @@ public class ChartTabSortFragment extends Fragment
         }
 
         data.setValues(values);//为饼图添加数据
-        
+
         if (hasCenterText1) {
 //            Typeface tf = Typeface.createFromAsset(getAssets(), "Roboto-Italic.ttf");
 //            data.setCenterText1Typeface(tf);//设置文本字体
@@ -367,10 +368,24 @@ class ChartTabSortRecyclerAdapter extends BaseRecyclerViewAdapter {
             if (num > 0) {//收入
                 holder.item_money.setText(new DecimalFormat("0.00").format(num));
                 holder.item_percent.setText(new DecimalFormat("0.0%").format(num/totalMoney));
+                try {
+                    holder.item_money.setTextColor(Color.parseColor(ItemXmlPullParserUtils.
+                            parseIconColor(mContext, "shouru.xml", ((AccountRecord) mDatas.get("records").get(pos)).getIcon())));
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
             }
             else {
                 holder.item_money.setText(new DecimalFormat("0.00").format(num*-1));
                 holder.item_percent.setText(new DecimalFormat("0.0%").format(num/totalMoney));
+                try {
+                    holder.item_money.setTextColor(Color.parseColor(ItemXmlPullParserUtils.
+                            parseIconColor(mContext, "zhichu.xml", ((AccountRecord) mDatas.get("records").get(pos)).getIcon())));
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
             }
             int resID = mContent.getResources().getIdentifier(((AccountRecord)mDatas.get("records").get(pos)).getIcon(), "drawable", mContent.getPackageName());
             holder.item_icon.setBackgroundResource(resID);

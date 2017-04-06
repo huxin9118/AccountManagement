@@ -184,7 +184,7 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
             long dayFirstMilliSeconds = TimeUtils.getDateFirstMilliSeconds(time);
             long dayLastMilliSeconds = TimeUtils.getDateLastMilliSeconds(time);
             while (dayFirstMilliSeconds >= start.getTime()) {
-                records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds, dayLastMilliSeconds, null, account);
+                records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds, dayLastMilliSeconds, null, account,null);
                 if (records.size() > 0) {//这一天有记录
                     AccountRecord recordDay = new AccountRecord();
                     recordDay.setRecordname("DAY");
@@ -320,6 +320,9 @@ class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
             int resID = mContent.getResources().getIdentifier(((AccountRecord)mDatas.get("records").get(pos)).getIcon(), "drawable", mContent.getPackageName());
             holder.item_icon.setBackgroundResource(resID);
             holder.item_name.setText(((AccountRecord) mDatas.get("records").get(pos)).getRecordname());
+            holder.item_remark.setText(((AccountRecord) mDatas.get("records").get(pos)).getRemark());
+            if("".equals(holder.item_remark.getText().toString()))
+                holder.item_remark.setVisibility(View.GONE);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -336,6 +339,7 @@ class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
     static class Holder extends RecyclerView.ViewHolder {
         public ImageView item_icon;
         public TextView item_name;
+        public TextView item_remark;
         public TextView item_money;
         public TextView day_text;
         public Holder(View itemView, int viewType) {
@@ -344,6 +348,7 @@ class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
             if(viewType == TYPE_NORMAL) {
                 item_icon = (ImageView) itemView.findViewById(R.id.item_icon);
                 item_name = (TextView) itemView.findViewById(R.id.item_name);
+                item_remark = (TextView) itemView.findViewById(R.id.item_remark);
                 item_money = (TextView) itemView.findViewById(R.id.item_money);
             }
             if(viewType == TYPE_DAY) {

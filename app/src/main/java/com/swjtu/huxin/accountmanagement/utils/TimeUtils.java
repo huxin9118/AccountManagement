@@ -175,7 +175,7 @@ public class TimeUtils {
         return calendar.getTime().getTime();
     }
 
-    public static long getYearFirstMilliSeconds(int year) {
+    public static Date getYearFirstMilliSeconds(int year) {
         Calendar calendar = Calendar.getInstance();// 创建一个日历对象
         calendar.set(Calendar.YEAR,year);
         calendar.set(Calendar.MONTH, 0);
@@ -184,10 +184,10 @@ public class TimeUtils {
         calendar.set(Calendar.MINUTE,0);
         calendar.set(Calendar.SECOND,0);
         calendar.set(Calendar.MILLISECOND,0);
-        return calendar.getTime().getTime();
+        return calendar.getTime();
     }
 
-    public static long getYearLastMilliSeconds(int year) {
+    public static Date getYearLastMilliSeconds(int year) {
         Calendar calendar = Calendar.getInstance();// 创建一个日历对象
         calendar.set(Calendar.YEAR,year);
         calendar.set(Calendar.MONTH, 11);
@@ -196,7 +196,7 @@ public class TimeUtils {
         calendar.set(Calendar.MINUTE,59);
         calendar.set(Calendar.SECOND,59);
         calendar.set(Calendar.MILLISECOND,calendar.getActualMaximum(Calendar.MILLISECOND));
-        return calendar.getTime().getTime();
+        return calendar.getTime();
     }
 
 //    public static String getTimeYMD(Date time) {

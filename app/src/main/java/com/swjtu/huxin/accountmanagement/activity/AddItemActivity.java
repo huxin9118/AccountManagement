@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -601,6 +603,7 @@ public class AddItemActivity extends BaseAppCompatActivity {
         outOfWindow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                showLog("你大爷的啊啊啊啊啊啊啊1");
                 accountPopupWindow.dismiss();
             }
         });
@@ -658,6 +661,7 @@ public class AddItemActivity extends BaseAppCompatActivity {
         outOfWindow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                showLog("你大爷的啊啊啊啊啊啊啊2");
                 memberPopupWindow.dismiss();
             }
         });
@@ -676,6 +680,7 @@ public class AddItemActivity extends BaseAppCompatActivity {
             public void onClick(View v) {
                 remarkPopupWindow.dismiss();
                 editText.setText(remark);
+                editText.setSelection(remark.length());
                 updateBtnRemark();
             }
         });
@@ -685,6 +690,7 @@ public class AddItemActivity extends BaseAppCompatActivity {
                 remark = editText.getText().toString().trim();
                 remarkPopupWindow.dismiss();
                 editText.setText(remark);
+                editText.setSelection(remark.length());
                 updateBtnRemark();
             }
         });

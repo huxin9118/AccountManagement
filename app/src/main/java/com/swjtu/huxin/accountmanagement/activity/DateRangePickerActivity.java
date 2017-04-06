@@ -130,8 +130,8 @@ public class DateRangePickerActivity extends BaseAppCompatActivity {
                 week.setTextColor(getResources().getColor(R.color.darkgray));
                 month.setTextColor(getResources().getColor(R.color.darkgray));
                 year.setTextColor(getResources().getColor(R.color.customBlue));
-                start = new Date(TimeUtils.getYearFirstMilliSeconds(TimeUtils.getTime(new Date(),TimeUtils.YEAR)));
-                end = new Date(TimeUtils.getYearLastMilliSeconds(TimeUtils.getTime(new Date(),TimeUtils.YEAR)));
+                start = TimeUtils.getYearFirstMilliSeconds(TimeUtils.getTime(new Date(),TimeUtils.YEAR));
+                end = TimeUtils.getYearLastMilliSeconds(TimeUtils.getTime(new Date(),TimeUtils.YEAR));
                 startDatePicker.setValue(start);
                 endDatePicker.setValue(end);
             }

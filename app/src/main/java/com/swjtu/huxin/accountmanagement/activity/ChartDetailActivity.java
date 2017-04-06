@@ -21,6 +21,7 @@ import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
 import com.swjtu.huxin.accountmanagement.base.OnItemClickListener;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
+import com.swjtu.huxin.accountmanagement.utils.ConstantUtils;
 import com.swjtu.huxin.accountmanagement.utils.ItemXmlPullParserUtils;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 
@@ -115,16 +116,29 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
         updateDateRangeChange();
         backText.setText(intent.getStringExtra("back"));
         record = (AccountRecord) intent.getSerializableExtra("record");
-        title.setText(record.getRecordname()+"明细");
+        if("tab_member".equals(intent.getStringExtra("from"))) {
+            String member = record.getMember();
+            if("".equals(member))member = "无成员";
+            title.setText(member + "明细");
+        }
+        else {
+            title.setText(record.getRecordname() + "明细");
+        }
         try {
             if (Double.parseDouble(record.getMoney()) > 0) {
                 text.setText("收入");
                 money.setText(new DecimalFormat("0.00").format(Double.parseDouble(record.getMoney())));
-                background.setBackgroundColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(this, "shouru.xml", record.getIcon())));
+                if("tab_member".equals(intent.getStringExtra("from")))
+                    background.setBackgroundColor(Color.parseColor(getColorByMember(record.getMember())));
+                else
+                    background.setBackgroundColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(this, "shouru.xml", record.getIcon())));
             } else {
                 text.setText("支出");
                 money.setText(new DecimalFormat("0.00").format(Double.parseDouble(record.getMoney())*-1));
-                background.setBackgroundColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(this, "zhichu.xml", record.getIcon())));
+                if("tab_member".equals(intent.getStringExtra("from")))
+                    background.setBackgroundColor(Color.parseColor(getColorByMember(record.getMember())));
+                else
+                    background.setBackgroundColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(this, "zhichu.xml", record.getIcon())));
             }
         }
         catch (Exception e){
@@ -152,6 +166,16 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
                 }
             }
         });
+    }
+
+    public String getColorByMember(String Member){
+        switch (Member) {
+            case "":return ConstantUtils.ACCOUNT_COLOR[4];
+            case ConstantUtils.ACCOUNT_RECORD_MEMBER_ME:return ConstantUtils.ACCOUNT_COLOR[5];
+            case ConstantUtils.ACCOUNT_RECORD_MEMBER_FATHER:return ConstantUtils.ACCOUNT_COLOR[6];
+            case ConstantUtils.ACCOUNT_RECORD_MEMBER_MOTHER:return ConstantUtils.ACCOUNT_COLOR[7];
+            default:return "#";
+        }
     }
 
     private void updateDatePickerText(){
@@ -201,7 +225,7 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
             long dayFirstMilliSeconds = TimeUtils.getDateFirstMilliSeconds(time);
             long dayLastMilliSeconds = TimeUtils.getDateLastMilliSeconds(time);
             while (dayFirstMilliSeconds >= start.getTime()) {
-                records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds, dayLastMilliSeconds, record.getRecordname(),null);
+                records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds, dayLastMilliSeconds, record.getRecordname(),null,record.getMember());
                 if (records.size() > 0) {//这一天有记录
                     AccountRecord recordDay = new AccountRecord();
                     recordDay.setRecordname("DAY");
@@ -300,6 +324,11 @@ class ChartDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
             int resID = mContent.getResources().getIdentifier(((AccountRecord)mDatas.get("records").get(pos)).getIcon(), "drawable", mContent.getPackageName());
             holder.item_icon.setBackgroundResource(resID);
             holder.item_name.setText(((AccountRecord) mDatas.get("records").get(pos)).getRecordname());
+            holder.item_remark.setText(((AccountRecord) mDatas.get("records").get(pos)).getRemark());
+            if("".equals(holder.item_remark.getText().toString()))
+                holder.item_remark.setVisibility(View.GONE);
+            else
+                holder.item_remark.setVisibility(View.VISIBLE);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -316,6 +345,7 @@ class ChartDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
     static class Holder extends RecyclerView.ViewHolder {
         public ImageView item_icon;
         public TextView item_name;
+        public TextView item_remark;
         public TextView item_money;
         public TextView day_text;
         public Holder(View itemView, int viewType) {
@@ -324,6 +354,7 @@ class ChartDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
             if(viewType == TYPE_NORMAL) {
                 item_icon = (ImageView) itemView.findViewById(R.id.item_icon);
                 item_name = (TextView) itemView.findViewById(R.id.item_name);
+                item_remark = (TextView) itemView.findViewById(R.id.item_remark);
                 item_money = (TextView) itemView.findViewById(R.id.item_money);
             }
             if(viewType == TYPE_DAY) {

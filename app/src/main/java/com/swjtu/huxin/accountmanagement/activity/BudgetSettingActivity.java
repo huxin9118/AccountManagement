@@ -276,6 +276,7 @@ public class BudgetSettingActivity extends BaseAppCompatActivity {
         }
         else {
             Intent intent = new Intent();
+            intent.putExtra("isBudget",switchCompat.isChecked());
             intent.putExtra("totalMoney", btnMoney.getText().toString());
             setResult(RESULT_OK, intent);
             finish();

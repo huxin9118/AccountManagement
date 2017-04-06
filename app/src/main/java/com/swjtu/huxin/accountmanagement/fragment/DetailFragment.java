@@ -18,6 +18,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -205,6 +206,7 @@ public class DetailFragment extends Fragment {
         wpv = (WaveProgressView) view.findViewById(R.id.wpv);
         isBudget = sharedPreferences.getBoolean("isBudget",true);
         if(isBudget) {
+            wpv.setText(null);
             wpv.setMaxProgress(totalMoney.floatValue());
             wpv.setProgress(remainingMoney.floatValue());
         }
@@ -318,7 +320,7 @@ public class DetailFragment extends Fragment {
         for(int i = indexMaxDay; i >= 1; i--){
             long dayFirstMilliSeconds = TimeUtils.getDayFirstMilliSeconds(i,0,0);
             long dayLastMilliSeconds = TimeUtils.getDayLastMilliSeconds(i,0,0);
-            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds,null,null);
+            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds,null,null,null);
 
             if(records.size()>0) {//这一天有记录
                 String[] money = accountRecordService.getDayMoneyByRecords(records);
@@ -347,7 +349,7 @@ public class DetailFragment extends Fragment {
         for(int i = indexMaxDay; i >= 1; i--){
             long dayFirstMilliSeconds = TimeUtils.getDayFirstMilliSeconds(i,-1,0);
             long dayLastMilliSeconds = TimeUtils.getDayLastMilliSeconds(i,-1,0);
-            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds,null,null);
+            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds,null,null,null);
 
             if(records.size()>0) {
                 String[] money = accountRecordService.getDayMoneyByRecords(records);
@@ -402,7 +404,8 @@ public class DetailFragment extends Fragment {
         AccountRecordService accountRecordService = new AccountRecordService();
         String[] nowMoney = accountRecordService.getMonthMoneyByTime(TimeUtils.getTime(new Date(),TimeUtils.MONTH),0);
 
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(wpv, "progress", remainingMoney.floatValue(),
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(wpv, "progress",
+                totalMoney.floatValue()>remainingMoney.floatValue()?remainingMoney.floatValue():totalMoney.floatValue(),
                 totalMoney.subtract(new BigDecimal(nowMoney[1])).floatValue());
         remainingMoney = totalMoney.subtract(new BigDecimal(nowMoney[1]));
         objectAnimator.setDuration(2000);
@@ -421,6 +424,7 @@ public class DetailFragment extends Fragment {
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent){
         super.onActivityResult(requestCode, resultCode, intent);
+        Log.i("000", requestCode+"");
         switch(requestCode){
             case 1://添加item
                 if(resultCode == getActivity().RESULT_OK){

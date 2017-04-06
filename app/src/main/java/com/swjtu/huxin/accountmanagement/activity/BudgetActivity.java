@@ -81,10 +81,16 @@ public class BudgetActivity extends BaseAppCompatActivity {
                     totalMoney = new BigDecimal(intent.getStringExtra("totalMoney"));
                     if(remainingMoney.doubleValue() >= 0) setDefaultFragment("positive");
                     else setDefaultFragment("negative");
-//                    end.setText(totalMoney.toString());
-//                    progressBar.setMax((int)(totalMoney.doubleValue()*100));
                 }
         }
+    }
+
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("totalMoney", totalMoney);
+        intent.putExtra("remainingMoney",remainingMoney);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }
 
