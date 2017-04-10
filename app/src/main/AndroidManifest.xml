@@ -50,6 +50,9 @@
         <activity
             android:name=".activity.AccountSelectColorActivity">
         </activity>
+        <activity
+            android:name=".activity.AccountTransferActivity">
+        </activity>
     </application>
 
 </manifest>

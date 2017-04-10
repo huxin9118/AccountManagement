@@ -146,6 +146,11 @@ public class AccountRecordService {
         return money;
     }
 
+    /**
+     * account相关类专用
+     * @param Account
+     * @return
+     */
     public String getTotalMoneyByAccount(Account Account){
         SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
@@ -154,6 +159,14 @@ public class AccountRecordService {
         return money;
     }
 
+    /**
+     * account相关类专用
+     * @param firsttime
+     * @param lasttime
+     * @param Account
+     * @param isPositive
+     * @return
+     */
     public String getRangeTotalMoneyByAccount(Date firsttime, Date lasttime,Account Account,boolean isPositive){
         SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);

@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
+import com.swjtu.huxin.accountmanagement.base.OnItemClickListener;
+import com.swjtu.huxin.accountmanagement.base.OnNumKeyboardItemClickListener;
 import com.swjtu.huxin.accountmanagement.view.NumKeyboardView;
 
 import java.math.BigDecimal;
@@ -44,7 +46,6 @@ public class BudgetSettingActivity extends BaseAppCompatActivity {
     private TextView keyNum;
     private TextView keySymbol;
     private NumKeyboardView numKeyboardView;
-    private ArrayList<String> valueList;
     private GridView gridView;
 
 
@@ -89,14 +90,29 @@ public class BudgetSettingActivity extends BaseAppCompatActivity {
 
         keyNum = (TextView) findViewById(R.id.key_num);
         keySymbol = (TextView) findViewById(R.id.key_symbol);
-        keySymbol.setVisibility(View.GONE);
         keyboard = (LinearLayout)findViewById(R.id.keyboard);
         numKeyboardView = (NumKeyboardView) findViewById(R.id.numKeyboardView);
         keyboard.setVisibility(View.GONE);
 
-        valueList = numKeyboardView.getValueList();
         gridView = numKeyboardView.getGridView();
-        gridView.setOnItemClickListener(onItemClickListener);
+        gridView.setOnItemClickListener(new OnNumKeyboardItemClickListener(numKeyboardView, keyNum, keySymbol, new OnItemClickListener() {
+            @Override
+            public void onClick(View view, int pos, String viewName) {
+                if (!"0.00".equals(keyNum.getText().toString())) {
+                    totalMoney = keyNum.getText().toString();
+                    btnMoney.setText(totalMoney);
+                    keyboard.startAnimation(exitAnim);
+                    keyboard.setVisibility(View.GONE);
+
+                    SharedPreferences sharedPreferences = getSharedPreferences("userData", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("totalMoney", totalMoney);
+                    editor.apply();
+                } else {//输入金额为0
+                    showToast("预算金额必须大于0", Toast.LENGTH_SHORT);
+                }
+            }
+        }));
         btnEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,6 +124,12 @@ public class BudgetSettingActivity extends BaseAppCompatActivity {
                     keyboard.setVisibility(View.VISIBLE);
                 }
                 else{
+                    keySymbol.setVisibility(View.GONE);
+                    numKeyboardView.changeBtnOK();
+                    numKeyboardView.setAddSymbol(false);
+                    numKeyboardView.setSubtractSymbol(false);
+                    numKeyboardView.setZero(false);
+
                     keyboard.startAnimation(exitAnim);
                     keyboard.setVisibility(View.GONE);
                 }
@@ -133,140 +155,6 @@ public class BudgetSettingActivity extends BaseAppCompatActivity {
             }
         });
     }
-
-    private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
-        private boolean isInteger = true;//是否输入整数
-        private int numDecimal = 0;//已输入的小数位数
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            String amount;
-            if(numKeyboardView.isZero()) {
-                amount = "0.00";
-                numKeyboardView.setZero(false);
-            }
-            else {
-                amount = keyNum.getText().toString().trim();
-            }
-            if (position < 14 && position != 3 && position != 7 && position != 11 && position != 12) {    //点击0~9按钮
-                if(isInteger) {
-                    if(amount.charAt(0) == '0'){
-                        amount = valueList.get(position) + amount.substring(1);
-                    }
-                    else{
-                        amount = amount.substring(0,amount.length()-3) + valueList.get(position) + amount.substring(amount.length()-3);
-                    }
-                }
-                else{
-                    if(numDecimal == 0){
-                        amount = amount.substring(0,amount.length()-2) + valueList.get(position) + "0";
-                        numDecimal++;
-                    }
-                    else if(numDecimal == 1){
-                        amount = amount.substring(0,amount.length()-1) + valueList.get(position);
-                        numDecimal++;
-                    }
-                }
-            }
-            else {
-                if (position == 7) {      //点击+
-                    if(numKeyboardView.isAddSymbol()){
-                        keySymbol.setVisibility(View.GONE);
-                        numKeyboardView.changeBtnOK();
-                        numKeyboardView.setAddSymbol(false);
-                        numKeyboardView.setZero(false);
-                    }
-                    else {
-                        keySymbol.setText("+");
-                        keySymbol.setVisibility(View.VISIBLE);
-                        numKeyboardView.changeBtnEqual();
-                        numKeyboardView.setAddSymbol(true);
-                        numKeyboardView.setZero(true);
-                        numKeyboardView.setOldAmount(amount);
-                    }
-                    return;
-                }
-                if (position == 11) {      //点击—
-                    if(numKeyboardView.isSubtractSymbol()){
-                        keySymbol.setVisibility(View.GONE);
-                        numKeyboardView.changeBtnOK();
-                        numKeyboardView.setSubtractSymbol(false);
-                        numKeyboardView.setZero(false);
-                    }
-                    else {
-                        keySymbol.setText("-");
-                        keySymbol.setVisibility(View.VISIBLE);
-                        numKeyboardView.changeBtnEqual();
-                        numKeyboardView.setSubtractSymbol(true);
-                        numKeyboardView.setZero(true);
-                        numKeyboardView.setOldAmount(amount);
-                    }
-                    return;
-                }
-                if (position == 14) {      //点击小数点
-                    isInteger = isInteger==true?false:true;
-                }
-                if (position == 3) {      //点击退格键
-                    if(isInteger){
-                        if(amount.charAt(0) != '0'){
-                            amount = amount.substring(0, amount.length() - 4) + amount.substring(amount.length() - 3);
-                        }
-                        if(amount.length() == 3){
-                            amount = "0"+amount;
-                        }
-                        if(amount.length() == 4 && amount.charAt(0) == '0' && numDecimal != 0){
-                            isInteger = false;
-                        }
-                    }
-                    else{
-                        if (numDecimal == 0) {
-                            isInteger = true;
-                        }
-                        else if(numDecimal == 1){
-                            amount = amount.substring(0,amount.length()-2) + "00";
-                            numDecimal--;
-                        }
-                        else if(numDecimal == 2){
-                            amount = amount.substring(0,amount.length()-1) + "0";
-                            numDecimal--;
-                        }
-                    }
-                }
-                if (position == 12) {      //点击C
-                    amount = "0.00";
-                }
-                if (position == 15) {      //点击确定
-                    if(numKeyboardView.isAddSymbol()){
-                        amount = (new BigDecimal(numKeyboardView.getOldAmount()).add(new BigDecimal(amount))).toString();
-                        keySymbol.setVisibility(View.GONE);
-                        numKeyboardView.changeBtnOK();
-                        numKeyboardView.setAddSymbol(false);
-                    }
-                    else if(numKeyboardView.isSubtractSymbol()){
-                        amount = (new BigDecimal(numKeyboardView.getOldAmount()).subtract(new BigDecimal(amount))).toString();
-                        keySymbol.setVisibility(View.GONE);
-                        numKeyboardView.changeBtnOK();
-                        numKeyboardView.setSubtractSymbol(false);
-                    }
-                    else {
-                        if (!"0.00".equals(keyNum.getText().toString())) {
-                            btnMoney.setText(keyNum.getText());
-                            keyboard.startAnimation(exitAnim);
-                            keyboard.setVisibility(View.GONE);
-
-                            SharedPreferences sharedPreferences = getSharedPreferences("userData", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("totalMoney", keyNum.getText().toString());
-                            editor.apply();
-                        } else {//输入金额为0
-                            showToast("预算金额不能为0", Toast.LENGTH_SHORT);
-                        }
-                    }
-                }
-            }
-            keyNum.setText(amount);
-        }
-    };
-
 
     public void onBackPressed() {
         cancelToast();

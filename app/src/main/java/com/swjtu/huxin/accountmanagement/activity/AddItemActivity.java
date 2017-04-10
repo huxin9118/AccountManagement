@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -24,7 +23,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,7 +31,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +41,7 @@ import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
 import com.swjtu.huxin.accountmanagement.base.MyApplication;
 import com.swjtu.huxin.accountmanagement.base.OnItemClickListener;
 import com.swjtu.huxin.accountmanagement.R;
+import com.swjtu.huxin.accountmanagement.base.OnNumKeyboardItemClickListener;
 import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.domain.AddItem;
@@ -81,7 +79,6 @@ public class AddItemActivity extends BaseAppCompatActivity {
     private GridView gridView;
     private Animation enterAnim;
     private Animation exitAnim;
-    private ArrayList<String> valueList;
 
     private int tabPosition; //当前分页数
     private int indexAddItem = 0; //当前选取的项目数
@@ -160,17 +157,9 @@ public class AddItemActivity extends BaseAppCompatActivity {
         iconAddItem = (ImageView) findViewById(R.id.item_icon);
         numAddItem = (TextView) findViewById(R.id.item_num);
         symbolAddItem = (TextView) findViewById(R.id.item_symbol);
-        symbolAddItem.setVisibility(View.GONE);
 
         keyboard = (LinearLayout)findViewById(R.id.keybord);
         numKeyboardView = (NumKeyboardView) findViewById(R.id.numKeyboardView);
-//        numKeyboardView.getLayoutBack().setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {//收回键盘
-//                keyboard.startAnimation(exitAnim);
-//                keyboard.setVisibility(View.GONE);
-//            }
-//        });
 
         btnAccount = (TextView) findViewById(R.id.account);
         btnAccount.setOnClickListener(new OnClickListener() {
@@ -255,9 +244,53 @@ public class AddItemActivity extends BaseAppCompatActivity {
             }
         });
 
-        valueList = numKeyboardView.getValueList();
         gridView = numKeyboardView.getGridView();
-        gridView.setOnItemClickListener(onItemClickListener);
+        gridView.setOnItemClickListener(new OnNumKeyboardItemClickListener(numKeyboardView, numAddItem, symbolAddItem, new OnItemClickListener() {
+            @Override
+            public void onClick(View view, int pos, String viewName) {
+                if (!"0.00".equals(numAddItem.getText().toString())) {
+                    AccountRecord record;
+                    if (editRecord != null) record = editRecord;
+                    else record = new AccountRecord();
+
+                    if (indexAddItem != -1) {//编辑项目改变了Icon和Recordname
+                        MyApplication app = MyApplication.getApplication();
+                        ArrayList<AddItem> shouruAddItems = app.getShouruAddItems();
+                        ArrayList<AddItem> zhichuAddItems = app.getZhichuAddItems();
+                        if (tabPosition == 0) {//存储收入记录
+                            record.setIcon(shouruAddItems.get(indexAddItem).getIconAddItem());
+                            record.setRecordname(shouruAddItems.get(indexAddItem).getNameAddItem());
+                        } else {
+                            record.setIcon(zhichuAddItems.get(indexAddItem).getIconAddItem());
+                            record.setRecordname(zhichuAddItems.get(indexAddItem).getNameAddItem());
+                        }
+                    }
+
+                    if (tabPosition == 0) {
+                        record.setMoney(numAddItem.getText().toString());
+                    } else {
+                        record.setMoney("-" + numAddItem.getText().toString());
+                    }
+                    record.setRecordtime(timeAddItem.getTime());
+                    record.setRemark(remark);
+                    record.setMember(selectMember);
+                    MyApplication app = MyApplication.getApplication();
+                    record.setAccount(app.getAccounts().get(selectAccount));
+                    record.setAccountbook(app.getAccountBooks().get(1));
+
+                    Log.i("3: ", record.toString());
+
+                    Intent intent = new Intent();
+                    intent.putExtra("data", record);
+                    intent.putExtra("isFloatingActionButton", isFloatingActionButton);
+                    setResult(RESULT_OK, intent);
+                    finishAfterTransition();//带动画的退出
+                } else {//输入金额为0
+                    showToast("收入/支出金额必须大于0", Toast.LENGTH_SHORT);
+                }
+            }
+        }));
+
         numAddItem.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -284,12 +317,14 @@ public class AddItemActivity extends BaseAppCompatActivity {
             if(Double.parseDouble(editRecord.getMoney())>0){
                 numAddItem.setText(editRecord.getMoney());
                 mViewPager.setCurrentItem(0);
-                ItemChange(0);
+                ItemChange(editRecord.getRecordname(),editRecord.getIcon(),0);
+                indexAddItem = -1;
             }
             else{
                 numAddItem.setText(editRecord.getMoney().substring(1));
                 mViewPager.setCurrentItem(1);
-                ItemChange(1);
+                ItemChange(editRecord.getRecordname(),editRecord.getIcon(),1);
+                indexAddItem = -1;
             }
             timeAddItem = new Date(editRecord.getRecordtime());
             updateBtnDateAndTime(timeAddItem);
@@ -386,167 +421,6 @@ public class AddItemActivity extends BaseAppCompatActivity {
         public void onPageScrollStateChanged(int arg0){}
     };
 
-    private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
-        private boolean isInteger = true;//是否输入整数
-        private int numDecimal = 0;//已输入的小数位数
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            String amount;
-            if(numKeyboardView.isZero()) {
-                amount = "0.00";
-                numKeyboardView.setZero(false);
-            }
-            else {
-                amount = numAddItem.getText().toString().trim();
-            }
-            if (position < 14 && position != 3 && position != 7 && position != 11 && position != 12) {    //点击0~9按钮
-                if(isInteger) {
-                    if(amount.charAt(0) == '0'){
-                        amount = valueList.get(position) + amount.substring(1);
-                    }
-                    else{
-                        amount = amount.substring(0,amount.length()-3) + valueList.get(position) + amount.substring(amount.length()-3);
-                    }
-                }
-                else{
-                    if(numDecimal == 0){
-                        amount = amount.substring(0,amount.length()-2) + valueList.get(position) + "0";
-                        numDecimal++;
-                    }
-                    else if(numDecimal == 1){
-                        amount = amount.substring(0,amount.length()-1) + valueList.get(position);
-                        numDecimal++;
-                    }
-                }
-            }
-            else {
-                if (position == 7) {      //点击+
-                    if(numKeyboardView.isAddSymbol()){
-                        symbolAddItem.setVisibility(View.GONE);
-                        numKeyboardView.changeBtnOK();
-                        numKeyboardView.setAddSymbol(false);
-                        numKeyboardView.setZero(false);
-                    }
-                    else {
-                        symbolAddItem.setText("+");
-                        symbolAddItem.setVisibility(View.VISIBLE);
-                        numKeyboardView.changeBtnEqual();
-                        numKeyboardView.setAddSymbol(true);
-                        numKeyboardView.setZero(true);
-                        numKeyboardView.setOldAmount(amount);
-                    }
-                    return;
-                }
-                if (position == 11) {      //点击—
-                    if(numKeyboardView.isSubtractSymbol()){
-                        symbolAddItem.setVisibility(View.GONE);
-                        numKeyboardView.changeBtnOK();
-                        numKeyboardView.setSubtractSymbol(false);
-                        numKeyboardView.setZero(false);
-                    }
-                    else {
-                        symbolAddItem.setText("-");
-                        symbolAddItem.setVisibility(View.VISIBLE);
-                        numKeyboardView.changeBtnEqual();
-                        numKeyboardView.setSubtractSymbol(true);
-                        numKeyboardView.setZero(true);
-                        numKeyboardView.setOldAmount(amount);
-                    }
-                    return;
-                }
-                if (position == 14) {      //点击小数点
-                    isInteger = isInteger==true?false:true;
-                }
-                if (position == 3) {      //点击退格键
-                    if(isInteger){
-                        if(amount.charAt(0) != '0'){
-                            amount = amount.substring(0, amount.length() - 4) + amount.substring(amount.length() - 3);
-                        }
-                        if(amount.length() == 3){
-                            amount = "0"+amount;
-                        }
-                        if(amount.length() == 4 && amount.charAt(0) == '0' && numDecimal != 0){
-                            isInteger = false;
-                        }
-                    }
-                    else{
-                        if (numDecimal == 0) {
-                            isInteger = true;
-                        }
-                        else if(numDecimal == 1){
-                            amount = amount.substring(0,amount.length()-2) + "00";
-                            numDecimal--;
-                        }
-                        else if(numDecimal == 2){
-                            amount = amount.substring(0,amount.length()-1) + "0";
-                            numDecimal--;
-                        }
-                    }
-                }
-                if (position == 12) {      //点击C
-                    amount = "0.00";
-                }
-                if (position == 15) {      //点击确定
-                    if(numKeyboardView.isAddSymbol()){
-                        amount = (new BigDecimal(numKeyboardView.getOldAmount()).add(new BigDecimal(amount))).toString();
-                        symbolAddItem.setVisibility(View.GONE);
-                        numKeyboardView.changeBtnOK();
-                        numKeyboardView.setAddSymbol(false);
-                    }
-                    else if(numKeyboardView.isSubtractSymbol()){
-                        amount = (new BigDecimal(numKeyboardView.getOldAmount()).subtract(new BigDecimal(amount))).toString();
-                        symbolAddItem.setVisibility(View.GONE);
-                        numKeyboardView.changeBtnOK();
-                        numKeyboardView.setSubtractSymbol(false);
-                    }
-                    else{
-                        if (!"0.00".equals(numAddItem.getText().toString())) {
-                            AccountRecord record;
-                            if (editRecord != null) record = editRecord;
-                            else record = new AccountRecord();
-
-                            if (indexAddItem != -1) {//编辑项目改变了Icon和Recordname
-                                MyApplication app = MyApplication.getApplication();
-                                ArrayList<AddItem> shouruAddItems = app.getShouruAddItems();
-                                ArrayList<AddItem> zhichuAddItems = app.getZhichuAddItems();
-                                if (tabPosition == 0) {//存储收入记录
-                                    record.setIcon(shouruAddItems.get(indexAddItem).getIconAddItem());
-                                    record.setRecordname(shouruAddItems.get(indexAddItem).getNameAddItem());
-                                } else {
-                                    record.setIcon(zhichuAddItems.get(indexAddItem).getIconAddItem());
-                                    record.setRecordname(zhichuAddItems.get(indexAddItem).getNameAddItem());
-                                }
-                            }
-
-                            if (tabPosition == 0) {
-                                record.setMoney(numAddItem.getText().toString());
-                            } else {
-                                record.setMoney("-" + numAddItem.getText().toString());
-                            }
-                            record.setRecordtime(timeAddItem.getTime());
-                            record.setRemark(remark);
-                            record.setMember(selectMember);
-                            MyApplication app = MyApplication.getApplication();
-                            record.setAccount(app.getAccounts().get(selectAccount));
-                            record.setAccountbook(app.getAccountBooks().get(1));
-
-                            Log.i("3: ", record.toString());
-
-                            Intent intent = new Intent();
-                            intent.putExtra("data", record);
-                            intent.putExtra("isFloatingActionButton", isFloatingActionButton);
-                            setResult(RESULT_OK, intent);
-                            finishAfterTransition();//带动画的退出
-                        } else {//输入金额为0
-                            showToast("收入/支出金额不能为0", Toast.LENGTH_SHORT);
-                        }
-                    }
-                }
-            }
-            numAddItem.setText(amount);
-        }
-    };
-
     //一定要在selectAccount完成初始化后再调用该方法
     private void initAccountPopupWindow() {
         View contentView = LayoutInflater.from(AddItemActivity.this).inflate(R.layout.popupwindow_account, null);
@@ -560,7 +434,7 @@ public class AddItemActivity extends BaseAppCompatActivity {
         final List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
         for(int i = 0; i < accounts.size(); i++) {
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("item_icon", getIconByType(accounts.get(i).getType()));
+            map.put("item_icon", getPopupWindowIconByType(accounts.get(i).getType()));
             map.put("item_text", accounts.get(i).getAccountname());
             String totalMoney = accountRecordService.getTotalMoneyByAccount(accounts.get(i));
             map.put("item_money", new BigDecimal(accounts.get(i).getMoney()).add(new BigDecimal(totalMoney)).toString());
@@ -603,7 +477,6 @@ public class AddItemActivity extends BaseAppCompatActivity {
         outOfWindow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLog("你大爷的啊啊啊啊啊啊啊1");
                 accountPopupWindow.dismiss();
             }
         });
@@ -614,7 +487,6 @@ public class AddItemActivity extends BaseAppCompatActivity {
         //设置各个控件的点击响应
         ListView list = (ListView)contentView.findViewById(R.id.list);
 
-        AccountRecordService accountRecordService = new AccountRecordService();
         MyApplication app = MyApplication.getApplication();
         final List<String> members = new ArrayList<String>(app.getMembers());
         final List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
@@ -661,7 +533,6 @@ public class AddItemActivity extends BaseAppCompatActivity {
         outOfWindow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLog("你大爷的啊啊啊啊啊啊啊2");
                 memberPopupWindow.dismiss();
             }
         });
@@ -709,7 +580,7 @@ public class AddItemActivity extends BaseAppCompatActivity {
         popupWindow.showAtLocation(rootview, Gravity.BOTTOM, 0, 0);
     }
 
-    private int getIconByType(int type){
+    private int getPopupWindowIconByType(int type){
         switch (type) {
             case ConstantUtils.ACCOUNT_TYPE_CASH:return R.drawable.ic_cash_gray;
             case ConstantUtils.ACCOUNT_TYPE_BANK_CARD:return R.drawable.ic_bank_card_gray;
@@ -717,23 +588,6 @@ public class AddItemActivity extends BaseAppCompatActivity {
             case ConstantUtils.ACCOUNT_TYPE_ALIPAY:return R.drawable.ic_alipay_gray;
             case ConstantUtils.ACCOUNT_TYPE_WECHAT:return R.drawable.ic_wechat_gray;
             default:return -1;
-        }
-    }
-
-    /**
-     * edit记录初始化Tab分页时调用
-     * @param position 当前分页数（收入 | 支出）
-     */
-    public void ItemChange(int position){
-        this.tabPosition = position; //改变分页位置标记
-        this.indexAddItem = -1;//edit记录时将其特殊化为-1，表示未修改过记录
-        if(position == 0){
-            btnShouru.setTextColor(getResources().getColor(R.color.customBlue));
-            btnZhichu.setTextColor(getResources().getColor(R.color.darkgray));
-        }
-        else{
-            btnShouru.setTextColor(getResources().getColor(R.color.darkgray));
-            btnZhichu.setTextColor(getResources().getColor(R.color.customBlue));
         }
     }
 

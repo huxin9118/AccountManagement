@@ -3,6 +3,7 @@ package com.swjtu.huxin.accountmanagement.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.swjtu.huxin.accountmanagement.base.MyApplication;
 import com.swjtu.huxin.accountmanagement.domain.Account;
@@ -30,7 +31,10 @@ public class AccountRecordDao {
         cv.put("money", record.getMoney());
         cv.put("remark", record.getRemark());
         cv.put("account_id", record.getAccount().getId());
-        cv.put("accountbook_id", record.getAccountbook().getId());
+        if(record.getAccountbook() != null)
+            cv.put("accountbook_id", record.getAccountbook().getId());
+        else
+            cv.put("accountbook_id", -1);
         cv.put("member", record.getMember());
         cv.put("recordtime", record.getRecordtime());
         //返回值是改行的主键，如果出错返回-1
@@ -97,7 +101,15 @@ public class AccountRecordDao {
             record.setMoney(cs.getString(cs.getColumnIndex("money")));
             record.setRemark(cs.getString(cs.getColumnIndex("remark")));
             record.setAccount(app.getAccounts().get(cs.getInt(cs.getColumnIndex("account_id"))));
-            record.setAccountbook(app.getAccountBooks().get(cs.getInt(cs.getColumnIndex("accountbook_id"))));
+            if(cs.getInt(cs.getColumnIndex("accountbook_id")) == -1){
+                Log.i("000", account+"===");
+                if(account != null)record.setAccountbook(null);
+                else continue;
+            }
+            else {
+                Log.i("111", account+"===");
+                record.setAccountbook(app.getAccountBooks().get(cs.getInt(cs.getColumnIndex("accountbook_id"))));
+            }
             record.setMember(cs.getString(cs.getColumnIndex("member")));
             record.setRecordtime(cs.getLong(cs.getColumnIndex("recordtime")));
             records.add(record);
@@ -107,7 +119,7 @@ public class AccountRecordDao {
     }
 
     public List<String> getMoneyListByTime(long firsttime,long lasttime){
-        Cursor cs = db.query("account_record", new String[]{"money"}, "recordtime between ? and ?", new String[]{firsttime+"",lasttime+""}, null, null, "recordtime desc",null);
+        Cursor cs = db.query("account_record", new String[]{"money"}, "accountbook_id != ? AND recordtime between ? and ?", new String[]{-1+"",firsttime+"",lasttime+""}, null, null, "recordtime desc",null);
         List<String> MoneyList = new ArrayList<String>();
         while(cs.moveToNext()){
             MoneyList.add(cs.getString(cs.getColumnIndex("money")));
@@ -119,9 +131,9 @@ public class AccountRecordDao {
     public List<AccountRecord> getListGroupByRecordname(Date firsttime, Date lasttime, boolean isPositive){
         String sql;
         if(isPositive)
-            sql = "SELECT recordname ,icon,SUM(money) money ,COUNT(money) counts FROM account_record WHERE money > 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY recordname";
+            sql = "SELECT recordname ,icon,SUM(money) money ,COUNT(money) counts FROM account_record WHERE accountbook_id != -1 AND money > 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY recordname";
         else
-            sql = "SELECT recordname ,icon,SUM(money) money ,COUNT(money) counts FROM account_record WHERE money < 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY recordname";
+            sql = "SELECT recordname ,icon,SUM(money) money ,COUNT(money) counts FROM account_record WHERE accountbook_id != -1 AND money < 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY recordname";
         Cursor cs = db.rawQuery(sql, new String[]{firsttime.getTime()+"",lasttime.getTime()+""});
         List<AccountRecord> records = new ArrayList<AccountRecord>();
         while(cs.moveToNext()){
@@ -140,9 +152,9 @@ public class AccountRecordDao {
     public List<AccountRecord> getListGroupByMember(Date firsttime, Date lasttime, boolean isPositive){
         String sql;
         if(isPositive)
-            sql = "SELECT member ,SUM(money) money FROM account_record WHERE money > 0 AND recordtime between ? and ? GROUP BY member ORDER BY member";
+            sql = "SELECT member ,SUM(money) money FROM account_record WHERE accountbook_id != -1 AND money > 0 AND recordtime between ? and ? GROUP BY member ORDER BY member";
         else
-            sql = "SELECT member ,SUM(money) money FROM account_record WHERE money < 0 AND recordtime between ? and ? GROUP BY member ORDER BY member";
+            sql = "SELECT member ,SUM(money) money FROM account_record WHERE accountbook_id != -1 AND money < 0 AND recordtime between ? and ? GROUP BY member ORDER BY member";
         Cursor cs = db.rawQuery(sql, new String[]{firsttime.getTime()+"",lasttime.getTime()+""});
         List<AccountRecord> records = new ArrayList<AccountRecord>();
         while(cs.moveToNext()){
@@ -157,7 +169,7 @@ public class AccountRecordDao {
     }
 
     public String getRangeTotalMoneyByRecordname(Date firsttime, Date lasttime,String recordname){
-        String sql = "SELECT SUM(money) money FROM account_record WHERE recordname = ? AND recordtime between ? and ?";
+        String sql = "SELECT SUM(money) money FROM account_record WHERE accountbook_id != -1 AND recordname = ? AND recordtime between ? and ?";
         Cursor cs = db.rawQuery(sql, new String[]{recordname,firsttime.getTime()+"",lasttime.getTime()+""});
         cs.moveToNext();
         String money = cs.getString(cs.getColumnIndex("money"));

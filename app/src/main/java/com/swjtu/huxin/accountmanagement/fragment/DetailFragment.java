@@ -491,7 +491,6 @@ public class DetailFragment extends Fragment {
                         records.add(record);
                         mRecyclerViewAdapter.addItemList(0,records);
                     }
-
                     updateHeader();
                     updateWAV();
                 }

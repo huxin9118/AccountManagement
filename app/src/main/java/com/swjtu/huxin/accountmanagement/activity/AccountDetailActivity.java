@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -230,7 +229,6 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
     }
 
     public void onBackPressed() {
-        Log.i("000", "onActivityResult: "+"asfafafasfs");
         cancelToast();
         Intent intent = new Intent();
         intent.putExtra("account", account);
@@ -298,11 +296,12 @@ class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
         final int pos = getRealPosition(holder);
         if(getItemViewType(position) == TYPE_HEADER || getItemViewType(position) == TYPE_FOOTER) return;
         if(getItemViewType(position) == TYPE_NORMAL) {
-            double num = Double.parseDouble(((AccountRecord) mDatas.get("records").get(pos)).getMoney());
+            AccountRecord record = (AccountRecord) mDatas.get("records").get(pos);
+            double num = Double.parseDouble(record.getMoney());
             if (num > 0) {//收入
                 holder.item_money.setText("+"+new DecimalFormat("0.00").format(num));
                 try {
-                    holder.item_money.setTextColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(mContext, "shouru.xml", ((AccountRecord) mDatas.get("records").get(pos)).getIcon())));
+                    holder.item_money.setTextColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(mContext, "shouru.xml", record.getIcon())));
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -311,16 +310,19 @@ class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
             else {
                 holder.item_money.setText("-"+new DecimalFormat("0.00").format(num*-1));
                 try {
-                    holder.item_money.setTextColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(mContext, "zhichu.xml", ((AccountRecord) mDatas.get("records").get(pos)).getIcon())));
+                    holder.item_money.setTextColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(mContext, "zhichu.xml",record.getIcon())));
                 }
                 catch (Exception e){
                     e.printStackTrace();
                 }
             }
-            int resID = mContent.getResources().getIdentifier(((AccountRecord)mDatas.get("records").get(pos)).getIcon(), "drawable", mContent.getPackageName());
+            int resID = mContent.getResources().getIdentifier(record.getIcon(), "drawable", mContent.getPackageName());
             holder.item_icon.setBackgroundResource(resID);
-            holder.item_name.setText(((AccountRecord) mDatas.get("records").get(pos)).getRecordname());
-            holder.item_remark.setText(((AccountRecord) mDatas.get("records").get(pos)).getRemark());
+            holder.item_name.setText(record.getRecordname());
+            if(record.getAccountbook() == null)
+                holder.item_remark.setText(record.getMember()+record.getRemark());
+            else
+                holder.item_remark.setText(record.getRemark());
             if("".equals(holder.item_remark.getText().toString()))
                 holder.item_remark.setVisibility(View.GONE);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -331,7 +333,8 @@ class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
             });
         }
         if(getItemViewType(position) == TYPE_DAY) {
-            String dayText = (new SimpleDateFormat("M月d日").format(new Date(((AccountRecord)mDatas.get("records").get(pos)).getRecordtime())));
+            AccountRecord record = (AccountRecord) mDatas.get("records").get(pos);
+            String dayText = (new SimpleDateFormat("M月d日").format(new Date(record.getRecordtime())));
             holder.day_text.setText(dayText);
         }
     }

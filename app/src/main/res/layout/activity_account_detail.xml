@@ -23,15 +23,15 @@
                 android:layout_centerVertical="true"
                 android:gravity="center">
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:background="@drawable/ic_back_white"/>
                 <TextView
                     android:id="@+id/back_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="账户"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textColor="@color/white"
                     android:layout_toRightOf="@id/back" />
             </LinearLayout>
@@ -41,14 +41,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="现金"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="@color/white"
                 android:layout_centerInParent="true" />
 
             <ImageView
                 android:id="@+id/setting"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:background="@drawable/ic_shezhi_white"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true" />

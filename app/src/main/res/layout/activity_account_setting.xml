@@ -20,14 +20,14 @@
             android:layout_centerVertical="true"
             android:gravity="center">
             <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:background="@drawable/ic_back_blue"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="返回"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textColor="@color/customBlue"
                 android:layout_toRightOf="@id/back" />
         </LinearLayout>
@@ -41,12 +41,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="现金"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="设置"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
         </LinearLayout>
     </RelativeLayout>
 

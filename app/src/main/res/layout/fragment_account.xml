@@ -13,19 +13,20 @@
 
 
         <TextView
+            android:id="@+id/btnTransfer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_alignParentRight="true"
             android:text="转账"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColor="@color/customBlue"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="我的账户"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:layout_centerInParent="true" />
     </RelativeLayout>
 
@@ -49,7 +50,7 @@
             android:layout_centerVertical="true"
             android:layout_margin="5dp"
             android:text="总余额"
-            android:textSize="19sp"
+            android:textSize="18sp"
             android:gravity="center"/>
 
         <TextView
@@ -60,7 +61,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:text="0.00"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textColor="@color/customBlue"
             android:gravity="center"/>
     </RelativeLayout>

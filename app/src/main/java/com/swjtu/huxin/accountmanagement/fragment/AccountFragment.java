@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.activity.AccountDetailActivity;
+import com.swjtu.huxin.accountmanagement.activity.AccountTransferActivity;
 import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
 import com.swjtu.huxin.accountmanagement.base.OnItemClickListener;
 import com.swjtu.huxin.accountmanagement.base.MyApplication;
@@ -41,11 +42,11 @@ public class AccountFragment extends Fragment {
     public static final String ARGUMENT = "argument";
 
     private TextView money;
+    private TextView btnTransfer;
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private AccountRecyclerAdapter mRecyclerViewAdapter;
-    private int indexItem = -1; //当前选取的项目数
 
     /**
      * 传入需要的参数，设置给arguments
@@ -75,6 +76,15 @@ public class AccountFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_account,container,false);
 
         money = (TextView) view.findViewById(R.id.money);
+        btnTransfer = (TextView) view.findViewById(R.id.btnTransfer);
+        btnTransfer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AccountTransferActivity.class);
+                startActivityForResult(intent,2);
+            }
+        });
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
@@ -84,7 +94,6 @@ public class AccountFragment extends Fragment {
         mRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onClick(View view, int pos, String viewName) {
-                indexItem = pos;
                 Account account = (Account) mRecyclerViewAdapter.getDatas("accounts").get(pos);
                 Intent intent = new Intent(getActivity(), AccountDetailActivity.class);
                 intent.putExtra("account", account);
@@ -118,13 +127,17 @@ public class AccountFragment extends Fragment {
             case 1:
                 if(resultCode == getActivity().RESULT_OK){
                     Account account = (Account) intent.getSerializableExtra("account");
-                    mRecyclerViewAdapter.getDatas("accounts").set(indexItem,account);
-                    mRecyclerViewAdapter.notifyDataSetChanged();
                     MyApplication app = MyApplication.getApplication();
                     app.getAccounts().put(account.getId(),account);
+                    initRecyclerViewData();
+
                     AccountService accountService = new AccountService();
                     accountService.updateAccount(account);
                 }
+                break;
+            case 2:
+                initRecyclerViewData();
+                break;
         }
     }
 
