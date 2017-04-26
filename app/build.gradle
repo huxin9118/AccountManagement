@@ -38,4 +38,5 @@ dependencies {
     compile 'net.rdrei.android.dirchooser:library:3.2@aar'
     compile 'com.github.castorflex.verticalviewpager:library:19.0.1'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.6'
+    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
 }

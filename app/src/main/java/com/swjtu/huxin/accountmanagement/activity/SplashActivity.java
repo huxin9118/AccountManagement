@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.animation.Animation;
@@ -51,8 +50,8 @@ public class SplashActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkFirstRun();
         setContentView(R.layout.activity_splash);
+        checkFirstRun();
         imgXiaolian = (ImageView) findViewById(R.id.ic_xiaolian_blue);
         text1 = (TextView) findViewById(R.id.text1);
         text2 = (TextView) findViewById(R.id.text2);

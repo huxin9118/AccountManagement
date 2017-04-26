@@ -368,6 +368,10 @@ class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter  implements I
             if("".equals(holder.item_remark.getText().toString()))
                 holder.item_remark.setVisibility(View.GONE);
 
+            if(record.getAccountbook() == null){
+                holder.item_edit.setVisibility(View.GONE);
+            }
+
             holder.item_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

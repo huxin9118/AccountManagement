@@ -57,7 +57,12 @@ public class AccountRecordDao {
 
     public long delete(AccountRecord record){
         //返回值是影响的行数
-        return db.delete("account_record","id = ?", new String[]{record.getId()+""});
+        if(record.getAccountbook() != null) {
+            return db.delete("account_record", "id = ?", new String[]{record.getId() + ""});
+        }
+        else {
+            return db.delete("account_record", "recordtime = ? AND accountbook_id = -1", new String[]{record.getRecordtime() + ""});
+        }
     }
 
     public AccountRecord find(int recordID){

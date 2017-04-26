@@ -3,6 +3,7 @@ package com.swjtu.huxin.accountmanagement.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -205,26 +206,24 @@ public class ChartTabMemberFragment extends Fragment
         data.setValueLabelBackgroundEnabled(false);// 设置是否显示数据的背景颜色
 
         if (isExploded) { //爆炸显示
-            data.setSlicesSpacing(2);//设置数据间的间隙
+            data.setSlicesSpacing(1);//设置数据间的间隙
         }
 
         data.setValues(values);//为饼图添加数据
 
+        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltxh.ttf");
         if (hasCenterText1) {
-//            Typeface tf = Typeface.createFromAsset(getAssets(), "Roboto-Italic.ttf");
-//            data.setCenterText1Typeface(tf);//设置文本字体
-//            data.setCenterText1FontSize(ChartUtils.px2sp(getResources().getDisplayMetrics().scaledDensity,
-//                    (int) getResources().getDimension(R.dimen.pie_chart_text1_size)));
-            //设置文本
             if(isShouru)data.setCenterText1("总收入");
             else data.setCenterText1("总支出");
-            data.setCenterText1FontSize(13);//设置文本大小
+            data.setCenterText1Typeface(font);//设置文本字体
+            data.setCenterText1FontSize(16);//设置文本大小
             data.setCenterText1Color(getResources().getColor(R.color.gray));//设置文本颜色
         }
 
         if (hasCenterText2) {
             if(isShouru)data.setCenterText2(new DecimalFormat("0.00").format(totalMoney));
             else data.setCenterText2(new DecimalFormat("0.00").format(totalMoney*-1));
+            data.setCenterText2Typeface(font);//设置文本字体
             data.setCenterText2FontSize(22);
             data.setCenterText2Color(getResources().getColor(R.color.gray));
         }

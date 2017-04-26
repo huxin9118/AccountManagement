@@ -1,11 +1,14 @@
 package com.swjtu.huxin.accountmanagement.base;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 /**
@@ -21,6 +24,11 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     /**

@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Typeface;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Layout;
@@ -79,6 +80,8 @@ public class WaveProgressView extends View {
 
         //初始化一些画笔
         textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltxh.ttf");
+        textPaint.setTypeface(font);
         textPaint.setTextSize(textSize);
         doubleTextSize = textSize;
         singleTextSize = textSize * 1.3f;
@@ -173,7 +176,7 @@ public class WaveProgressView extends View {
             text = "月预算\n" + new DecimalFormat("0.00").format(this.progress);
             textPaint.setTextSize(doubleTextSize);
             StaticLayout staticLayout = new StaticLayout(text, textPaint, bitmapCanvas.getWidth(), Layout.Alignment.ALIGN_CENTER, 1.0F, 0.0F, true);
-            bitmapCanvas.translate(0, radius / 2);
+            bitmapCanvas.translate(0, radius / 1.8f);
             staticLayout.draw(bitmapCanvas);
             bitmapCanvas.restore();
             canvas.drawBitmap(bitmap, 0, 0, null);

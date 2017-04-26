@@ -3,6 +3,7 @@ package com.swjtu.huxin.accountmanagement.activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.base.MyApplication;
+import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountBook;
 import com.swjtu.huxin.accountmanagement.utils.ExportDatabaseUtils;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
@@ -214,6 +216,12 @@ public class MoreExportActivity extends BaseAppCompatActivity {
             }
         });
 
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences("userData", MODE_PRIVATE);
+        selectAccountbook = sharedPreferences.getInt("defaultAccountbook", 1);
+        MyApplication app = MyApplication.getApplication();
+        AccountBook accountbook = app.getAccountBooks().get(selectAccountbook);
+        textAccountbook.setText(accountbook.getBookname());
         initAccountBookPopupWindow();
     }
 
@@ -229,6 +237,10 @@ public class MoreExportActivity extends BaseAppCompatActivity {
         for(int i = 0; i < accountbooks.size(); i++) {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("item_text", accountbooks.get(i).getBookname());
+            if(selectAccountbook == accountbooks.get(i).getId())
+                map.put("item_selector", R.drawable.ic_selector_blue);
+            else
+                map.put("item_selector", null);
             data.add(map);
         }
 
@@ -250,6 +262,10 @@ public class MoreExportActivity extends BaseAppCompatActivity {
                 accountbookPopupWindow.dismiss();
 
                 selectAccountbook = accountbooks.get(position).getId();
+                SharedPreferences sharedPreferences = getSharedPreferences("userData", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("defaultAccountbook",selectAccountbook);
+                editor.apply();
                 textAccountbook.setText(accountbooks.get(position).getBookname());
             }
         });

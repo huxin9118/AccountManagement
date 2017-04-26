@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
 
+import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountBook;
 import com.swjtu.huxin.accountmanagement.domain.AddItem;
@@ -12,6 +13,8 @@ import com.swjtu.huxin.accountmanagement.domain.AddItem;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by huxin on 2017/2/28.
@@ -37,6 +40,8 @@ public class MyApplication extends Application{
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
         }
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder().setDefaultFontPath("fonts/fzltxh.ttf")
+                .setFontAttrId(R.attr.fontPath).build());
     }
 
     public static Context getContext() {
