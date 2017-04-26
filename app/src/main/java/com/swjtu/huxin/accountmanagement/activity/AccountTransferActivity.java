@@ -223,6 +223,7 @@ public class AccountTransferActivity extends BaseAppCompatActivity {
                         accountRecordService.addAccountRecord(recordOut);
                         accountRecordService.addAccountRecord(recordIn);
 
+                        setResult(RESULT_OK);
                         finish();
                     } else {//输入金额为0
                         showToast("预算金额必须大于0", Toast.LENGTH_SHORT);

@@ -305,6 +305,8 @@ public class DetailFragment extends Fragment {
                         nowHeaderTime = TimeUtils.getMonthFirstMilliSeconds(headerMonth,headerYear);
                     }
                 }
+
+                mRecyclerViewAdapter.hideDeleteAndEidt();
             }
         });
         return view;
@@ -581,12 +583,7 @@ class DetailRecyclerAdapter extends BaseRecyclerViewAdapter{
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isDeleteAndEidtShow) {
-                    MyApplication app = MyApplication.getApplication();
-                    setAnimator(delete, app.getScreenWidth() / 2 * -0.8f, 0, 0, 90, -1);
-                    setAnimator(edit, app.getScreenWidth() / 2 * 0.8f, 0, 0, -90, 1);
-                    isDeleteAndEidtShow = false;
-                }
+                hideDeleteAndEidt();
             }
         });
 
@@ -609,27 +606,28 @@ class DetailRecyclerAdapter extends BaseRecyclerViewAdapter{
             holder.item_icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Toast.makeText(mContext, "pos="+pos+" position="+position, Toast.LENGTH_SHORT).show();
                     MyApplication app = MyApplication.getApplication();
                     if (!isDeleteAndEidtShow) {
-                        setAnimator(holder.item_delete, 0, app.getScreenWidth() / 2 * -0.8f, 90, 0, -1);
-                        setAnimator(holder.item_edit, 0, app.getScreenWidth() / 2 * 0.8f, -90, 0, 1);
+                        setAnimator(holder.item_delete, 0, app.getScreenWidth() / 2 * -0.8f, 90, 0, false);
+                        setAnimator(holder.item_edit, 0, app.getScreenWidth() / 2 * 0.8f, -90, 0, false);
                         delete = holder.item_delete;
                         edit = holder.item_edit;
                         isDeleteAndEidtShow = true;
                     }
                     else{
-                        setAnimator(delete, app.getScreenWidth() / 2 * -0.8f, 0, 0, 90, -1);
-                        setAnimator(edit, app.getScreenWidth() / 2 * 0.8f, 0, 0, -90, 1);
+                        setAnimator(delete, app.getScreenWidth() / 2 * -0.8f, 0, 0, 90, true);
+                        setAnimator(edit, app.getScreenWidth() / 2 * 0.8f, 0, 0, -90, true);
 
                         if(delete != holder.item_delete) {
-                            setAnimator(holder.item_delete, 0, app.getScreenWidth() / 2 * -0.8f, 90, 0, -1);
-                            setAnimator(holder.item_edit, 0, app.getScreenWidth() / 2 * 0.8f, -90, 0, 1);
+                            setAnimator(holder.item_delete, 0, app.getScreenWidth() / 2 * -0.8f, 90, 0, false);
+                            setAnimator(holder.item_edit, 0, app.getScreenWidth() / 2 * 0.8f, -90, 0, false);
                             delete = holder.item_delete;
                             edit = holder.item_edit;
                             isDeleteAndEidtShow = true;
                         }
                         else{
+                            delete = null;
+                            edit = null;
                             isDeleteAndEidtShow = false;
                         }
                     }
@@ -661,25 +659,43 @@ class DetailRecyclerAdapter extends BaseRecyclerViewAdapter{
     public void hideDeleteAndEidt(){
         if (isDeleteAndEidtShow) {
             MyApplication app = MyApplication.getApplication();
-            setAnimator(delete, app.getScreenWidth() / 2 * -0.8f, 0, 0, 90, -1);
-            setAnimator(edit, app.getScreenWidth() / 2 * 0.8f, 0, 0, -90, 1);
+            setAnimator(delete, app.getScreenWidth() / 2 * -0.8f, 0, 0, 90, true);
+            setAnimator(edit, app.getScreenWidth() / 2 * 0.8f, 0, 0, -90, true);
+            delete = null;
+            edit = null;
             isDeleteAndEidtShow = false;
         }
     }
 
-    private void setAnimator(View view, float XFrom, float XTo, float rotationFrom, float rotationTo, float direction){
-        ObjectAnimator move1 = ObjectAnimator.ofFloat(view, "translationX", XFrom, XTo + 20 * direction);
-        ObjectAnimator move2 = ObjectAnimator.ofFloat(view, "translationX", XTo + 20 * direction, XTo);
-        ObjectAnimator rotate1 = ObjectAnimator.ofFloat(view, "rotation", rotationFrom, rotationTo + 45 * direction);
-        ObjectAnimator rotate2 = ObjectAnimator.ofFloat(view, "rotation", rotationTo + 45 * direction, rotationTo);
-        AnimatorSet animSet1 = new AnimatorSet();
-        AnimatorSet animSet2 = new AnimatorSet();
-        animSet1.play(rotate1).with(move1);
-        animSet2.play(rotate2).with(move2).after(animSet1);
-//        animSet1.setInterpolator(new DecelerateInterpolator());
-//        animSet2.setInterpolator(new AccelerateInterpolator());
-        animSet2.setDuration(500);
-        animSet2.start();
+    private void setAnimator(View view, float XFrom, float XTo, float rotationFrom, float rotationTo, boolean isShow){
+        ObjectAnimator move1;
+        ObjectAnimator move2;
+        ObjectAnimator rotate1;
+        ObjectAnimator rotate2;
+        if(!isShow) {
+            move1 = ObjectAnimator.ofFloat(view, "translationX", XFrom, XTo * 1.1f);
+            move2 = ObjectAnimator.ofFloat(view, "translationX", XTo * 1.1f, XTo);
+            rotate1 = ObjectAnimator.ofFloat(view, "rotation", rotationFrom, rotationFrom / -2);
+            rotate2 = ObjectAnimator.ofFloat(view, "rotation", rotationFrom / -2, rotationTo);
+        }
+        else {
+            move1 = ObjectAnimator.ofFloat(view, "translationX", XFrom, XFrom * 1.1f);
+            move2 = ObjectAnimator.ofFloat(view, "translationX", XFrom * 1.1f, XTo);
+            rotate1 = ObjectAnimator.ofFloat(view, "rotation", rotationFrom, rotationTo / -2);
+            rotate2 = ObjectAnimator.ofFloat(view, "rotation", rotationTo / -2, rotationTo);
+        }
+        move1.setDuration(500);
+        move1.setStartDelay(0);
+        rotate1.setDuration(500);
+        rotate1.setStartDelay(0);
+        move2.setDuration(500);
+        move2.setStartDelay(500);
+        rotate2.setDuration(500);
+        rotate2.setStartDelay(500);
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.playTogether(move1,rotate1,move2,rotate2);
+//        animSet.setInterpolator(new DecelerateInterpolator());
+        animSet.start();
     }
 
     @Override

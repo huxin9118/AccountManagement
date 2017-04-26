@@ -16,6 +16,9 @@
     <color name="zhichu">#2fb2e8</color>
     <color name="jieyu">#ff6b6b</color>
 
+    <color name="item_delete">#ff3b30</color>
+    <color name="item_edit">#6c6ced</color>
+
     <color name="more_summary">#c5d78f</color>
     <color name="more_export">#82d1f1</color>
 

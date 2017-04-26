@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -19,7 +18,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
@@ -288,7 +286,6 @@ public class MoreSummaryActivity extends BaseAppCompatActivity {
                     yearFirstMilliSeconds,yearLastMilliSeconds,"网购",null,null);
             BigDecimal maxMoney = new BigDecimal("0.00");
             BigDecimal sumMoney = new BigDecimal("0.00");
-            Log.i("sss", records.size()+"");
             for(int i = 0; i < records.size(); i++){
                 BigDecimal money = new BigDecimal(records.get(i).getMoney()).negate();
                 sumMoney = sumMoney.add(money);
@@ -333,7 +330,6 @@ public class MoreSummaryActivity extends BaseAppCompatActivity {
                     yearFirstMilliSeconds,yearLastMilliSeconds,"餐饮",null,null);
             BigDecimal maxMoney = new BigDecimal("0.00");
             BigDecimal sumMoney = new BigDecimal("0.00");
-            Log.i("sss", records.size()+"");
             for(int i = 0; i < records.size(); i++){
                 BigDecimal money = new BigDecimal(records.get(i).getMoney()).negate();
                 sumMoney = sumMoney.add(money);

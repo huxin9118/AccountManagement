@@ -136,7 +136,9 @@ public class AccountFragment extends Fragment {
                 }
                 break;
             case 2:
-                initRecyclerViewData();
+                if(resultCode == getActivity().RESULT_OK) {
+                    initRecyclerViewData();
+                }
                 break;
         }
     }

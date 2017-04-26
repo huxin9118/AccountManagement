@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.R;
@@ -25,6 +26,8 @@ import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
 import com.swjtu.huxin.accountmanagement.utils.ConstantUtils;
 import com.swjtu.huxin.accountmanagement.utils.ItemXmlPullParserUtils;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
+import com.swjtu.huxin.accountmanagement.view.ItemSwipeHelpter;
+import com.swjtu.huxin.accountmanagement.view.ItemSwipeLayout;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -113,6 +116,7 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
                 dateRange.setText(new SimpleDateFormat("yyyy.M.d").format(start) + "~" + new SimpleDateFormat("M.d").format(end));
                 updateDateRangeChange();
                 updateData();
+                mRecyclerViewAdapter.getmItemSwipeHelpter().close();
             }
         });
 
@@ -126,6 +130,7 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
                 dateRange.setText(new SimpleDateFormat("yyyy.M.d").format(start) + "~" + new SimpleDateFormat("M.d").format(end));
                 updateDateRangeChange();
                 updateData();
+                mRecyclerViewAdapter.getmItemSwipeHelpter().close();
             }
         });
 
@@ -137,9 +142,6 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
         numShouru = (TextView) findViewById(R.id.numShouru);
         numZhichu = (TextView) findViewById(R.id.numZhichu);
         numJieyu = (TextView) findViewById(R.id.numJieyu);
-        AccountRecordService accountRecordService = new AccountRecordService();
-        String totalMoney = accountRecordService.getTotalMoneyByAccount(account);
-        numJieyu.setText(new BigDecimal(account.getMoney()).add(new BigDecimal(totalMoney)).toString());
 
         empty = (LinearLayout) findViewById(R.id.empty);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -153,12 +155,18 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
 
         mRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onClick(View view, int pos, String viewName) {
-                if("itemView".equals(viewName)) {
-//                    Intent intent = new Intent(ChartDetailActivity.this, AddItem.class);
-//                    intent.putExtra("back", "明细");
-//                    intent.putExtra("record", (AccountRecord)mRecyclerViewAdapter.getDatas("records").get(pos));
-//                    startActivityForResult(intent, 1);
+            public void onClick(View view, int pos,String viewName) {
+                mRecyclerViewAdapter.getmItemSwipeHelpter().close();
+                if("item_edit".equals(viewName)) {
+                    Intent intent = new Intent(AccountDetailActivity.this, AddItemActivity.class);
+                    intent.putExtra("edit", ((AccountRecord) mRecyclerViewAdapter.getDatas("records").get(pos)));
+                    startActivityForResult(intent, 2);
+                }
+                if("item_delete".equals(viewName)) {
+                    AccountRecord removedRecord = (AccountRecord) mRecyclerViewAdapter.getDatas("records").get(pos);
+                    AccountRecordService accountRecordService = new AccountRecordService();
+                    accountRecordService.removeAccountRecord(removedRecord);
+                    updateData();
                 }
             }
         });
@@ -201,6 +209,9 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
 
     private void updateData(){
         AccountRecordService accountRecordService = new AccountRecordService();
+        String totalMoney = accountRecordService.getTotalMoneyByAccount(account);
+        numJieyu.setText(new BigDecimal(account.getMoney()).add(new BigDecimal(totalMoney)).toString());
+
         String shouru = new DecimalFormat("0.00").format(Double.valueOf(accountRecordService.getRangeTotalMoneyByAccount(start,end,account,true)));
         String zhichu = new DecimalFormat("0.00").format(Double.valueOf(accountRecordService.getRangeTotalMoneyByAccount(start,end,account,false)));
         if("0.00".equals(shouru) && "0.00".equals(zhichu)) {
@@ -239,7 +250,7 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         switch (requestCode) {
-            case 1:
+            case 1://账户设置
                 if(resultCode == RESULT_OK){
                     account = (Account) intent.getSerializableExtra("account");
                     background.setBackgroundColor(Color.parseColor(account.getColor()));
@@ -247,17 +258,48 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
                     String totalMoney = accountRecordService.getTotalMoneyByAccount(account);
                     numJieyu.setText(new BigDecimal(account.getMoney()).add(new BigDecimal(totalMoney)).toString());
                 }
+                break;
+            case 2 ://编辑
+                if(resultCode == RESULT_OK){
+                    AccountRecord record = (AccountRecord)intent.getSerializableExtra("data");
+                    AccountRecordService accountRecordService = new AccountRecordService();
+                    accountRecordService.updateAccountRecord(record);
+                    mRecyclerViewAdapter.addDatas("records",new ArrayList<AccountRecord>());//清空数据
+                    updateData();
+                }
+                break;
         }
     }
 }
 
-class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
+class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter  implements ItemSwipeHelpter.Callback{
     private Context mContext;
+    private RecyclerView mRecyclerView;
+    private ItemSwipeHelpter mItemSwipeHelpter;
     public final static int TYPE_DAY = 3;
 
     public AccountDetailRecyclerAdapter(Context context) {
         super(context);
         mContext = context;
+    }
+
+    @Override
+    public ItemSwipeLayout getSwipLayout(float x, float y) {
+        if(mRecyclerView.findChildViewUnder(x,y) instanceof ItemSwipeLayout)
+            return (ItemSwipeLayout)mRecyclerView.findChildViewUnder(x,y);
+        return null;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
+        mItemSwipeHelpter = new ItemSwipeHelpter(mContext,this);
+        recyclerView.addOnItemTouchListener(mItemSwipeHelpter);
+    }
+
+    public ItemSwipeHelpter getmItemSwipeHelpter() {
+        return mItemSwipeHelpter;
     }
 
     @Override
@@ -325,10 +367,24 @@ class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
                 holder.item_remark.setText(record.getRemark());
             if("".equals(holder.item_remark.getText().toString()))
                 holder.item_remark.setVisibility(View.GONE);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+            holder.item_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnItemClickListener.onClick(v,pos,"itemView");
+                    if(mItemSwipeHelpter.isExpanded())
+                        mItemSwipeHelpter.close();
+                }
+            });
+            holder.item_edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemClickListener.onClick(v, pos,"item_edit");
+                }
+            });
+            holder.item_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemClickListener.onClick(v, pos,"item_delete");
                 }
             });
         }
@@ -340,6 +396,9 @@ class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
     }
 
     static class Holder extends RecyclerView.ViewHolder {
+        public RelativeLayout item_content;
+        public TextView item_delete;
+        public TextView item_edit;
         public ImageView item_icon;
         public TextView item_name;
         public TextView item_remark;
@@ -349,6 +408,10 @@ class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
             super(itemView);
             if(viewType == TYPE_HEADER || viewType == TYPE_FOOTER) return;
             if(viewType == TYPE_NORMAL) {
+                item_content = (RelativeLayout)itemView.findViewById(R.id.item_content);
+                item_delete = (TextView) itemView.findViewById(R.id.item_delete);
+                item_edit = (TextView) itemView.findViewById(R.id.item_edit);
+
                 item_icon = (ImageView) itemView.findViewById(R.id.item_icon);
                 item_name = (TextView) itemView.findViewById(R.id.item_name);
                 item_remark = (TextView) itemView.findViewById(R.id.item_remark);

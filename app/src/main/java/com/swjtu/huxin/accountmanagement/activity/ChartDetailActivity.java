@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -13,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.R;
@@ -24,6 +24,8 @@ import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
 import com.swjtu.huxin.accountmanagement.utils.ConstantUtils;
 import com.swjtu.huxin.accountmanagement.utils.ItemXmlPullParserUtils;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
+import com.swjtu.huxin.accountmanagement.view.ItemSwipeHelpter;
+import com.swjtu.huxin.accountmanagement.view.ItemSwipeLayout;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -74,6 +76,7 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setResult(RESULT_OK);
                 finish();
             }
         });
@@ -91,6 +94,7 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
                 updateDatePickerText();
                 updateDateRangeChange();
                 updateData();
+                mRecyclerViewAdapter.getmItemSwipeHelpter().close();//关闭Item侧滑菜单
             }
         });
 
@@ -103,6 +107,7 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
                 updateDatePickerText();
                 updateDateRangeChange();
                 updateData();
+                mRecyclerViewAdapter.getmItemSwipeHelpter().close();
             }
         });
 
@@ -154,18 +159,44 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
         initRecyclerViewData(false);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());//添加/删除item默认的动画效果
-
         mRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onClick(View view, int pos, String viewName) {
-                if("itemView".equals(viewName)) {
-//                    Intent intent = new Intent(ChartDetailActivity.this, AddItem.class);
-//                    intent.putExtra("back", "明细");
-//                    intent.putExtra("record", (AccountRecord)mRecyclerViewAdapter.getDatas("records").get(pos));
-//                    startActivityForResult(intent, 1);
+            public void onClick(View view, int pos,String viewName) {
+                mRecyclerViewAdapter.getmItemSwipeHelpter().close();
+                if("item_edit".equals(viewName)) {
+                    Intent intent = new Intent(ChartDetailActivity.this, AddItemActivity.class);
+                    intent.putExtra("edit", ((AccountRecord) mRecyclerViewAdapter.getDatas("records").get(pos)));
+                    startActivityForResult(intent, 1);
+                }
+                if("item_delete".equals(viewName)) {
+                    AccountRecord removedRecord = (AccountRecord) mRecyclerViewAdapter.getDatas("records").get(pos);
+                    AccountRecordService accountRecordService = new AccountRecordService();
+                    accountRecordService.removeAccountRecord(removedRecord);
+                    updateData();
                 }
             }
         });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        switch (requestCode) {
+            case 1 :
+                if(resultCode == RESULT_OK){
+                    AccountRecord record = (AccountRecord)intent.getSerializableExtra("data");
+                    AccountRecordService accountRecordService = new AccountRecordService();
+                    accountRecordService.updateAccountRecord(record);
+                    mRecyclerViewAdapter.addDatas("records",new ArrayList<AccountRecord>());//清空数据
+                    updateData();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK);
+        super.onBackPressed();
     }
 
     public String getColorByMember(String Member){
@@ -257,13 +288,34 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
     }
 }
 
-class ChartDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
+class ChartDetailRecyclerAdapter extends BaseRecyclerViewAdapter  implements ItemSwipeHelpter.Callback{
     private Context mContext;
+    private RecyclerView mRecyclerView;
+    private ItemSwipeHelpter mItemSwipeHelpter;
     public final static int TYPE_DAY = 3;
 
     public ChartDetailRecyclerAdapter(Context context) {
         super(context);
         mContext = context;
+    }
+
+    @Override
+    public ItemSwipeLayout getSwipLayout(float x, float y) {
+        if(mRecyclerView.findChildViewUnder(x,y) instanceof ItemSwipeLayout)
+            return (ItemSwipeLayout)mRecyclerView.findChildViewUnder(x,y);
+        return null;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mRecyclerView = recyclerView;
+        mItemSwipeHelpter = new ItemSwipeHelpter(mContext,this);
+        recyclerView.addOnItemTouchListener(mItemSwipeHelpter);
+    }
+
+    public ItemSwipeHelpter getmItemSwipeHelpter() {
+        return mItemSwipeHelpter;
     }
 
     @Override
@@ -330,10 +382,24 @@ class ChartDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
                 holder.item_remark.setVisibility(View.GONE);
             else
                 holder.item_remark.setVisibility(View.VISIBLE);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+            holder.item_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnItemClickListener.onClick(v,pos,"itemView");
+                    if(mItemSwipeHelpter.isExpanded())
+                        mItemSwipeHelpter.close();
+                }
+            });
+            holder.item_edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemClickListener.onClick(v, pos,"item_edit");
+                }
+            });
+            holder.item_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemClickListener.onClick(v, pos,"item_delete");
                 }
             });
         }
@@ -345,6 +411,9 @@ class ChartDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
     }
 
     static class Holder extends RecyclerView.ViewHolder {
+        public RelativeLayout item_content;
+        public TextView item_delete;
+        public TextView item_edit;
         public ImageView item_icon;
         public TextView item_name;
         public TextView item_remark;
@@ -354,6 +423,10 @@ class ChartDetailRecyclerAdapter extends BaseRecyclerViewAdapter{
             super(itemView);
             if(viewType == TYPE_HEADER || viewType == TYPE_FOOTER) return;
             if(viewType == TYPE_NORMAL) {
+                item_content = (RelativeLayout)itemView.findViewById(R.id.item_content);
+                item_delete = (TextView) itemView.findViewById(R.id.item_delete);
+                item_edit = (TextView) itemView.findViewById(R.id.item_edit);
+
                 item_icon = (ImageView) itemView.findViewById(R.id.item_icon);
                 item_name = (TextView) itemView.findViewById(R.id.item_name);
                 item_remark = (TextView) itemView.findViewById(R.id.item_remark);

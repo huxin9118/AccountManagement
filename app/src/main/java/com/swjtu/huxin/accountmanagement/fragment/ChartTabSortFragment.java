@@ -156,7 +156,7 @@ public class ChartTabSortFragment extends Fragment
                     intent.putExtra("start", start);
                     intent.putExtra("end",end);
                     intent.putExtra("record",(AccountRecord)mRecyclerViewAdapter.getDatas("records").get(pos));
-                    startActivity(intent);
+                    startActivityForResult(intent,2);
                 }
             }
         });
@@ -211,7 +211,7 @@ public class ChartTabSortFragment extends Fragment
         data.setValueLabelBackgroundEnabled(false);// 设置是否显示数据的背景颜色
 
         if (isExploded) { //爆炸显示
-            data.setSlicesSpacing(3);//设置数据间的间隙
+            data.setSlicesSpacing(2);//设置数据间的间隙
         }
 
         data.setValues(values);//为饼图添加数据
@@ -306,6 +306,12 @@ public class ChartTabSortFragment extends Fragment
                     updateDateRangePickerReturn();
                     updateData();
                 }
+                break;
+            case 2:
+                if(resultCode == getActivity().RESULT_OK) {
+                    updateData();
+                }
+                break;
         }
     }
 
