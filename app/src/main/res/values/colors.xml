@@ -8,13 +8,16 @@
 
     <color name="half_transparent">#99FFFFFF</color>
     <color name="customBlue">#2fb2e8</color>
-    <color name="listBackgrount">#F0F0F0</color>
-    <color name="listLine">#DDDDDDDD</color>
-    <color name="colorLine">#66DDDDDD</color>
+    <color name="listBackgrount">#F8F8F8</color>
+    <color name="listLine">#E7E7E7</color>
+    <color name="colorLine">#66E7E7E7</color>
 
     <color name="shouru">#5cc5ac</color>
     <color name="zhichu">#2fb2e8</color>
     <color name="jieyu">#ff6b6b</color>
+
+    <color name="more_summary">#c5d78f</color>
+    <color name="more_export">#82d1f1</color>
 
     <color name="account_color_0">#9361a2</color>
     <color name="account_color_1">#ab92ed</color>

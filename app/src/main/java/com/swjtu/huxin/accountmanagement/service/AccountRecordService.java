@@ -9,6 +9,7 @@ import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -143,7 +144,7 @@ public class AccountRecordService {
         AccountRecordDao dao = new AccountRecordDao(db);
         String money = dao.getRangeTotalMoneyByRecordname(firsttime,lasttime,recordname);
         db.close();
-        return money;
+        return new DecimalFormat("0.00").format(Double.parseDouble(money));
     }
 
     /**

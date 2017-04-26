@@ -114,12 +114,12 @@ public class ChartTabTrendFragment extends Fragment
             public void onClick(View v) {
                 if(isBtnShouruPressed){
                     isBtnShouruPressed = false;
-                    btnShouru.setBackgroundResource(R.drawable.shape_button_unpressed);
+                    btnShouru.setBackgroundResource(R.drawable.shape_button_chart_trend_unpressed);
                     btnShouru.setTextColor(getResources().getColor(R.color.gray));
                 }
                 else {
                     isBtnShouruPressed = true;
-                    btnShouru.setBackgroundResource(R.drawable.shape_button_shouru);
+                    btnShouru.setBackgroundResource(R.drawable.shape_button_chart_trend_shouru);
                     btnShouru.setTextColor(getResources().getColor(R.color.white));
                 }
                 updateData();
@@ -130,12 +130,12 @@ public class ChartTabTrendFragment extends Fragment
             public void onClick(View v) {
                 if(isBtnZhichuPressed){
                     isBtnZhichuPressed = false;
-                    btnZhichu.setBackgroundResource(R.drawable.shape_button_unpressed);
+                    btnZhichu.setBackgroundResource(R.drawable.shape_button_chart_trend_unpressed);
                     btnZhichu.setTextColor(getResources().getColor(R.color.gray));
                 }
                 else {
                     isBtnZhichuPressed = true;
-                    btnZhichu.setBackgroundResource(R.drawable.shape_button_zhichu);
+                    btnZhichu.setBackgroundResource(R.drawable.shape_button_chart_trend_zhichu);
                     btnZhichu.setTextColor(getResources().getColor(R.color.white));
                 }
                 updateData();
@@ -146,12 +146,12 @@ public class ChartTabTrendFragment extends Fragment
             public void onClick(View v) {
                 if(isBtnJieyuPressed){
                     isBtnJieyuPressed = false;
-                    btnJieyu.setBackgroundResource(R.drawable.shape_button_unpressed);
+                    btnJieyu.setBackgroundResource(R.drawable.shape_button_chart_trend_unpressed);
                     btnJieyu.setTextColor(getResources().getColor(R.color.gray));
                 }
                 else {
                     isBtnJieyuPressed = true;
-                    btnJieyu.setBackgroundResource(R.drawable.shape_button_jieyu);
+                    btnJieyu.setBackgroundResource(R.drawable.shape_button_chart_trend_jieyu);
                     btnJieyu.setTextColor(getResources().getColor(R.color.white));
                 }
                 updateData();

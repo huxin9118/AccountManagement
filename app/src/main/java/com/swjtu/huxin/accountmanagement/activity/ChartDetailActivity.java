@@ -251,7 +251,7 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
         }
         else {
             empty.setVisibility(View.GONE);
-            money.setText(new DecimalFormat("0.00").format(Double.parseDouble(totalMoney)));
+            money.setText(totalMoney);
             initRecyclerViewData(false);
         }
     }

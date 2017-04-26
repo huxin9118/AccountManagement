@@ -6,17 +6,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
 /**
  * Created by huxin on 2017/2/25.
  */
@@ -44,7 +41,7 @@ public class NumKeyboardView extends RelativeLayout {
 
         this.context = context;
 
-        View view = View.inflate(context, R.layout.layout_num_keyboard, null);
+        View view = View.inflate(context, R.layout.view_num_keyboard, null);
 
         valueList = new ArrayList<>();
 

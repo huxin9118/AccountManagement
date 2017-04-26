@@ -6,6 +6,11 @@
     android:layout_height="match_parent"
     android:background="@color/listBackgrount">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/listLine"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -22,11 +27,6 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/listLine"/>
-
-    <View
-        android:layout_width="match_parent"
         android:layout_height="10dp"
         android:background="@color/listBackgrount"/>
 
@@ -37,32 +37,89 @@
         android:background="@color/listLine"/>
 
     <RelativeLayout
-        android:id="@+id/enter"
+        android:id="@+id/btnSummary"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:background="@color/white">
+        <android.support.v7.widget.CardView
+            android:id="@+id/iconSummary"
+            android:layout_width="30dp"
+            android:layout_height="30sp"
+            android:layout_centerVertical="true"
+            app:contentPadding="6dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="5dp"
+            app:cardBackgroundColor="@color/more_summary">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_summary_white"/>
+        </android.support.v7.widget.CardView>
+
         <TextView
-            android:id="@+id/enter_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="设置"
+            android:layout_toRightOf="@id/iconSummary"
+            android:layout_marginLeft="10dp"
+            android:text="账单总结"
             android:textSize="16sp"/>
 
-        <LinearLayout
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_enter_gray"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/listLine"/>
+
+    <RelativeLayout
+        android:id="@+id/btnExport"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@color/white">
+        <android.support.v7.widget.CardView
+            android:id="@+id/iconExport"
+            android:layout_width="30dp"
+            android:layout_height="30sp"
+            android:layout_centerVertical="true"
+            app:contentPadding="6dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="5dp"
+            app:cardBackgroundColor="@color/more_export">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_export_white"/>
+        </android.support.v7.widget.CardView>
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:background="@drawable/ic_enter_gray"/>
+            android:layout_toRightOf="@id/iconExport"
+            android:layout_marginLeft="10dp"
+            android:text="导出数据"
+            android:textSize="16sp"/>
 
-        </LinearLayout>
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_enter_gray"/>
+
     </RelativeLayout>
 
     <View

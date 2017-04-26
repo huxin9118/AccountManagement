@@ -102,12 +102,10 @@ public class AccountRecordDao {
             record.setRemark(cs.getString(cs.getColumnIndex("remark")));
             record.setAccount(app.getAccounts().get(cs.getInt(cs.getColumnIndex("account_id"))));
             if(cs.getInt(cs.getColumnIndex("accountbook_id")) == -1){
-                Log.i("000", account+"===");
                 if(account != null)record.setAccountbook(null);
                 else continue;
             }
             else {
-                Log.i("111", account+"===");
                 record.setAccountbook(app.getAccountBooks().get(cs.getInt(cs.getColumnIndex("accountbook_id"))));
             }
             record.setMember(cs.getString(cs.getColumnIndex("member")));
@@ -131,9 +129,9 @@ public class AccountRecordDao {
     public List<AccountRecord> getListGroupByRecordname(Date firsttime, Date lasttime, boolean isPositive){
         String sql;
         if(isPositive)
-            sql = "SELECT recordname ,icon,SUM(money) money ,COUNT(money) counts FROM account_record WHERE accountbook_id != -1 AND money > 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY recordname";
+            sql = "SELECT recordname ,icon,SUM(money) money ,COUNT(money) counts FROM account_record WHERE accountbook_id != -1 AND money > 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY money";
         else
-            sql = "SELECT recordname ,icon,SUM(money) money ,COUNT(money) counts FROM account_record WHERE accountbook_id != -1 AND money < 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY recordname";
+            sql = "SELECT recordname ,icon,SUM(money) money ,COUNT(money) counts FROM account_record WHERE accountbook_id != -1 AND money < 0 AND recordtime between ? and ? GROUP BY recordname ORDER BY money";
         Cursor cs = db.rawQuery(sql, new String[]{firsttime.getTime()+"",lasttime.getTime()+""});
         List<AccountRecord> records = new ArrayList<AccountRecord>();
         while(cs.moveToNext()){
@@ -152,9 +150,9 @@ public class AccountRecordDao {
     public List<AccountRecord> getListGroupByMember(Date firsttime, Date lasttime, boolean isPositive){
         String sql;
         if(isPositive)
-            sql = "SELECT member ,SUM(money) money FROM account_record WHERE accountbook_id != -1 AND money > 0 AND recordtime between ? and ? GROUP BY member ORDER BY member";
+            sql = "SELECT member ,SUM(money) money FROM account_record WHERE accountbook_id != -1 AND money > 0 AND recordtime between ? and ? GROUP BY member ORDER BY money";
         else
-            sql = "SELECT member ,SUM(money) money FROM account_record WHERE accountbook_id != -1 AND money < 0 AND recordtime between ? and ? GROUP BY member ORDER BY member";
+            sql = "SELECT member ,SUM(money) money FROM account_record WHERE accountbook_id != -1 AND money < 0 AND recordtime between ? and ? GROUP BY member ORDER BY money";
         Cursor cs = db.rawQuery(sql, new String[]{firsttime.getTime()+"",lasttime.getTime()+""});
         List<AccountRecord> records = new ArrayList<AccountRecord>();
         while(cs.moveToNext()){

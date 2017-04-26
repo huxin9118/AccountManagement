@@ -310,9 +310,9 @@ public class ChartTabSortFragment extends Fragment
     }
 
     private void initRecyclerViewData(){
-        List money = new ArrayList();
-        money.add(totalMoney);
-        mRecyclerViewAdapter.addDatas("totalMoney",money);
+        List moneyList = new ArrayList();
+        moneyList.add(totalMoney);
+        mRecyclerViewAdapter.addDatas("totalMoney",moneyList);
         mRecyclerViewAdapter.addDatas("records",records);
         mRecyclerViewAdapter.notifyDataSetChanged();
     }
@@ -363,14 +363,15 @@ class ChartTabSortRecyclerAdapter extends BaseRecyclerViewAdapter {
         final int pos = getRealPosition(holder);
         if(getItemViewType(position) == TYPE_HEADER || getItemViewType(position) == TYPE_FOOTER) return;
         if(getItemViewType(position) == TYPE_NORMAL) {
+            AccountRecord record = (AccountRecord) mDatas.get("records").get(pos);
             double totalMoney = (double)mDatas.get("totalMoney").get(0);
-            double num = Double.parseDouble(((AccountRecord) mDatas.get("records").get(pos)).getMoney());
+            double num = Double.parseDouble(record.getMoney());
             if (num > 0) {//收入
                 holder.item_money.setText(new DecimalFormat("0.00").format(num));
                 holder.item_percent.setText(new DecimalFormat("0.0%").format(num/totalMoney));
                 try {
                     holder.item_money.setTextColor(Color.parseColor(ItemXmlPullParserUtils.
-                            parseIconColor(mContext, "shouru.xml", ((AccountRecord) mDatas.get("records").get(pos)).getIcon())));
+                            parseIconColor(mContext, "shouru.xml", record.getIcon())));
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -381,15 +382,15 @@ class ChartTabSortRecyclerAdapter extends BaseRecyclerViewAdapter {
                 holder.item_percent.setText(new DecimalFormat("0.0%").format(num/totalMoney));
                 try {
                     holder.item_money.setTextColor(Color.parseColor(ItemXmlPullParserUtils.
-                            parseIconColor(mContext, "zhichu.xml", ((AccountRecord) mDatas.get("records").get(pos)).getIcon())));
+                            parseIconColor(mContext, "zhichu.xml", record.getIcon())));
                 }
                 catch (Exception e){
                     e.printStackTrace();
                 }
             }
-            int resID = mContent.getResources().getIdentifier(((AccountRecord)mDatas.get("records").get(pos)).getIcon(), "drawable", mContent.getPackageName());
+            int resID = mContent.getResources().getIdentifier(record.getIcon(), "drawable", mContent.getPackageName());
             holder.item_icon.setBackgroundResource(resID);
-            holder.item_name.setText(((AccountRecord) mDatas.get("records").get(pos)).getRecordname());
+            holder.item_name.setText(record.getRecordname());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

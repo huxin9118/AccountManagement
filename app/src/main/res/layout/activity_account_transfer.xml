@@ -274,7 +274,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
                 android:text="03月02日"
-                android:background="@drawable/shape_button_date"
+                android:background="@drawable/shape_button_numkeyborad_date"
                 />
 
             <TextView
@@ -285,7 +285,7 @@
                 android:layout_toRightOf="@id/date"
                 android:layout_marginLeft="5dp"
                 android:text="23:22"
-                android:background="@drawable/shape_button_time"
+                android:background="@drawable/shape_button_numkeyborad_time"
                 />
 
             <Button

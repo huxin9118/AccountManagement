@@ -656,14 +656,6 @@ class DetailRecyclerAdapter extends BaseRecyclerViewAdapter{
         if(getItemViewType(position) == TYPE_MONTH) {
             holder.day_text.setText(((AccountRecord)mDatas.get("records").get(pos)).getId()+"月");
         }
-//        if (position == getItemCount() - 1) {//修改最后一项的背景线长度
-//            if (isFirstBindBottomItem) {
-//                isFirstBindBottomItem = false;
-//                ViewGroup.LayoutParams params = holder.item_icon.getLayoutParams();
-//                ViewGroup.LayoutParams params2 = holder.line.getLayoutParams();
-//                params2.height = (params2.height - params.width) / 2;
-//            }
-//        }
     }
 
     public void hideDeleteAndEidt(){
@@ -686,7 +678,7 @@ class DetailRecyclerAdapter extends BaseRecyclerViewAdapter{
         animSet2.play(rotate2).with(move2).after(animSet1);
 //        animSet1.setInterpolator(new DecelerateInterpolator());
 //        animSet2.setInterpolator(new AccelerateInterpolator());
-        animSet1.setDuration(500);
+        animSet2.setDuration(500);
         animSet2.start();
     }
 

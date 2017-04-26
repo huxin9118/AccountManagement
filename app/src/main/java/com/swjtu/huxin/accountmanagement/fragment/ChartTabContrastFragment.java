@@ -10,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +62,7 @@ public class ChartTabContrastFragment extends Fragment
     private boolean isShouru = false;
     private ImageView btnSwitch;
     private List<AccountRecord> records;
-    private List<BigDecimal> money;
+    private List<Integer> months;
 
     private LinearLayout empty;
     private RecyclerView mRecyclerView;
@@ -129,15 +130,8 @@ public class ChartTabContrastFragment extends Fragment
             @Override
             public void onClick(View view, int pos, String viewName) {
                 if("itemView".equals(viewName)) {
-//                    try {
-//                        int color = Color.parseColor(ItemXmlPullParserUtils.parseIconColor(getContext(),
-//                                "zhichu.xml", records.get(pos).getIcon()));
-//                    }
-//                    catch (Exception e){
-//                        e.printStackTrace();
-//                    }
                     AccountRecordService accountRecordService = new AccountRecordService();
-                    money = new ArrayList<BigDecimal>();
+                    List<BigDecimal> money = new ArrayList<BigDecimal>();
                     for(int i = 1;i <= 12;i++){
                         Date start = new Date(TimeUtils.getMonthFirstMilliSeconds(i,date - TimeUtils.getTime(new Date(),TimeUtils.YEAR)));
                         Date end = new Date(TimeUtils.getMonthLastMilliSeconds(i,date - TimeUtils.getTime(new Date(),TimeUtils.YEAR)));
@@ -150,9 +144,6 @@ public class ChartTabContrastFragment extends Fragment
                         try {
                             generateLineData(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(getContext(),
                                     "shouru.xml", records.get(pos).getIcon())),money);
-                            Viewport v = new Viewport(0, 3000, 11, -100);
-                            lineChart.setMaximumViewport(v);
-                            lineChart.setCurrentViewport(v);
                         }
                         catch (Exception e){
                             e.printStackTrace();
@@ -162,15 +153,11 @@ public class ChartTabContrastFragment extends Fragment
                         try {
                             generateLineData(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(getContext(),
                                     "zhichu.xml", records.get(pos).getIcon())),money);
-                            Viewport v = new Viewport(0, 3000, 11, -100);
-                            lineChart.setMaximumViewport(v);
-                            lineChart.setCurrentViewport(v);
                         }
                         catch (Exception e){
                             e.printStackTrace();
                         }
                     }
-                    mRecyclerViewAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -185,6 +172,19 @@ public class ChartTabContrastFragment extends Fragment
         AccountRecordService accountRecordService = new AccountRecordService();
         records = accountRecordService.getAccountRecordListGroupByRecordname(TimeUtils.getYearFirstMilliSeconds(date),
                 TimeUtils.getYearLastMilliSeconds(date),isShouru);
+
+        months = new ArrayList<Integer>();
+        for(int j = 0;j < records.size();j++) {
+            int month = 0;
+            for (int i = 1; i <= 12; i++) {
+                Date start = new Date(TimeUtils.getMonthFirstMilliSeconds(i, date - TimeUtils.getTime(new Date(), TimeUtils.YEAR)));
+                Date end = new Date(TimeUtils.getMonthLastMilliSeconds(i, date - TimeUtils.getTime(new Date(), TimeUtils.YEAR)));
+                if(new BigDecimal(accountRecordService.getRangeTotalMoneyByRecordname(start, end, records.get(j).getRecordname())).doubleValue() != 0){
+                    month++;
+                }
+            }
+            months.add(month);
+        }
         if(records.size() == 0){
             empty.setVisibility(View.VISIBLE);
         }
@@ -197,6 +197,7 @@ public class ChartTabContrastFragment extends Fragment
 
     private void initRecyclerViewData(){
         mRecyclerViewAdapter.addDatas("records",records);
+        mRecyclerViewAdapter.addDatas("months",months);
         mRecyclerViewAdapter.notifyDataSetChanged();
     }
 
@@ -325,14 +326,16 @@ class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
         final int pos = getRealPosition(holder);
         if(getItemViewType(position) == TYPE_HEADER || getItemViewType(position) == TYPE_FOOTER) return;
         if(getItemViewType(position) == TYPE_NORMAL) {
-            double num = Double.parseDouble(((AccountRecord) mDatas.get("records").get(pos)).getMoney());
-            int count = ((AccountRecord) mDatas.get("records").get(pos)).getId();
+            AccountRecord record = (AccountRecord) mDatas.get("records").get(pos);
+            int month = (int) mDatas.get("months").get(pos);
+            double num = Double.parseDouble(record.getMoney());
+            int count = record.getId();
             if (num > 0) {//收入
                 holder.item_money.setText(new DecimalFormat("0.00").format(num));
-                holder.item_money.setText(new DecimalFormat("0.00").format(num/count));
+                holder.item_avg_money.setText(new DecimalFormat("0.00").format(num/month));
                 try {
                     holder.item_back.setCardBackgroundColor(Color.parseColor(ItemXmlPullParserUtils.
-                            parseIconColor(mContext, "shouru.xml", ((AccountRecord) mDatas.get("records").get(pos)).getIcon())));
+                            parseIconColor(mContext, "shouru.xml", record.getIcon())));
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -343,10 +346,10 @@ class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
             }
             else {
                 holder.item_money.setText(new DecimalFormat("0.00").format(num*-1));
-                holder.item_money.setText(new DecimalFormat("0.00").format(num*-1/count));
+                holder.item_avg_money.setText(new DecimalFormat("0.00").format(num*-1/month));
                 try {
                     holder.item_back.setCardBackgroundColor(Color.parseColor(ItemXmlPullParserUtils.
-                            parseIconColor(mContext, "zhichu.xml", ((AccountRecord) mDatas.get("records").get(pos)).getIcon())));
+                            parseIconColor(mContext, "zhichu.xml", record.getIcon())));
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -355,10 +358,10 @@ class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
                 holder.item_label2.setText("累计消费次数");
                 holder.item_label3.setText("月均消费");
             }
-            int resID = mContent.getResources().getIdentifier(((AccountRecord)mDatas.get("records").get(pos)).getIcon(), "drawable", mContent.getPackageName());
+            int resID = mContent.getResources().getIdentifier(record.getIcon(), "drawable", mContent.getPackageName());
             holder.item_icon.setBackgroundResource(resID);
             holder.item_count.setText(count+"");
-            holder.item_name.setText(((AccountRecord) mDatas.get("records").get(pos)).getRecordname());
+            holder.item_name.setText(record.getRecordname());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

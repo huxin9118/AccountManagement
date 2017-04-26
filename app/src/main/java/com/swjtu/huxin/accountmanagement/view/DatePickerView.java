@@ -31,7 +31,7 @@ public class DatePickerView extends LinearLayout {
     public DatePickerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
-        View view = View.inflate(context, R.layout.layout_date_picker, null);
+        View view = View.inflate(context, R.layout.view_date_picker, null);
         date = new Date();
         time[0] = (CustomNumberPicker)view.findViewById(R.id.year);
         time[1] = (CustomNumberPicker)view.findViewById(R.id.month);

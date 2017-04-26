@@ -2,6 +2,8 @@ package com.swjtu.huxin.accountmanagement.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
+import android.os.StrictMode;
 
 import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountBook;
@@ -31,6 +33,10 @@ public class MyApplication extends Application{
         super.onCreate();
         context = getApplicationContext();
         application = this;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+        }
     }
 
     public static Context getContext() {

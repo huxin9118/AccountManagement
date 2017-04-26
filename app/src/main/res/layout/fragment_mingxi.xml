@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=" 默认账本 "
-            android:background="@drawable/shape_button_book"
+            android:background="@drawable/shape_button_detail_book"
             android:layout_centerInParent="true" />
         <ImageView
             android:layout_width="0.5dp"

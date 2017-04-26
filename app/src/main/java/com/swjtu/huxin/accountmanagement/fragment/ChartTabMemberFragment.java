@@ -357,8 +357,9 @@ class ChartTabMemberRecyclerAdapter extends BaseRecyclerViewAdapter {
         final int pos = getRealPosition(holder);
         if(getItemViewType(position) == TYPE_HEADER || getItemViewType(position) == TYPE_FOOTER) return;
         if(getItemViewType(position) == TYPE_NORMAL) {
+            AccountRecord record = (AccountRecord) mDatas.get("records").get(pos);
             double totalMoney = (double)mDatas.get("totalMoney").get(0);
-            double num = Double.parseDouble(((AccountRecord) mDatas.get("records").get(pos)).getMoney());
+            double num = Double.parseDouble(record.getMoney());
             if (num > 0) {//收入
                 holder.item_money.setText(new DecimalFormat("0.00").format(num));
                 holder.item_percent.setText(new DecimalFormat("0.0%").format(num/totalMoney));
@@ -368,7 +369,7 @@ class ChartTabMemberRecyclerAdapter extends BaseRecyclerViewAdapter {
                 holder.item_percent.setText(new DecimalFormat("0.0%").format(num/totalMoney));
             }
 
-            String member = ((AccountRecord) mDatas.get("records").get(pos)).getMember();
+            String member = record.getMember();
             holder.item_circle.setCardBackgroundColor(Color.parseColor(getColorByMember(member)));
             holder.item_money.setTextColor(Color.parseColor(getColorByMember(member)));
             if("".equals(member)) {
@@ -376,8 +377,8 @@ class ChartTabMemberRecyclerAdapter extends BaseRecyclerViewAdapter {
                 holder.item_name.setText("无成员");
             }
             else {
-                holder.item_icon.setText(((AccountRecord) mDatas.get("records").get(pos)).getMember().substring(0, 1));
-                holder.item_name.setText(((AccountRecord) mDatas.get("records").get(pos)).getMember());
+                holder.item_icon.setText(record.getMember().substring(0, 1));
+                holder.item_name.setText(record.getMember());
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
