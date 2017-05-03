@@ -18,7 +18,7 @@
             android:text=" 默认账本 "
             android:background="@drawable/shape_button_detail_book"
             android:layout_centerInParent="true" />
-        <ImageView
+        <View
             android:layout_width="0.5dp"
             android:layout_height="wrap_content"
             android:background="@color/silver"
@@ -26,6 +26,14 @@
             android:layout_alignParentBottom="true"
             android:layout_below="@id/textbook"/>
     </RelativeLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="0.5dp"
+        android:layout_height="0dp"
+        android:background="@color/silver"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/title"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floating_action_button"
@@ -73,8 +81,7 @@
                 android:layout_weight="1"
                 android:id="@+id/header_view">
 
-                <ImageView
-                    android:id="@+id/line"
+                <View
                     android:layout_width="0.5dp"
                     android:layout_height="match_parent"
                     android:background="@color/silver"

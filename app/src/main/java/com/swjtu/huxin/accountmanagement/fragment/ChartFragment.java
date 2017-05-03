@@ -63,11 +63,7 @@ public class ChartFragment extends Fragment {
             if(i == position)
                 btnTab[i].setTextColor(getResources().getColor(R.color.customBlue));
             else {
-                int[] attrsArray = { R.attr.textColor };
-                TypedArray typedArray = getContext().obtainStyledAttributes(attrsArray);
-                int color = typedArray.getColor(0,-1);
-                typedArray.recycle();
-                btnTab[i].setTextColor(color);
+                btnTab[i].setTextColor(getResources().getColor(R.color.darkgray));
             }
         }
     }

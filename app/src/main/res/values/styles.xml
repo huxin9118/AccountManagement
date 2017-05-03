@@ -24,6 +24,10 @@
         <item name="listItem">@color/listItem_white</item>
         <item name="mainBackgrount">@drawable/ic_theme_white</item>
         <item name="textColor">#333333</item>
+        <item name="less_half_transparent_contrast">@color/less_half_transparent_black</item>
+        <item name="half_transparent_contrast">@color/half_transparent_black</item>
+        <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
+        <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
     </style>
 
     <style name="MyTheme_Cat" parent="MyTheme">
@@ -31,6 +35,21 @@
         <item name="listItem">@color/listItem</item>
         <item name="mainBackgrount">@drawable/ic_theme_cat</item>
         <item name="textColor">#333333</item>
+        <item name="less_half_transparent_contrast">@color/less_half_transparent_black</item>
+        <item name="half_transparent_contrast">@color/half_transparent_black</item>
+        <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
+        <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
+    </style>
+
+    <style name="MyTheme_Sea" parent="MyTheme">
+        <item name="listBackgrount">@color/listBackgrount</item>
+        <item name="listItem">@color/listItem</item>
+        <item name="mainBackgrount">@drawable/ic_theme_sea</item>
+        <item name="textColor">#333333</item>
+        <item name="less_half_transparent_contrast">@color/less_half_transparent_black</item>
+        <item name="half_transparent_contrast">@color/half_transparent_black</item>
+        <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
+        <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
     </style>
 
     <style name="MyTheme_Constellation" parent="MyTheme">
@@ -39,6 +58,10 @@
         <item name="mainBackgrount">@drawable/ic_theme_constellation</item>
         <item name="android:textColor">#FFFAFA</item>
         <item name="textColor">#FFFAFA</item>
+        <item name="less_half_transparent_contrast">@color/less_half_transparent_white</item>
+        <item name="half_transparent_contrast">@color/half_transparent_white</item>
+        <item name="more_half_transparent_contrast">@color/more_half_transparent_white</item>
+        <item name="popupwindow_backgound">@color/more_half_transparent_black</item>
     </style>
 
     <style name="MyTheme_Dark" parent="MyTheme">
@@ -47,21 +70,22 @@
         <item name="mainBackgrount">@drawable/ic_theme_dark</item>
         <item name="android:textColor">#FFFAFA</item>
         <item name="textColor">#FFFAFA</item>
+        <item name="less_half_transparent_contrast">@color/less_half_transparent_white</item>
+        <item name="half_transparent_contrast">@color/half_transparent_white</item>
+        <item name="more_half_transparent_contrast">@color/more_half_transparent_white</item>
+        <item name="popupwindow_backgound">@color/more_half_transparent_black</item>
     </style>
 
     <style name="MyTheme_Paris" parent="MyTheme">
-        <item name="listBackgrount">@color/listBackgrount</item>
+        <item name="listBackgrount">@color/listBackgrount_pairs</item>
         <item name="listItem">@color/listItem_pairs</item>
         <item name="mainBackgrount">@drawable/ic_theme_paris</item>
         <item name="android:textColor">#FFFAFA</item>
         <item name="textColor">#FFFAFA</item>
-    </style>
-
-    <style name="MyTheme_Sea" parent="MyTheme">
-        <item name="listBackgrount">@color/listBackgrount</item>
-        <item name="listItem">@color/listItem</item>
-        <item name="mainBackgrount">@drawable/ic_theme_sea</item>
-        <item name="textColor">#333333</item>
+        <item name="less_half_transparent_contrast">@color/less_half_transparent_white</item>
+        <item name="half_transparent_contrast">@color/half_transparent_white</item>
+        <item name="more_half_transparent_contrast">@color/more_half_transparent_white</item>
+        <item name="popupwindow_backgound">@color/more_half_transparent_black</item>
     </style>
 
     <style name="MyTheme_Volcano" parent="MyTheme">
@@ -70,6 +94,10 @@
         <item name="mainBackgrount">@drawable/ic_theme_volcano</item>
         <item name="android:textColor">#FFFAFA</item>
         <item name="textColor">#FFFAFA</item>
+        <item name="less_half_transparent_contrast">@color/less_half_transparent_white</item>
+        <item name="half_transparent_contrast">@color/half_transparent_white</item>
+        <item name="more_half_transparent_contrast">@color/more_half_transparent_white</item>
+        <item name="popupwindow_backgound">@color/more_half_transparent_black</item>
     </style>
 
     <style name="WaveProgressViewDefault">

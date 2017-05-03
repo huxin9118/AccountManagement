@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/white"
+        android:background="?attr/popupwindow_backgound"
         android:layout_alignParentBottom="true">
 
         <EditText
@@ -22,12 +22,12 @@
             android:gravity="left|top"
             android:minLines="10"
             android:textSize="20sp"
-            android:textColor="@color/gray"/>
+            android:textColor="@color/lightgray"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center"
-            android:background="@color/listBackgrount">
+            android:background="@color/darkgray">
 
             <ImageView
                 android:id="@+id/close"

@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.swjtu.huxin.accountmanagement.R;
@@ -74,14 +76,14 @@ public class MoreSkinActivity extends BaseAppCompatActivity {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("currentTheme",myThemes.get(pos));
                     editor.apply();
-                    int themeResID = getResources().getIdentifier(myThemes.get(pos), "style", getPackageName());
-                    MyApplication.getApplication().setMyTheme(themeResID);
+                    MyApplication.getApplication().setMyTheme(myThemes.get(pos));
                     finish();
                     Intent intent = new Intent(MoreSkinActivity.this, MainActivity.class);
                     intent.putExtra("defaultPosition",3);
                     intent.setFlags(IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     overridePendingTransition(0,0);
+                    showToast("皮肤更换成功", Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -143,6 +145,10 @@ class MoreSkinRecyclerAdapter extends BaseRecyclerViewAdapter {
             typedArray.recycle();
             Glide.with(mContent).load(imgResID).override(640,360).bitmapTransform(new RoundedCornersTransformation(mContext,
                     DensityUtils.dp2px(mContext,20),DensityUtils.dp2px(mContext,20))).into(holder.img);
+            if(myThemes.get(pos).equals(MyApplication.getApplication().getMyTheme()))
+                holder.btnSelector.setVisibility(View.VISIBLE);
+            else
+                holder.btnSelector.setVisibility(View.GONE);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -154,11 +160,13 @@ class MoreSkinRecyclerAdapter extends BaseRecyclerViewAdapter {
 
     static class Holder extends RecyclerView.ViewHolder {
         public ImageView img;
+        public RelativeLayout btnSelector;
         public Holder(View itemView, int viewType) {
             super(itemView);
             if(viewType == TYPE_HEADER || viewType == TYPE_FOOTER) return;
             if(viewType == TYPE_NORMAL) {
                 img = (ImageView) itemView.findViewById(R.id.img);
+                btnSelector = (RelativeLayout) itemView.findViewById(R.id.btnSelector);
             }
         }
     }

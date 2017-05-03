@@ -5,87 +5,316 @@ import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.TypedArray;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
-
-import com.john.waveview.WaveView;
+import android.widget.TextView;
 import com.swjtu.huxin.accountmanagement.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by huxin on 2017/2/26.
  */
 
 public class CustomPtrHeader extends FrameLayout implements PtrUIHandler {
-    WaveView wave_view;
-    int i;
 
-    public CustomPtrHeader(Context context) {
+    private final static String KEY_SharedPreferences = "cube_ptr_classic_last_update";
+    private static SimpleDateFormat sDataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private int mRotateAniTime = 150;
+    private RotateAnimation mFlipAnimation;
+    private RotateAnimation mReverseFlipAnimation;
+    private TextView mTitleTextView;
+    private View mRotateView;
+    private View mProgressBar;
+    private long mLastUpdateTime = -1;
+    private TextView mLastUpdateTextView;
+    private String mLastUpdateTimeKey;
+    private boolean mShouldShowLastUpdate;
+
+    private LastUpdateTimeUpdater mLastUpdateTimeUpdater = new LastUpdateTimeUpdater();
+
+    private View line;
+
+    public CustomPtrHeader(Context context,View line) {
         super(context);
-        init();
+        this.line = line;
+        initViews(null);
     }
 
     public CustomPtrHeader(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+
+        initViews(attrs);
     }
 
-    public CustomPtrHeader(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
+    public CustomPtrHeader(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initViews(attrs);
     }
 
-    public CustomPtrHeader(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+    protected void initViews(AttributeSet attrs) {
+        TypedArray arr = getContext().obtainStyledAttributes(attrs, in.srain.cube.views.ptr.R.styleable.PtrClassicHeader, 0, 0);
+        if (arr != null) {
+            mRotateAniTime = arr.getInt(in.srain.cube.views.ptr.R.styleable.PtrClassicHeader_ptr_rotate_ani_time, mRotateAniTime);
+        }
+        buildAnimation();
+        View header = LayoutInflater.from(getContext()).inflate(R.layout.item_recycler_detail_refresh_header, this);
+
+        mRotateView = header.findViewById(R.id.ptr_classic_header_rotate_view);
+
+        mTitleTextView = (TextView) header.findViewById(R.id.ptr_classic_header_rotate_view_header_title);
+        mLastUpdateTextView = (TextView) header.findViewById(R.id.ptr_classic_header_rotate_view_header_last_update);
+        mProgressBar = header.findViewById(R.id.ptr_classic_header_rotate_view_progressbar);
+
+        resetView();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mLastUpdateTimeUpdater != null) {
+            mLastUpdateTimeUpdater.stop();
+        }
+    }
+
+    public void setRotateAniTime(int time) {
+        if (time == mRotateAniTime || time == 0) {
+            return;
+        }
+        mRotateAniTime = time;
+        buildAnimation();
     }
 
     /**
-     * 初始化
+     * Specify the last update time by this key string
+     *
+     * @param key
      */
-    private void init() {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.item_recycler_detail_refresh_header, this);
-        wave_view = (WaveView) view.findViewById(R.id.wave_view);
+    public void setLastUpdateTimeKey(String key) {
+        if (TextUtils.isEmpty(key)) {
+            return;
+        }
+        mLastUpdateTimeKey = key;
+    }
+
+    /**
+     * Using an object to specify the last update time.
+     *
+     * @param object
+     */
+    public void setLastUpdateTimeRelateObject(Object object) {
+        setLastUpdateTimeKey(object.getClass().getName());
+    }
+
+    private void buildAnimation() {
+        mFlipAnimation = new RotateAnimation(0, -180, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+        mFlipAnimation.setInterpolator(new LinearInterpolator());
+        mFlipAnimation.setDuration(mRotateAniTime);
+        mFlipAnimation.setFillAfter(true);
+
+        mReverseFlipAnimation = new RotateAnimation(-180, 0, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+        mReverseFlipAnimation.setInterpolator(new LinearInterpolator());
+        mReverseFlipAnimation.setDuration(mRotateAniTime);
+        mReverseFlipAnimation.setFillAfter(true);
+    }
+
+    private void resetView() {
+        hideRotateView();
+        mProgressBar.setVisibility(INVISIBLE);
+    }
+
+    private void hideRotateView() {
+        mRotateView.clearAnimation();
+        mRotateView.setVisibility(INVISIBLE);
     }
 
     @Override
     public void onUIReset(PtrFrameLayout frame) {
-
+        resetView();
+        mShouldShowLastUpdate = true;
+        tryUpdateLastUpdateTime();
     }
 
     @Override
     public void onUIRefreshPrepare(PtrFrameLayout frame) {
 
+        mShouldShowLastUpdate = true;
+        tryUpdateLastUpdateTime();
+        mLastUpdateTimeUpdater.start();
+
+        mProgressBar.setVisibility(INVISIBLE);
+
+        mRotateView.setVisibility(VISIBLE);
+        mTitleTextView.setVisibility(VISIBLE);
+        if (frame.isPullToRefresh()) {
+            mTitleTextView.setText("下拉刷新");
+        } else {
+            mTitleTextView.setText("下拉");
+        }
     }
 
     @Override
     public void onUIRefreshBegin(PtrFrameLayout frame) {
+        mShouldShowLastUpdate = false;
+        hideRotateView();
+        mProgressBar.setVisibility(VISIBLE);
+        mTitleTextView.setVisibility(VISIBLE);
+        mTitleTextView.setText("加载中...");
 
+        tryUpdateLastUpdateTime();
+        mLastUpdateTimeUpdater.stop();
     }
 
     @Override
     public void onUIRefreshComplete(PtrFrameLayout frame) {
 
+        hideRotateView();
+        mProgressBar.setVisibility(INVISIBLE);
+
+        mTitleTextView.setVisibility(VISIBLE);
+        mTitleTextView.setText("更新完成");
+
+        // update last update time
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(KEY_SharedPreferences, 0);
+        if (!TextUtils.isEmpty(mLastUpdateTimeKey)) {
+            mLastUpdateTime = new Date().getTime();
+            sharedPreferences.edit().putLong(mLastUpdateTimeKey, mLastUpdateTime).commit();
+        }
     }
 
+    private void tryUpdateLastUpdateTime() {
+        if (TextUtils.isEmpty(mLastUpdateTimeKey) || !mShouldShowLastUpdate) {
+            mLastUpdateTextView.setVisibility(GONE);
+        } else {
+            String time = getLastUpdateTime();
+            if (TextUtils.isEmpty(time)) {
+                mLastUpdateTextView.setVisibility(GONE);
+            } else {
+                mLastUpdateTextView.setVisibility(VISIBLE);
+                mLastUpdateTextView.setText(time);
+            }
+        }
+    }
+
+    private String getLastUpdateTime() {
+
+        if (mLastUpdateTime == -1 && !TextUtils.isEmpty(mLastUpdateTimeKey)) {
+            mLastUpdateTime = getContext().getSharedPreferences(KEY_SharedPreferences, 0).getLong(mLastUpdateTimeKey, -1);
+        }
+        if (mLastUpdateTime == -1) {
+            return null;
+        }
+        long diffTime = new Date().getTime() - mLastUpdateTime;
+        int seconds = (int) (diffTime / 1000);
+        if (diffTime < 0) {
+            return null;
+        }
+        if (seconds <= 0) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(getContext().getString(in.srain.cube.views.ptr.R.string.cube_ptr_last_update));
+
+        if (seconds < 60) {
+            sb.append(seconds + getContext().getString(in.srain.cube.views.ptr.R.string.cube_ptr_seconds_ago));
+        } else {
+            int minutes = (seconds / 60);
+            if (minutes > 60) {
+                int hours = minutes / 60;
+                if (hours > 24) {
+                    Date date = new Date(mLastUpdateTime);
+                    sb.append(sDataFormat.format(date));
+                } else {
+                    sb.append(hours + getContext().getString(in.srain.cube.views.ptr.R.string.cube_ptr_hours_ago));
+                }
+
+            } else {
+                sb.append(minutes + getContext().getString(in.srain.cube.views.ptr.R.string.cube_ptr_minutes_ago));
+            }
+        }
+        return sb.toString();
+    }
 
     @Override
-    public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator){
-        float percent = Math.min(1f, ptrIndicator.getCurrentPercent());
+    public void onUIPositionChange(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
 
-        //if (status == PtrFrameLayout.PTR_STATUS_PREPARE) {
-        wave_view.setProgress((int) (percent * 300* 1.0));
-        invalidate();
-        // }
+        final int mOffsetToRefresh = frame.getOffsetToRefresh();
+        final int currentPos = ptrIndicator.getCurrentPosY();
+        final int lastPos = ptrIndicator.getLastPosY();
+
+        Log.i("===", line.getLayoutParams().height+"==="+currentPos);
+
+        line.getLayoutParams().height = currentPos;
+        line.requestLayout();
+
+        if (currentPos < mOffsetToRefresh && lastPos >= mOffsetToRefresh) {
+            if (isUnderTouch && status == PtrFrameLayout.PTR_STATUS_PREPARE) {
+                crossRotateLineFromBottomUnderTouch(frame);
+                if (mRotateView != null) {
+                    mRotateView.clearAnimation();
+                    mRotateView.startAnimation(mReverseFlipAnimation);
+                }
+            }
+        } else if (currentPos > mOffsetToRefresh && lastPos <= mOffsetToRefresh) {
+            if (isUnderTouch && status == PtrFrameLayout.PTR_STATUS_PREPARE) {
+                crossRotateLineFromTopUnderTouch(frame);
+                if (mRotateView != null) {
+                    mRotateView.clearAnimation();
+                    mRotateView.startAnimation(mFlipAnimation);
+                }
+            }
+        }
     }
 
-    /**
-     * 设置波纹进度
-     * @param progress 进度
-     */
-    private void setWaveProgress(int progress){
-        wave_view.setProgress(progress);
+    private void crossRotateLineFromTopUnderTouch(PtrFrameLayout frame) {
+        if (!frame.isPullToRefresh()) {
+            mTitleTextView.setVisibility(VISIBLE);
+            mTitleTextView.setText("释放刷新");
+        }
     }
 
+    private void crossRotateLineFromBottomUnderTouch(PtrFrameLayout frame) {
+        mTitleTextView.setVisibility(VISIBLE);
+        if (frame.isPullToRefresh()) {
+            mTitleTextView.setText("下拉刷新");
+        } else {
+            mTitleTextView.setText("下拉");
+
+        }
+    }
+
+    private class LastUpdateTimeUpdater implements Runnable {
+
+        private boolean mRunning = false;
+
+        private void start() {
+            if (TextUtils.isEmpty(mLastUpdateTimeKey)) {
+                return;
+            }
+            mRunning = true;
+            run();
+        }
+
+        private void stop() {
+            mRunning = false;
+            removeCallbacks(this);
+        }
+
+        @Override
+        public void run() {
+            tryUpdateLastUpdateTime();
+            if (mRunning) {
+                postDelayed(this, 1000);
+            }
+        }
+    }
 }

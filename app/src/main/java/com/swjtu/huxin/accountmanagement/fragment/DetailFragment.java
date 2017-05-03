@@ -55,6 +55,7 @@ public class DetailFragment extends Fragment {
     private boolean isRecyclerViewTop = true;
     private Date firstTime;
 
+    private View longerLine;
     private PtrFrameLayout mPtrFrameLayout;
     private WaveProgressView wpv;
     private TextView txtZhichu;
@@ -104,12 +105,16 @@ public class DetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail,container,false);
+
+        longerLine = view.findViewById(R.id.line);
+
         //创建自定义刷新头部view
-        mHeaderView = new CustomPtrHeader(getContext());
+        mHeaderView = new CustomPtrHeader(getContext(),longerLine);
+//        mHeaderView = new PtrClassicDefaultHeader(getContext());
         mPtrFrameLayout = (PtrFrameLayout) view.findViewById(R.id.ptr_frame);
         //设置刷新头部view
         mPtrFrameLayout.setHeaderView(mHeaderView);
-        //设置回调
+        //设置下拉时UI变化监听
         mPtrFrameLayout.addPtrUIHandler(mHeaderView);
         //设置下拉刷新监听
         mPtrFrameLayout.setPtrHandler(new PtrDefaultHandler() {
@@ -122,7 +127,6 @@ public class DetailFragment extends Fragment {
                         mPtrFrameLayout.refreshComplete();
                     }
                 }, 2000);
-
             }
             @Override
             //检查是否可以执行下来刷新
@@ -134,10 +138,12 @@ public class DetailFragment extends Fragment {
 
         //启动时自动刷新
         mPtrFrameLayout.autoRefresh(false);
+        //设置下拉过程中，content的内容布局保持不动
+        mPtrFrameLayout.setPinContent(false);
         //下拉时阻止事件分发
         mPtrFrameLayout.setInterceptEventWhileWorking(true);
         //横向滑动不刷新，和ViewPager配合使用
-        //mPtrFrameLayout.disableWhenHorizontalMove(true);
+        mPtrFrameLayout.disableWhenHorizontalMove(true);
 
 
         mFloatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);

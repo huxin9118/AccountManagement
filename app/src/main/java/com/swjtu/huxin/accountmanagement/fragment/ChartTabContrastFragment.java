@@ -1,6 +1,7 @@
 package com.swjtu.huxin.accountmanagement.fragment;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,12 +11,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.R;
@@ -32,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import lecho.lib.hellocharts.gesture.ZoomType;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
@@ -204,6 +204,7 @@ public class ChartTabContrastFragment extends Fragment
         mRecyclerViewAdapter.addDatas("months",months);
         mRecyclerViewAdapter.notifyDataSetChanged();
         mRecyclerViewAdapter.setFirstRun(true);
+        mRecyclerViewAdapter.setSelectPostionView(null);
     }
 
     private void initLineChart(){
@@ -303,6 +304,7 @@ public class ChartTabContrastFragment extends Fragment
 class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
     private Context mContext;
     private boolean isFirstRun = true;
+    private View selectPostionView;
 
     public ChartTabContrastRecyclerAdapter(Context context) {
         super(context);
@@ -328,7 +330,7 @@ class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        Holder holder = (Holder)viewHolder;
+        final Holder holder = (Holder)viewHolder;
         final int pos = getRealPosition(holder);
         if(getItemViewType(position) == TYPE_HEADER || getItemViewType(position) == TYPE_FOOTER) return;
         if(getItemViewType(position) == TYPE_NORMAL) {
@@ -372,6 +374,14 @@ class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
                 @Override
                 public void onClick(View v) {
                     mOnItemClickListener.onClick(v,pos,"itemView");
+                    if(selectPostionView != null)
+                        selectPostionView.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
+                    selectPostionView = holder.background;
+                    int[] attrsArray = {R.attr.less_half_transparent_contrast};
+                    TypedArray typedArray = mContext.obtainStyledAttributes(attrsArray);
+                    int color = typedArray.getColor(0, -1);
+                    typedArray.recycle();
+                    selectPostionView.setBackgroundColor(color);
                 }
             });
             if(pos == 0 && isFirstRun == true){
@@ -382,6 +392,7 @@ class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
     }
 
     static class Holder extends RecyclerView.ViewHolder {
+        public RelativeLayout background;
         public CardView item_back;
         public ImageView item_icon;
         public TextView item_name;
@@ -395,6 +406,7 @@ class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
             super(itemView);
             if(viewType == TYPE_HEADER || viewType == TYPE_FOOTER) return;
             if(viewType == TYPE_NORMAL) {
+                background = (RelativeLayout) itemView.findViewById(R.id.background);
                 item_back = (CardView) itemView.findViewById(R.id.item_back);
                 item_icon = (ImageView) itemView.findViewById(R.id.item_icon);
                 item_name = (TextView) itemView.findViewById(R.id.item_name);
@@ -410,5 +422,9 @@ class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
 
     public void setFirstRun(boolean firstRun) {
         isFirstRun = firstRun;
+    }
+
+    public void setSelectPostionView(View selectPostionView) {
+        this.selectPostionView = selectPostionView;
     }
 }

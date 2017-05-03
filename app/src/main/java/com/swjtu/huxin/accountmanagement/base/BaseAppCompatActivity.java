@@ -29,8 +29,9 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        int myTheme = MyApplication.getApplication().getMyTheme();
-        setTheme(myTheme);
+        String myTheme = MyApplication.getApplication().getMyTheme();
+        int themeResID = getResources().getIdentifier(myTheme, "style", getPackageName());
+        setTheme(themeResID);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 

@@ -47,15 +47,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/btnSwitch"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="30dp"
-            android:background="@drawable/ic_switch_circle"/>
-
         <LinearLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
@@ -65,18 +56,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_marginTop="10dp"
+                android:paddingTop="10dp"
                 android:text="默认账本"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                android:background="?attr/listItem"/>
 
             <lecho.lib.hellocharts.view.LineChartView
                 android:id="@+id/linechart"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp">
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:background="?attr/listItem">
             </lecho.lib.hellocharts.view.LineChartView>
 
             <View
@@ -87,7 +80,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="?attr/listBackgrount">
             </android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
@@ -119,5 +113,14 @@
                 android:text="请添加一些新纪录吧"
                 android:textSize="16sp"/>
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btnSwitch"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/ic_switch_circle"/>
     </RelativeLayout>
 </LinearLayout>

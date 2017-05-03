@@ -35,7 +35,7 @@ public class MyApplication extends Application{
     private Set<String> members;
     private int screenHeight;
     private int screenWidth;
-    private int myTheme = -1;
+    private String myTheme;
 
     @Override
     public void onCreate() {
@@ -51,8 +51,7 @@ public class MyApplication extends Application{
 
         SharedPreferences sharedPreferences = getSharedPreferences("userData", MODE_PRIVATE);
         String myTheme = sharedPreferences.getString("currentTheme","MyTheme_White");
-        int themeResID = getResources().getIdentifier(myTheme, "style", getPackageName());
-        setMyTheme(themeResID);
+        setMyTheme(myTheme);
 
 //        int[] attrsArray = { R.attr.mainBackgrount };
 //        TypedArray typedArray = obtainStyledAttributes(attrsArray);
@@ -125,11 +124,11 @@ public class MyApplication extends Application{
         this.screenWidth = screenWidth;
     }
 
-    public int getMyTheme() {
+    public String getMyTheme() {
         return myTheme;
     }
 
-    public void setMyTheme(int myTheme) {
+    public void setMyTheme(String myTheme) {
         this.myTheme = myTheme;
     }
 }
