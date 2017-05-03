@@ -3,12 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/mainBackgrount">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:padding="15dp">
+        android:padding="15dp"
+        android:background="?attr/listItem">
 
         <LinearLayout
             android:id="@+id/back"
@@ -48,7 +50,8 @@
     <FrameLayout
         android:id="@+id/fragment"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?attr/listItem">
 
     </FrameLayout>
 
@@ -59,8 +62,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/listBackgrount"/>
+        android:layout_height="20dp"
+        android:background="?attr/listBackgrount"/>
 
     <View
         android:layout_width="match_parent"
@@ -72,5 +75,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cacheColorHint="@null"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"/>
 </LinearLayout>

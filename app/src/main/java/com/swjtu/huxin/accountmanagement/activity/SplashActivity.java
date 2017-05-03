@@ -61,8 +61,8 @@ public class SplashActivity extends BaseAppCompatActivity {
         if(dayDistance < 1) text2.setText("你今天刚刚开始记账");
         else text2.setText("你坚持记账 "+dayDistance+" 天了");
 
-        rotateHandler.sendEmptyMessageDelayed(0, 1500);
-        skipHandler.sendEmptyMessageDelayed(0, 3000);
+        rotateHandler.sendEmptyMessageDelayed(0, 800);
+        skipHandler.sendEmptyMessageDelayed(0, 2000);
 
         MyApplication app = MyApplication.getApplication();
         DisplayMetrics metric = new DisplayMetrics();
@@ -174,6 +174,10 @@ public class SplashActivity extends BaseAppCompatActivity {
             });
             sortMember.addAll(member);
             app.setMembers(sortMember);
+
+//            String myTheme = sharedPreferences.getString("currentTheme","MyTheme_White");
+//            int themeResID = getResources().getIdentifier(myTheme, "style", getPackageName());
+//            app.setMyTheme(themeResID);
         }
     }
 
@@ -181,7 +185,6 @@ public class SplashActivity extends BaseAppCompatActivity {
         SharedPreferences sharedPreferences = this.getSharedPreferences("userData", MODE_PRIVATE);
         isFirstRun = sharedPreferences.getBoolean("isFirstRun", true);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        Log.i(editor.toString()+"###", sharedPreferences.toString());
         if (isFirstRun)  {
             Log.i("debug", "第一次运行");
             editor.putBoolean("isFirstRun", false);

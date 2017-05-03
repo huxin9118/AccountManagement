@@ -54,8 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:text="0.00"
-            android:textSize="15sp"
-            android:textColor="@color/gray"/>
+            android:textSize="15sp"/>
 
         <TextView
             android:id="@+id/progress_end"
@@ -64,7 +63,6 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
             android:text="3500.00"
-            android:textSize="15sp"
-            android:textColor="@color/gray"/>
+            android:textSize="15sp"/>
     </RelativeLayout>
 </LinearLayout>

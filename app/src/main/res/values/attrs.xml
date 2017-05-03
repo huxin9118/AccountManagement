@@ -13,4 +13,11 @@
     </declare-styleable>
 
 
+    <declare-styleable name="myTheme">
+        <attr name="listBackgrount" format="reference"/>
+        <attr name="listItem" format="reference"/>
+        <attr name="mainBackgrount" format="reference"/>
+        <attr name="textColor" format="color"/>
+    </declare-styleable>
+
 </resources>

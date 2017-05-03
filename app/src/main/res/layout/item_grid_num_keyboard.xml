@@ -1,33 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#e0e0e0">
-
-    <TextView
-        android:id="@+id/btn_keys"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_centerInParent="true"
-        android:background="@drawable/selector_gird_item"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:textColor="#333333"
-        android:textSize="26sp" />
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/imgDelete"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="55dp"
-        android:layout_centerInParent="true">
+        android:layout_weight="1">
+        <TextView
+            android:id="@+id/btn_keys"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/selector_gird_item"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:textColor="#333333"
+            android:textSize="26sp" />
 
         <ImageView
+            android:id="@+id/imgDelete"
             android:layout_width="40dp"
             android:layout_height="30dp"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_keyboard_delete" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/silver"
+            android:layout_alignParentBottom="true"/>
+
     </RelativeLayout>
 
-
-</RelativeLayout>
+    <View
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:background="@color/silver"
+        android:layout_alignParentRight="true"/>
+</LinearLayout>

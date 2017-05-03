@@ -4,6 +4,7 @@ package com.swjtu.huxin.accountmanagement.fragment;
  * Created by huxin on 2017/2/24.
  */
 
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -61,8 +62,13 @@ public class ChartFragment extends Fragment {
         for(int i = 0; i < 4; i++){
             if(i == position)
                 btnTab[i].setTextColor(getResources().getColor(R.color.customBlue));
-            else
-                btnTab[i].setTextColor(getResources().getColor(R.color.darkgray));
+            else {
+                int[] attrsArray = { R.attr.textColor };
+                TypedArray typedArray = getContext().obtainStyledAttributes(attrsArray);
+                int color = typedArray.getColor(0,-1);
+                typedArray.recycle();
+                btnTab[i].setTextColor(color);
+            }
         }
     }
 

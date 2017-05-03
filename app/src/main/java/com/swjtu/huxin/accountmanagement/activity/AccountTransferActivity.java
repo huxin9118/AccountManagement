@@ -1,6 +1,5 @@
 package com.swjtu.huxin.accountmanagement.activity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -10,8 +9,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +55,8 @@ public class AccountTransferActivity extends BaseAppCompatActivity {
     private Account accountIn;
     private CardView btnOut;
     private CardView btnIn;
+    private RelativeLayout emptyOut;
+    private RelativeLayout emptyIn;
     private ImageView iconOut;
     private ImageView iconIn;
     private TextView nameOut;
@@ -95,6 +95,8 @@ public class AccountTransferActivity extends BaseAppCompatActivity {
         btnBack = (LinearLayout) findViewById(R.id.back);
         btnOut = (CardView) findViewById(R.id.btnOut);
         btnIn = (CardView) findViewById(R.id.btnIn);
+        emptyOut = (RelativeLayout) findViewById(R.id.emptyOut);
+        emptyIn = (RelativeLayout) findViewById(R.id.emptyIn);
         iconOut = (ImageView) findViewById(R.id.iconOut);
         iconIn = (ImageView) findViewById(R.id.iconIn);
         nameOut = (TextView) findViewById(R.id.nameOut);
@@ -199,6 +201,10 @@ public class AccountTransferActivity extends BaseAppCompatActivity {
                 if(accountOut == null || accountIn == null){
                     showToast("请先选择转出和转入账户", Toast.LENGTH_SHORT);
                 }
+                else if(accountOut == accountIn)
+                {
+                    showToast("转入账户不能和转出账户一样哦~", Toast.LENGTH_SHORT);
+                }
                 else {
                     if (!"0.00".equals(numOut.getText().toString())) {
                         AccountRecord recordOut = new AccountRecord();
@@ -226,7 +232,7 @@ public class AccountTransferActivity extends BaseAppCompatActivity {
                         setResult(RESULT_OK);
                         finish();
                     } else {//输入金额为0
-                        showToast("预算金额必须大于0", Toast.LENGTH_SHORT);
+                        showToast("转账金额必须大于0", Toast.LENGTH_SHORT);
                     }
                 }
             }
@@ -320,10 +326,11 @@ public class AccountTransferActivity extends BaseAppCompatActivity {
                 detail1Out.setText(getDetail1ByType(accountOut.getType()));
                 detail2Out.setText(accountOut.getAccountdetail());
                 numOut.setTextColor(getResources().getColor(R.color.white));
-                symbolOut.setTextColor(getResources().getColor(R.color.half_transparent));
+                symbolOut.setTextColor(getResources().getColor(R.color.more_half_transparent_white));
                 iconOut.setVisibility(View.VISIBLE);
                 iconOut.setBackgroundResource(getIconByType(accountOut.getType()));
                 btnOut.setCardBackgroundColor(Color.parseColor(accountOut.getColor()));
+                emptyOut.setBackgroundColor(getResources().getColor(R.color.transparent));
             }
         });
 
@@ -383,10 +390,11 @@ public class AccountTransferActivity extends BaseAppCompatActivity {
                 detail1In.setText(getDetail1ByType(accountIn.getType()));
                 detail2In.setText(accountIn.getAccountdetail());
                 numIn.setTextColor(getResources().getColor(R.color.white));
-                symbolIn.setTextColor(getResources().getColor(R.color.half_transparent));
+                symbolIn.setTextColor(getResources().getColor(R.color.more_half_transparent_white));
                 iconIn.setVisibility(View.VISIBLE);
                 iconIn.setBackgroundResource(getIconByType(accountIn.getType()));
                 btnIn.setCardBackgroundColor(Color.parseColor(accountIn.getColor()));
+                emptyIn.setBackgroundColor(getResources().getColor(R.color.transparent));
 
             }
         });

@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/lightgray"
+    android:background="?attr/mainBackgrount"
     android:transitionName="sharedView">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="?attr/listItem">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="?attr/listItem">
 
         <ImageView
             android:id="@+id/item_icon"
@@ -118,7 +118,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#f5f5f5"
+            android:background="?attr/listItem"
             android:padding="5dp">
 
             <TextView

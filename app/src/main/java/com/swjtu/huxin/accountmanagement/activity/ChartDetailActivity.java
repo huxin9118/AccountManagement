@@ -386,8 +386,9 @@ class ChartDetailRecyclerAdapter extends BaseRecyclerViewAdapter  implements Ite
             holder.item_content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mItemSwipeHelpter.isExpanded())
+                    if(mItemSwipeHelpter.isExpanded()){
                         mItemSwipeHelpter.close();
+                    }
                 }
             });
             holder.item_edit.setOnClickListener(new View.OnClickListener() {

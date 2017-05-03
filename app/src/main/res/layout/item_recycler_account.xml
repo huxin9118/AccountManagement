@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:layout_marginTop="10dp"
-    android:layout_marginRight="8dp"
-    android:layout_marginLeft="8dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
     app:contentPaddingLeft="8dp"
     app:cardBackgroundColor="#2fb2e8"
     app:cardCornerRadius="6dp"
-    app:cardElevation="1dp" >
+    app:cardElevation="1dp"
+    android:alpha="0.9">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -56,14 +57,14 @@
                     android:gravity="center"
                     android:text="生活费"
                     android:textSize="12sp"
-                    android:textColor="@color/half_transparent"/>
+                    android:textColor="@color/more_half_transparent_white"/>
                 <TextView
                     android:id="@+id/item_detail2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textSize="12sp"
-                    android:textColor="@color/half_transparent"/>
+                    android:textColor="@color/more_half_transparent_white"/>
             </LinearLayout>
         </LinearLayout>
 

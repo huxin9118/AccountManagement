@@ -2,6 +2,7 @@ package com.swjtu.huxin.accountmanagement.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -218,6 +219,10 @@ public class ChartTabSortFragment extends Fragment
         data.setValues(values);//为饼图添加数据
 
         Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltxh.ttf");
+        int[] attrsArray = { R.attr.textColor };
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrsArray);
+        int color = typedArray.getColor(0,-1);
+        typedArray.recycle();
         if (hasCenterText1) {
             if(isShouru)data.setCenterText1("总收入");
             else data.setCenterText1("总支出");
@@ -227,7 +232,7 @@ public class ChartTabSortFragment extends Fragment
 //                    (int) getResources().getDimension(R.dimen.pie_chart_text1_size)));
             data.setCenterText1Typeface(font);//设置文本字体
             data.setCenterText1FontSize(16);//设置文本大小
-            data.setCenterText1Color(getResources().getColor(R.color.gray));//设置文本颜色
+            data.setCenterText1Color(color);//设置文本颜色
         }
 
         if (hasCenterText2) {
@@ -235,7 +240,7 @@ public class ChartTabSortFragment extends Fragment
             else data.setCenterText2(new DecimalFormat("0.00").format(totalMoney*-1));
             data.setCenterText2Typeface(font);//设置文本字体
             data.setCenterText2FontSize(22);
-            data.setCenterText2Color(getResources().getColor(R.color.gray));
+            data.setCenterText2Color(color);
         }
 
         if(records.size() == 0){

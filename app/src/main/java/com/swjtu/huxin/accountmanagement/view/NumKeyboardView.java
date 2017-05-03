@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -65,7 +66,7 @@ public class NumKeyboardView extends RelativeLayout {
         // 初始化按钮上应该显示的数字
         valueList.add("1");valueList.add("2");valueList.add("3");valueList.add("");
         valueList.add("4");valueList.add("5");valueList.add("6");valueList.add("+");
-        valueList.add("7");valueList.add("8");valueList.add("9");valueList.add("—");
+        valueList.add("7");valueList.add("8");valueList.add("9");valueList.add("-");
         valueList.add("C");valueList.add("0");valueList.add(".");valueList.add("确定");
     }
 
@@ -155,7 +156,7 @@ class KeyBoardAdapter extends BaseAdapter {
             convertView = View.inflate(mContext, R.layout.item_grid_num_keyboard, null);
             viewHolder = new ViewHolder();
             viewHolder.btnKey = (TextView) convertView.findViewById(R.id.btn_keys);
-            viewHolder.imgDelete = (RelativeLayout) convertView.findViewById(R.id.imgDelete);
+            viewHolder.imgDelete = (ImageView) convertView.findViewById(R.id.imgDelete);
 
             convertView.setTag(viewHolder);
         } else {
@@ -163,22 +164,20 @@ class KeyBoardAdapter extends BaseAdapter {
         }
 
         if (position == 3) {//退格键
-            viewHolder.btnKey.setBackgroundResource(R.drawable.ic_keyboard_delete);
             viewHolder.imgDelete.setVisibility(View.VISIBLE);
-            viewHolder.btnKey.setVisibility(View.INVISIBLE);
+            viewHolder.btnKey.setBackgroundColor(mContext.getResources().getColor(R.color.functionKey));
         }
                         //   +                -                 C                 .                 确定
         else if (position == 7 || position == 11 || position == 12 || position == 14 || position == 15) {
             viewHolder.imgDelete.setVisibility(View.INVISIBLE);
-            viewHolder.btnKey.setVisibility(View.VISIBLE);
             viewHolder.btnKey.setText(valueList.get(position));
-            viewHolder.btnKey.setBackgroundColor(Color.parseColor("#e0e0e0"));
+            viewHolder.btnKey.setBackgroundColor(mContext.getResources().getColor(R.color.functionKey));
             if(position == 15)ok = viewHolder.btnKey;
         }
         else {
             viewHolder.imgDelete.setVisibility(View.INVISIBLE);
-            viewHolder.btnKey.setVisibility(View.VISIBLE);
             viewHolder.btnKey.setText(valueList.get(position));
+            viewHolder.btnKey.setBackgroundColor(mContext.getResources().getColor(R.color.numKey));
         }
         return convertView;
     }
@@ -201,6 +200,6 @@ class KeyBoardAdapter extends BaseAdapter {
      */
     public final class ViewHolder {
         public TextView btnKey;
-        public RelativeLayout imgDelete;
+        public ImageView imgDelete;
     }
 }

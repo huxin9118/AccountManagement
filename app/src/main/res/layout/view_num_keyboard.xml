@@ -39,10 +39,5 @@
         android:id="@+id/gv_keybord"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/line2"
-        android:background="#bdbdbd"
-        android:horizontalSpacing="1px"
-        android:numColumns="4"
-        android:verticalSpacing="1px" />
-
+        android:numColumns="4" />
 </RelativeLayout>

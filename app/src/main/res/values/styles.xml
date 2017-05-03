@@ -19,6 +19,59 @@
         <!--<item name="android:windowActionBar">false</item>-->
     </style>
 
+    <style name="MyTheme_White" parent="MyTheme">
+        <item name="listBackgrount">@color/listBackgrount_white</item>
+        <item name="listItem">@color/listItem_white</item>
+        <item name="mainBackgrount">@drawable/ic_theme_white</item>
+        <item name="textColor">#333333</item>
+    </style>
+
+    <style name="MyTheme_Cat" parent="MyTheme">
+        <item name="listBackgrount">@color/listBackgrount</item>
+        <item name="listItem">@color/listItem</item>
+        <item name="mainBackgrount">@drawable/ic_theme_cat</item>
+        <item name="textColor">#333333</item>
+    </style>
+
+    <style name="MyTheme_Constellation" parent="MyTheme">
+        <item name="listBackgrount">@color/listBackgrount</item>
+        <item name="listItem">@color/listItem</item>
+        <item name="mainBackgrount">@drawable/ic_theme_constellation</item>
+        <item name="android:textColor">#FFFAFA</item>
+        <item name="textColor">#FFFAFA</item>
+    </style>
+
+    <style name="MyTheme_Dark" parent="MyTheme">
+        <item name="listBackgrount">@color/listBackgrount</item>
+        <item name="listItem">@color/listItem</item>
+        <item name="mainBackgrount">@drawable/ic_theme_dark</item>
+        <item name="android:textColor">#FFFAFA</item>
+        <item name="textColor">#FFFAFA</item>
+    </style>
+
+    <style name="MyTheme_Paris" parent="MyTheme">
+        <item name="listBackgrount">@color/listBackgrount</item>
+        <item name="listItem">@color/listItem_pairs</item>
+        <item name="mainBackgrount">@drawable/ic_theme_paris</item>
+        <item name="android:textColor">#FFFAFA</item>
+        <item name="textColor">#FFFAFA</item>
+    </style>
+
+    <style name="MyTheme_Sea" parent="MyTheme">
+        <item name="listBackgrount">@color/listBackgrount</item>
+        <item name="listItem">@color/listItem</item>
+        <item name="mainBackgrount">@drawable/ic_theme_sea</item>
+        <item name="textColor">#333333</item>
+    </style>
+
+    <style name="MyTheme_Volcano" parent="MyTheme">
+        <item name="listBackgrount">@color/listBackgrount</item>
+        <item name="listItem">@color/listItem</item>
+        <item name="mainBackgrount">@drawable/ic_theme_volcano</item>
+        <item name="android:textColor">#FFFAFA</item>
+        <item name="textColor">#FFFAFA</item>
+    </style>
+
     <style name="WaveProgressViewDefault">
         <item name="WPV_radius">55dp</item>
         <item name="WPV_progress_text_color">#fff</item>

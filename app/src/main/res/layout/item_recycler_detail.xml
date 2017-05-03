@@ -4,33 +4,45 @@
     android:layout_height="80dp">
 
     <ImageView
-        android:id="@+id/line"
-        android:layout_width="0.5dp"
-        android:layout_height="match_parent"
-        android:background="@color/silver"
-        android:layout_centerHorizontal="true" />
-    <ImageView
         android:id="@+id/item_delete"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:background="@drawable/ic_delete"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:alpha="0.9"/>
         <!--android:layout_marginLeft="20dp"-->
         <!--android:layout_centerVertical="true" />-->
     <ImageView
         android:id="@+id/item_edit"
         android:layout_width="25dp"
         android:layout_height="25dp"
+        android:background="@drawable/ic_edit"
         android:layout_centerInParent="true"
-        android:background="@drawable/ic_edit"/>
+        android:alpha="0.9"/>
         <!--android:layout_centerVertical="true"-->
         <!--android:layout_alignParentRight="true"-->
         <!--android:layout_marginRight="20dp" />-->
+
     <ImageView
         android:id="@+id/item_icon"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:alpha="0.9"/>
+
+    <ImageView
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"
+        android:background="@color/silver"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/item_icon"/>
+    <ImageView
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"
+        android:background="@color/silver"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/item_icon"/>
+
     <TextView
         android:id="@+id/item_left"
         android:layout_width="wrap_content"

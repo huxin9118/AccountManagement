@@ -5,4 +5,4 @@
     android:layout_height="match_parent"
     android:cacheColorHint="@null"
     android:scrollbars="vertical"
-    android:background="@color/lightgray"/>
+    android:background="?attr/listBackgrount"/>

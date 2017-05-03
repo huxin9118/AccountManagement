@@ -3,19 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/listBackgrount">
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/listLine"/>
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:padding="15dp"
-        android:background="@color/white">
+        android:background="?attr/listItem">
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,8 +21,14 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/listBackgrount"/>
+        android:layout_height="1px"
+        android:background="@color/listLine"/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="?attr/listBackgrount"/>
 
 
     <View
@@ -36,13 +36,14 @@
         android:layout_height="1px"
         android:background="@color/listLine"/>
 
+
     <RelativeLayout
         android:id="@+id/btnSummary"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:background="@color/white">
+        android:background="?attr/listItem">
         <android.support.v7.widget.CardView
             android:id="@+id/iconSummary"
             android:layout_width="30dp"
@@ -88,7 +89,7 @@
         android:layout_height="50dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:background="@color/white">
+        android:background="?attr/listItem">
         <android.support.v7.widget.CardView
             android:id="@+id/iconExport"
             android:layout_width="30dp"
@@ -127,4 +128,53 @@
         android:layout_height="1px"
         android:background="@color/listLine"/>
 
+    <RelativeLayout
+        android:id="@+id/btnSkin"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="?attr/listItem">
+        <android.support.v7.widget.CardView
+            android:id="@+id/iconSkin"
+            android:layout_width="30dp"
+            android:layout_height="30sp"
+            android:layout_centerVertical="true"
+            app:contentPadding="6dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="5dp"
+            app:cardBackgroundColor="@color/more_skin">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_skin_white"/>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iconSkin"
+            android:layout_marginLeft="10dp"
+            android:text="更换皮肤"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_enter_gray"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/listLine"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/listBackgrount"/>
 </LinearLayout>

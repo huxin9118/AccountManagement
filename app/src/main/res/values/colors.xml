@@ -6,11 +6,22 @@
 
     <color name="transparent">#00000000</color>
 
-    <color name="half_transparent">#99FFFFFF</color>
+    <color name="less_half_transparent_white">#18FFFFFF</color>
+    <color name="more_half_transparent_white">#AAFFFFFF</color>
     <color name="customBlue">#2fb2e8</color>
-    <color name="listBackgrount">#F8F8F8</color>
-    <color name="listLine">#E7E7E7</color>
-    <color name="colorLine">#66E7E7E7</color>
+
+    <color name="listLine">#AAd6d6d6</color>
+    <color name="colorLine">#55d6d6d6</color>
+
+    <color name="listBackgrount_white">#F8F8F8</color>
+    <color name="listBackgrount">#18FFFFFF</color>
+
+    <color name="listItem_white">#FFFFFF</color>
+    <color name="listItem_pairs">#12FFFFFF</color>
+    <color name="listItem">#66F8F8F8</color>
+
+    <color name="numKey">#55FFFFFF</color>
+    <color name="functionKey">#55e0e0e0</color>
 
     <color name="shouru">#5cc5ac</color>
     <color name="zhichu">#2fb2e8</color>
@@ -21,6 +32,7 @@
 
     <color name="more_summary">#c5d78f</color>
     <color name="more_export">#82d1f1</color>
+    <color name="more_skin">#f4b7d9</color>
 
     <color name="account_color_0">#9361a2</color>
     <color name="account_color_1">#ab92ed</color>

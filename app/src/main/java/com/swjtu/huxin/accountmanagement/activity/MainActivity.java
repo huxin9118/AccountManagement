@@ -1,18 +1,21 @@
 package com.swjtu.huxin.accountmanagement.activity;
 
 
+import android.content.Intent;
+import android.content.res.TypedArray;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.bumptech.glide.Glide;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.fragment.MoreFragment;
@@ -21,6 +24,8 @@ import com.swjtu.huxin.accountmanagement.fragment.ChartFragment;
 import com.swjtu.huxin.accountmanagement.fragment.AccountFragment;
 
 import java.util.ArrayList;
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class MainActivity extends BaseAppCompatActivity implements BottomNavigationBar.OnTabSelectedListener{
 //    private ArrayList<Fragment> fragments;
@@ -55,20 +60,29 @@ public class MainActivity extends BaseAppCompatActivity implements BottomNavigat
                 .setHideOnSelect(false); //控制便签被点击时 消失|不消失
         */
 
+        Intent intent = getIntent();
+        setDefaultFragment(intent.getIntExtra("defaultPosition",0));
+
         BottomNavigationBar bottomNavigationBar = (BottomNavigationBar) findViewById(R.id.bottom_navigation_bar);
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);//设置模式
         bottomNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);//设置背景色样式
         bottomNavigationBar
-                .addItem(new BottomNavigationItem(R.drawable.ic_mingxi, "明细").setActiveColorResource(R.color.orange))
-                .addItem(new BottomNavigationItem(R.drawable.ic_zhanghu, "账户").setActiveColorResource(R.color.teal))
-                .addItem(new BottomNavigationItem(R.drawable.ic_tubiao, "图表").setActiveColorResource(R.color.customBlue))
-                .addItem(new BottomNavigationItem(R.drawable.ic_gengduo, "更多").setActiveColorResource(R.color.brown))
-                .setFirstSelectedPosition(0)
+                .addItem(new BottomNavigationItem(R.drawable.ic_mingxi, "明细").setActiveColorResource(R.color.orange).setInActiveColorResource(R.color.gray))
+                .addItem(new BottomNavigationItem(R.drawable.ic_zhanghu, "账户").setActiveColorResource(R.color.teal).setInActiveColorResource(R.color.gray))
+                .addItem(new BottomNavigationItem(R.drawable.ic_tubiao, "图表").setActiveColorResource(R.color.customBlue).setInActiveColorResource(R.color.gray))
+                .addItem(new BottomNavigationItem(R.drawable.ic_gengduo, "更多").setActiveColorResource(R.color.brown).setInActiveColorResource(R.color.gray))
+                .setFirstSelectedPosition(intent.getIntExtra("defaultPosition",0))
                 .initialise();
 
         bottomNavigationBar.setTabSelectedListener(this);
 
-        setDefaultFragment();
+        ImageView background = (ImageView)findViewById(R.id.background);
+        int[] attrsArray = { R.attr.mainBackgrount };
+        TypedArray typedArray = obtainStyledAttributes(attrsArray);
+        int imgResID = typedArray.getResourceId(0,-1);
+        typedArray.recycle();
+        Glide.with(this).load(imgResID).placeholder(R.drawable.ic_loading1).dontAnimate()
+                .bitmapTransform(new BlurTransformation(this, 8)).into(background);
     }
 
     public void onBackPressed() {
@@ -90,11 +104,16 @@ public class MainActivity extends BaseAppCompatActivity implements BottomNavigat
 //        return fragments;
 //    }
 //
-    private void setDefaultFragment() {
+    private void setDefaultFragment(int defaultPosition) {
 //        fragments = getFragments();
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.layFrame, DetailFragment.newInstance("明细"));
+        switch (defaultPosition){
+            case 0:transaction.replace(R.id.layFrame, DetailFragment.newInstance("明细"));break;
+            case 1:transaction.replace(R.id.layFrame, AccountFragment.newInstance("账户"));break;
+            case 2:transaction.replace(R.id.layFrame, ChartFragment.newInstance("图表"));break;
+            case 3:transaction.replace(R.id.layFrame, MoreFragment.newInstance("更多"));break;
+        }
         transaction.commit();
     }
 

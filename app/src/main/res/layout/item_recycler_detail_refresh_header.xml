@@ -9,23 +9,14 @@
         android:background="@color/silver"
         android:layout_centerHorizontal="true" />
 
-    <ImageView
-        android:id="@+id/transparent_area"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true" />
-
     <com.john.waveview.WaveView xmlns:wave="http://schemas.android.com/apk/res-auto"
         android:id="@+id/wave_view"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/transparent_area"
-        android:background="@color/white"
+        android:layout_alignParentBottom="true"
         wave:above_wave_color="@color/dodgerblue"
         wave:blow_wave_color="@color/customBlue"
-        wave:progress="80"
         wave:wave_height="little"
         wave:wave_hz="normal"
         wave:wave_length="middle" />
@@ -33,7 +24,7 @@
     <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/ic_launcher_transparent"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/transparent_area"/>
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/ic_launcher_transparent"/>
 </RelativeLayout>

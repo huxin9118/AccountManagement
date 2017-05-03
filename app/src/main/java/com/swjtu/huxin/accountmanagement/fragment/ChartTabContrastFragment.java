@@ -65,6 +65,7 @@ public class ChartTabContrastFragment extends Fragment
     private List<Integer> months;
 
     private LinearLayout empty;
+    private LinearLayout content;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private ChartTabContrastRecyclerAdapter mRecyclerViewAdapter;
@@ -118,6 +119,7 @@ public class ChartTabContrastFragment extends Fragment
         });
 
         empty = (LinearLayout) view.findViewById(R.id.empty);
+        content = (LinearLayout) view.findViewById(R.id.content);
         lineChart = (LineChartView) view.findViewById(R.id.linechart);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -187,9 +189,11 @@ public class ChartTabContrastFragment extends Fragment
         }
         if(records.size() == 0){
             empty.setVisibility(View.VISIBLE);
+            content.setVisibility(View.GONE);
         }
         else {
             empty.setVisibility(View.GONE);
+            content.setVisibility(View.VISIBLE);
             initRecyclerViewData();
             initLineChart();
         }
@@ -199,6 +203,7 @@ public class ChartTabContrastFragment extends Fragment
         mRecyclerViewAdapter.addDatas("records",records);
         mRecyclerViewAdapter.addDatas("months",months);
         mRecyclerViewAdapter.notifyDataSetChanged();
+        mRecyclerViewAdapter.setFirstRun(true);
     }
 
     private void initLineChart(){
@@ -297,6 +302,7 @@ public class ChartTabContrastFragment extends Fragment
 
 class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
     private Context mContext;
+    private boolean isFirstRun = true;
 
     public ChartTabContrastRecyclerAdapter(Context context) {
         super(context);
@@ -368,6 +374,10 @@ class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
                     mOnItemClickListener.onClick(v,pos,"itemView");
                 }
             });
+            if(pos == 0 && isFirstRun == true){
+                isFirstRun = false;
+                holder.itemView.performClick();
+            }
         }
     }
 
@@ -396,5 +406,9 @@ class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
                 item_label3 = (TextView) itemView.findViewById(R.id.item_label3);
             }
         }
+    }
+
+    public void setFirstRun(boolean firstRun) {
+        isFirstRun = firstRun;
     }
 }

@@ -56,6 +56,8 @@ public class ChartTabTrendFragment extends Fragment
     private LineChartView lineChart;
     private LineChartData chartData;
 
+    private LinearLayout empty;
+    private LinearLayout content;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private ChartTabTrendRecyclerAdapter mRecyclerViewAdapter;
@@ -64,8 +66,6 @@ public class ChartTabTrendFragment extends Fragment
     private List<BigDecimal> numJieyu;
     private double maxNum;
     private double minNum;
-
-    private LinearLayout empty;
 
     public static ChartTabTrendFragment newInstance(String argument) {
         Bundle bundle = new Bundle();
@@ -159,7 +159,7 @@ public class ChartTabTrendFragment extends Fragment
         });
 
         empty = (LinearLayout) view.findViewById(R.id.empty);
-
+        content = (LinearLayout) view.findViewById(R.id.content);
         lineChart = (LineChartView) view.findViewById(R.id.linechart);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -197,12 +197,14 @@ public class ChartTabTrendFragment extends Fragment
         }
         if(maxNum == 0 && minNum == 0){
             empty.setVisibility(View.VISIBLE);
+            content.setVisibility(View.GONE);
         }
         else{
             empty.setVisibility(View.GONE);
+            content.setVisibility(View.VISIBLE);
+            initRecyclerViewData();
+            initLineChart();
         }
-        initRecyclerViewData();
-        initLineChart();
     }
 
     private void initRecyclerViewData(){

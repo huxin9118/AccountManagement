@@ -4,13 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/listBackgrount">
+    android:background="?attr/mainBackgrount">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:padding="15dp"
-        android:background="@color/white">
+        android:background="?attr/listItem">
 
         <LinearLayout
             android:id="@+id/back"
@@ -46,8 +46,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,13 +58,17 @@
                 android:layout_height="60dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
-                app:contentPaddingLeft="8dp"
+                android:layout_marginTop="20dp"
                 app:cardCornerRadius="6dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardBackgroundColor="@color/transparent"
+                android:alpha="0.9">
                 <RelativeLayout
+                    android:id="@+id/emptyOut"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:paddingLeft="8dp"
+                    android:background="@drawable/shape_account_bai">
 
                     <ImageView
                         android:id="@+id/iconOut"
@@ -101,7 +104,7 @@
                                 android:gravity="center"
                                 android:visibility="gone"
                                 android:textSize="12sp"
-                                android:textColor="@color/half_transparent"/>
+                                android:textColor="@color/more_half_transparent_white"/>
                             <TextView
                                 android:id="@+id/detail2Out"
                                 android:layout_width="wrap_content"
@@ -109,7 +112,7 @@
                                 android:gravity="center"
                                 android:visibility="gone"
                                 android:textSize="12sp"
-                                android:textColor="@color/half_transparent"/>
+                                android:textColor="@color/more_half_transparent_white"/>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -142,16 +145,20 @@
                 android:id="@+id/btnIn"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
-                app:contentPaddingLeft="8dp"
                 app:cardCornerRadius="6dp"
                 app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardBackgroundColor="@color/transparent"
+                android:alpha="0.9">
                 <RelativeLayout
+                    android:id="@+id/emptyIn"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:paddingLeft="8dp"
+                    android:background="@drawable/shape_account_bai">
 
                     <ImageView
                         android:id="@+id/iconIn"
@@ -187,7 +194,7 @@
                                 android:gravity="center"
                                 android:visibility="gone"
                                 android:textSize="12sp"
-                                android:textColor="@color/half_transparent"/>
+                                android:textColor="@color/more_half_transparent_white"/>
                             <TextView
                                 android:id="@+id/detail2In"
                                 android:layout_width="wrap_content"
@@ -195,7 +202,7 @@
                                 android:gravity="center"
                                 android:visibility="gone"
                                 android:textSize="12sp"
-                                android:textColor="@color/half_transparent"/>
+                                android:textColor="@color/more_half_transparent_white"/>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -226,21 +233,20 @@
         </LinearLayout>
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="61dp"
+            android:layout_height="61dp"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_account_arrow"
-            app:civ_border_width="5dp"
-            app:civ_border_color="@color/listBackgrount" />
+            app:civ_border_width="8dp"
+            app:civ_border_color="?attr/listItem" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_account_arrow"
             app:civ_border_width="1dp"
             app:civ_border_color="@color/listLine" />
-
 
     </RelativeLayout>
 
@@ -264,7 +270,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#f5f5f5"
+            android:background="?attr/listItem"
             android:padding="5dp">
 
             <TextView

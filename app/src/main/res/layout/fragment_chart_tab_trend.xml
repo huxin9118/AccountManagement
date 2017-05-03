@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/listBackgrount">
+        android:background="?attr/listBackgrount">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -48,6 +48,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -57,8 +58,7 @@
                 android:gravity="center"
                 android:layout_marginTop="10dp"
                 android:text="默认账本"
-                android:textSize="14sp"
-                android:textColor="@color/gray"/>
+                android:textSize="14sp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -135,7 +135,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="@color/listBackgrount"
+                android:background="?attr/listBackgrount"
                 android:gravity="center">
                 <TextView
                     android:layout_width="0dp"
@@ -181,7 +181,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:background="@color/white"
+            android:background="@color/less_half_transparent_white"
             android:visibility="gone">
 
             <ImageView

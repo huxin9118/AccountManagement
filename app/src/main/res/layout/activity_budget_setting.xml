@@ -4,13 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/listBackgrount">
+    android:background="?attr/mainBackgrount">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:padding="15dp"
-        android:background="@color/white">
+        android:background="?attr/listItem">
 
         <LinearLayout
             android:id="@+id/back"
@@ -46,8 +46,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@color/listBackgrount"/>
+        android:layout_height="20dp"
+        android:background="?attr/listBackgrount"/>
 
     <View
         android:layout_width="match_parent"
@@ -58,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:padding="15dp"
-        android:background="@color/white">
+        android:background="?attr/listItem">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,7 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:padding="15dp"
-        android:background="@color/white">
+        android:background="?attr/listItem">
         <TextView
             android:id="@+id/enter_text"
             android:layout_width="wrap_content"
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:text="3000.00"
                 android:textSize="18sp"
-                android:textColor="@color/gray"
+                android:textColor="@color/darkgray"
                 android:layout_marginRight="5dp"/>
             <ImageView
                 android:layout_width="18dp"
@@ -126,7 +126,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/listBackgrount"/>
+        android:background="?attr/listBackgrount"/>
 
     <LinearLayout
         android:id="@+id/keyboard"
@@ -142,7 +142,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:background="?attr/listItem">
 
             <TextView
                 android:layout_width="wrap_content"

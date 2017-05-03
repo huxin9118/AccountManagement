@@ -31,8 +31,8 @@ public class ItemSwipeLayout extends RelativeLayout {
        super.onLayout(changed,l,t,r,b);
        if(mRightView != null){
            mRightWidth = mRightView.getMeasuredWidth();
-           int height = mRightView.getHeight();
-           mRightView.layout(r - mRightWidth,0,r,height);
+           int height = mRightView.getMeasuredHeight();
+           mRightView.layout(r,0,r + mRightWidth,height);
        }
         if(mCenterView != null){
             mCenterWidth = mCenterView.getMeasuredWidth();

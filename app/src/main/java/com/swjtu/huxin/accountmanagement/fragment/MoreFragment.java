@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.activity.MoreExportActivity;
+import com.swjtu.huxin.accountmanagement.activity.MoreSkinActivity;
 import com.swjtu.huxin.accountmanagement.activity.MoreSummaryActivity;
 
 public class MoreFragment extends Fragment {
@@ -22,6 +23,7 @@ public class MoreFragment extends Fragment {
     public static final String ARGUMENT = "argument";
     private RelativeLayout btnSummary;
     private RelativeLayout btnExport;
+    private RelativeLayout btnSkin;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,15 @@ public class MoreFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MoreExportActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnSkin = (RelativeLayout) view.findViewById(R.id.btnSkin);
+        btnSkin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MoreSkinActivity.class);
                 startActivity(intent);
             }
         });

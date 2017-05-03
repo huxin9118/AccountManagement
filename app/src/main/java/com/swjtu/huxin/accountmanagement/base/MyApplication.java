@@ -2,9 +2,13 @@ package com.swjtu.huxin.accountmanagement.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.StrictMode;
 
+import com.bumptech.glide.GenericRequestBuilder;
+import com.bumptech.glide.Glide;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountBook;
@@ -14,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
@@ -30,6 +35,7 @@ public class MyApplication extends Application{
     private Set<String> members;
     private int screenHeight;
     private int screenWidth;
+    private int myTheme = -1;
 
     @Override
     public void onCreate() {
@@ -42,6 +48,17 @@ public class MyApplication extends Application{
         }
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder().setDefaultFontPath("fonts/fzltxh.ttf")
                 .setFontAttrId(R.attr.fontPath).build());
+
+        SharedPreferences sharedPreferences = getSharedPreferences("userData", MODE_PRIVATE);
+        String myTheme = sharedPreferences.getString("currentTheme","MyTheme_White");
+        int themeResID = getResources().getIdentifier(myTheme, "style", getPackageName());
+        setMyTheme(themeResID);
+
+//        int[] attrsArray = { R.attr.mainBackgrount };
+//        TypedArray typedArray = obtainStyledAttributes(attrsArray);
+//        int imgResID = typedArray.getResourceId(0,-1);
+//        typedArray.recycle();
+//        Glide.with(this).load(imgResID).bitmapTransform(new BlurTransformation(this, 10)).into();
     }
 
     public static Context getContext() {
@@ -106,5 +123,13 @@ public class MyApplication extends Application{
 
     public void setScreenWidth(int screenWidth) {
         this.screenWidth = screenWidth;
+    }
+
+    public int getMyTheme() {
+        return myTheme;
+    }
+
+    public void setMyTheme(int myTheme) {
+        this.myTheme = myTheme;
     }
 }

@@ -2,14 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/listBackgrount">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:padding="15dp"
-        android:background="@color/white">
+        android:background="?attr/listItem">
 
 
         <TextView
@@ -35,40 +34,47 @@
         android:layout_height="1px"
         android:background="@color/listLine"/>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/shape_account_bai"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        android:paddingLeft="8dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:text="总余额"
-            android:textSize="18sp"
-            android:gravity="center"/>
-
-        <TextView
-            android:id="@+id/money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="?attr/listBackgrount">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/shape_account_bai"
+            android:layout_marginTop="20dp"
             android:layout_marginRight="10dp"
-            android:text="0.00"
-            android:textSize="20sp"
-            android:textColor="@color/customBlue"
-            android:gravity="center"/>
-    </RelativeLayout>
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="8dp"
+            android:alpha="0.9">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </android.support.v7.widget.RecyclerView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="5dp"
+                android:text="总余额"
+                android:textSize="18sp"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:text="0.00"
+                android:textSize="20sp"
+                android:textColor="@color/customBlue"
+                android:gravity="center"/>
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
 </LinearLayout>

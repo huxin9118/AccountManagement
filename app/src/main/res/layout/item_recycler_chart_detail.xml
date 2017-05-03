@@ -15,7 +15,8 @@
             android:text="删除"
             android:textSize="16sp"
             android:textColor="@color/white"
-            android:background="@color/item_delete"/>
+            android:background="@color/item_delete"
+            android:alpha="0.9"/>
 
         <TextView
             android:id="@+id/item_edit"
@@ -25,19 +26,20 @@
             android:text="编辑"
             android:textSize="16sp"
             android:textColor="@color/white"
-            android:background="@color/item_edit"/>
+            android:background="@color/item_edit"
+            android:alpha="0.9"/>
     </LinearLayout>
 
     <!--外层RelativeLayout包裹整个Item内容和侧滑菜单-->
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="50dp">
+        android:layout_height="50dp"
+        android:background="?attr/listItem">
         <!--内层RelativeLayout包裹Item内容-->
         <RelativeLayout
             android:id="@+id/item_content"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/white">
+            android:layout_height="50dp">
 
             <ImageView
                 android:id="@+id/item_icon"

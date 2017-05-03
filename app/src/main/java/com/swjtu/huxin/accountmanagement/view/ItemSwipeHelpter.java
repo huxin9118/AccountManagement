@@ -97,24 +97,21 @@ public class ItemSwipeHelpter implements RecyclerView.OnItemTouchListener,Gestur
                     mSwipeLayout = null;
                 return true;
             }
-                return true;
+            return true;
         }
         return false;
     }
 
     @Override
     public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-        int acton = MotionEventCompat.getActionMasked(e);
+        int action = MotionEventCompat.getActionMasked(e);
         int x = (int) e.getX();
         int y = (int) e.getY();
         /**
          * 如果recycler滑动就关闭item
          */
         if(rv.getScrollState() != RecyclerView.SCROLL_STATE_IDLE){
-               if(mSwipeLayout != null){
-                  smoothView(true);
-                   mSwipeLayout = null;
-               }
+            close();
             return false;
         }
         if(mAnimator != null && mAnimator.isRunning()){
@@ -122,7 +119,7 @@ public class ItemSwipeHelpter implements RecyclerView.OnItemTouchListener,Gestur
         }
 
         boolean needIntercept =  false;
-        switch (acton){
+        switch (action){
             case MotionEvent.ACTION_DOWN:
                 mLastx = e.getX();
                 mLasty = e.getY();
@@ -142,11 +139,10 @@ public class ItemSwipeHelpter implements RecyclerView.OnItemTouchListener,Gestur
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if(isExpanded()){
-
                     if (inView(x, y)) {
 
-                    }else{
-
+                    }
+                    else{
                        if(isCloseButton) {
 //                        needIntercept = false; //这里可以直接做结束动画
                        } else {
@@ -197,16 +193,14 @@ public class ItemSwipeHelpter implements RecyclerView.OnItemTouchListener,Gestur
     }
 
     @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-    }
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
 
     /**
      * 是否是开启状态
      * @return
      */
     public boolean isExpanded(){
-        return mSwipeLayout != null && mSwipeLayout.mCenterView.getScrollX() == mSwipeLayout.mRightWidth;
+        return mSwipeLayout != null && mSwipeLayout.getScrollX() == mSwipeLayout.mRightWidth;
     }
 
     public void close(){
@@ -222,7 +216,7 @@ public class ItemSwipeHelpter implements RecyclerView.OnItemTouchListener,Gestur
      * @return
      */
     private boolean isClosed(){
-        return mSwipeLayout != null && mSwipeLayout.mCenterView.getScrollX() == 0;
+        return mSwipeLayout != null && mSwipeLayout.getScrollX() == 0;
     }
 
     /**
@@ -231,7 +225,7 @@ public class ItemSwipeHelpter implements RecyclerView.OnItemTouchListener,Gestur
      * @return
      */
     private boolean smoothView(Boolean isClose){
-        int scrollX = mSwipeLayout.mCenterView.getScrollX();
+        int scrollX = mSwipeLayout.getScrollX();
         int to = 0;
         int width = mSwipeLayout.mRightWidth / 2;
         int duration = DURATION;
@@ -254,14 +248,11 @@ public class ItemSwipeHelpter implements RecyclerView.OnItemTouchListener,Gestur
         if(to == scrollX){
             return  false;
         }
-        mAnimator = ObjectAnimator.ofInt(mSwipeLayout.mCenterView,"scrollX",to);
+        mAnimator = ObjectAnimator.ofInt(mSwipeLayout,"scrollX",to);
         mAnimator.setDuration(duration);
         mAnimator.addListener(new Animator.AnimatorListener() {
             @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
+            public void onAnimationStart(Animator animation) {}
             @Override
             public void onAnimationEnd(Animator animation) {
                 mAnimator = null;
@@ -269,19 +260,14 @@ public class ItemSwipeHelpter implements RecyclerView.OnItemTouchListener,Gestur
                     mSwipeLayout = null;
                 }
             }
-
             @Override
             public void onAnimationCancel(Animator animation) {
                 mAnimator = null;
             }
-
             @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
+            public void onAnimationRepeat(Animator animation) {}
         });
         mAnimator.start();
-
         return true;
     }
 
@@ -296,9 +282,7 @@ public class ItemSwipeHelpter implements RecyclerView.OnItemTouchListener,Gestur
      * @return
      */
     private boolean inView(int x, int y) {
-
-        if (mSwipeLayout == null)
-            return false;
+        if (mSwipeLayout == null) return false;
 
         int scrollX = mSwipeLayout.mCenterView.getScrollX();
         int left = mSwipeLayout.mCenterView.getWidth() - scrollX;
@@ -316,18 +300,18 @@ public class ItemSwipeHelpter implements RecyclerView.OnItemTouchListener,Gestur
      * @param delta
      */
     private void horizontalDrag(int delta) {
-        int scrollX = mSwipeLayout.mCenterView.getScrollX();
-        int scrollY = mSwipeLayout.mCenterView.getScrollY();
+        int scrollX = mSwipeLayout.getScrollX();
+        int scrollY = mSwipeLayout.getScrollY();
         if ((scrollX + delta) <= 0) {
-            mSwipeLayout.mCenterView.scrollTo(0, scrollY);
+            mSwipeLayout.scrollTo(0, scrollY);
             return;
         }
         int horRange = mSwipeLayout.mRightWidth;
         scrollX += delta;
         if (Math.abs(scrollX) < horRange) {
-            mSwipeLayout.mCenterView.scrollTo(scrollX, scrollY);
+            mSwipeLayout.scrollTo(scrollX, scrollY);
         } else {
-            mSwipeLayout.mCenterView.scrollTo(horRange, scrollY);
+            mSwipeLayout.scrollTo(horRange, scrollY);
         }
     }
 

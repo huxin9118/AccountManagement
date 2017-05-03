@@ -4,6 +4,7 @@ package com.swjtu.huxin.accountmanagement.fragment;
  * Created by huxin on 2017/2/24.
  */
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ActivityOptions;
@@ -102,7 +103,7 @@ public class DetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_mingxi,container,false);
+        View view = inflater.inflate(R.layout.fragment_detail,container,false);
         //创建自定义刷新头部view
         mHeaderView = new CustomPtrHeader(getContext());
         mPtrFrameLayout = (PtrFrameLayout) view.findViewById(R.id.ptr_frame);
@@ -602,6 +603,8 @@ class DetailRecyclerAdapter extends BaseRecyclerViewAdapter{
                 holder.item_remark_right.setText(((AccountRecord) mDatas.get("records").get(pos)).getRemark());
             }
             int resID = mContent.getResources().getIdentifier(((AccountRecord) mDatas.get("records").get(pos)).getIcon(), "drawable", mContent.getPackageName());
+            holder.item_delete.setVisibility(View.INVISIBLE);
+            holder.item_edit.setVisibility(View.INVISIBLE);
             holder.item_icon.setBackgroundResource(resID);
             holder.item_icon.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -667,18 +670,43 @@ class DetailRecyclerAdapter extends BaseRecyclerViewAdapter{
         }
     }
 
-    private void setAnimator(View view, float XFrom, float XTo, float rotationFrom, float rotationTo, boolean isShow){
+    private void setAnimator(final View view, float XFrom, float XTo, float rotationFrom, float rotationTo, boolean isShow){
         ObjectAnimator move1;
         ObjectAnimator move2;
         ObjectAnimator rotate1;
         ObjectAnimator rotate2;
+        AnimatorSet animSet = new AnimatorSet();
         if(!isShow) {
+            animSet.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    view.setVisibility(View.VISIBLE);
+                }
+                @Override
+                public void onAnimationEnd(Animator animation) {}
+                @Override
+                public void onAnimationCancel(Animator animation) {}
+                @Override
+                public void onAnimationRepeat(Animator animation) {}
+            });
             move1 = ObjectAnimator.ofFloat(view, "translationX", XFrom, XTo * 1.1f);
             move2 = ObjectAnimator.ofFloat(view, "translationX", XTo * 1.1f, XTo);
             rotate1 = ObjectAnimator.ofFloat(view, "rotation", rotationFrom, rotationFrom / -2);
             rotate2 = ObjectAnimator.ofFloat(view, "rotation", rotationFrom / -2, rotationTo);
         }
         else {
+            animSet.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {}
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    view.setVisibility(View.INVISIBLE);
+                }
+                @Override
+                public void onAnimationCancel(Animator animation) {}
+                @Override
+                public void onAnimationRepeat(Animator animation) {}
+            });
             move1 = ObjectAnimator.ofFloat(view, "translationX", XFrom, XFrom * 1.1f);
             move2 = ObjectAnimator.ofFloat(view, "translationX", XFrom * 1.1f, XTo);
             rotate1 = ObjectAnimator.ofFloat(view, "rotation", rotationFrom, rotationTo / -2);
@@ -692,7 +720,6 @@ class DetailRecyclerAdapter extends BaseRecyclerViewAdapter{
         move2.setStartDelay(500);
         rotate2.setDuration(500);
         rotate2.setStartDelay(500);
-        AnimatorSet animSet = new AnimatorSet();
         animSet.playTogether(move1,rotate1,move2,rotate2);
 //        animSet.setInterpolator(new DecelerateInterpolator());
         animSet.start();
