@@ -65,7 +65,7 @@ public class ChartFragment extends Fragment {
                 btnTab[i].setTextColor(getResources().getColor(R.color.customBlue));
             }
             else {
-                int[] attrsArray = { R.attr.textColor };
+                int[] attrsArray = { R.attr.half_transparent_contrast };
                 TypedArray typedArray = getContext().obtainStyledAttributes(attrsArray);
                 int color = typedArray.getColor(0,-1);
                 typedArray.recycle();

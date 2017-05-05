@@ -69,14 +69,19 @@ public class MainActivity extends BaseAppCompatActivity implements BottomNavigat
         Intent intent = getIntent();
         setDefaultFragment(intent.getIntExtra("defaultPosition",0));
 
+        int[] attrsArray = { R.attr.half_transparent_contrast };
+        TypedArray typedArray = obtainStyledAttributes(attrsArray);
+        int color = typedArray.getColor(0,-1);
+        typedArray.recycle();
+
         BottomNavigationBar bottomNavigationBar = (BottomNavigationBar) findViewById(R.id.bottom_navigation_bar);
         bottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);//设置模式
         bottomNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);//设置背景色样式
         bottomNavigationBar
-                .addItem(new BottomNavigationItem(R.drawable.ic_mingxi, "明细").setActiveColorResource(R.color.orange).setInActiveColorResource(R.color.gray))
-                .addItem(new BottomNavigationItem(R.drawable.ic_zhanghu, "账户").setActiveColorResource(R.color.teal).setInActiveColorResource(R.color.gray))
-                .addItem(new BottomNavigationItem(R.drawable.ic_tubiao, "图表").setActiveColorResource(R.color.customBlue).setInActiveColorResource(R.color.gray))
-                .addItem(new BottomNavigationItem(R.drawable.ic_gengduo, "更多").setActiveColorResource(R.color.brown).setInActiveColorResource(R.color.gray))
+                .addItem(new BottomNavigationItem(R.drawable.ic_mingxi, "明细").setActiveColorResource(R.color.orange).setInActiveColor(color))
+                .addItem(new BottomNavigationItem(R.drawable.ic_zhanghu, "账户").setActiveColorResource(R.color.teal).setInActiveColor(color))
+                .addItem(new BottomNavigationItem(R.drawable.ic_tubiao, "图表").setActiveColorResource(R.color.customBlue).setInActiveColor(color))
+                .addItem(new BottomNavigationItem(R.drawable.ic_gengduo, "更多").setActiveColorResource(R.color.brown).setInActiveColor(color))
                 .setFirstSelectedPosition(intent.getIntExtra("defaultPosition",0))
                 .initialise();
 

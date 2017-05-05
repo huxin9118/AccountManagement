@@ -24,6 +24,7 @@
         <attr name="half_transparent_contrast" format="reference"/>
         <attr name="more_half_transparent_contrast" format="reference"/>
         <attr name="textColor" format="color"/>
+        <attr name="textSecondaryColor" format="color"/>
         <attr name="popupwindow_backgound" format="reference"/>
     </declare-styleable>
 

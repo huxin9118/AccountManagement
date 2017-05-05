@@ -151,7 +151,7 @@ public class ChartTabSortFragment extends Fragment implements Observer
             }
         });
 
-        int[] attrsArray = { R.attr.more_half_transparent_contrast };
+        int[] attrsArray = { R.attr.half_transparent_contrast };
         TypedArray typedArray = getContext().obtainStyledAttributes(attrsArray);
         int color = typedArray.getColor(0,-1);
         typedArray.recycle();
