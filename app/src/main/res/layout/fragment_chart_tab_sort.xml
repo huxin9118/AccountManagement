@@ -26,7 +26,8 @@
                 android:layout_height="wrap_content"
                 android:text="03月01日~31日"
                 android:textSize="16sp"
-                android:textColor="@color/customBlue"/>
+                android:textColor="@color/customBlue"
+                android:background="?attr/listItem"/>
             <ImageView
                 android:id="@+id/date_right"
                 android:layout_width="18dp"
@@ -46,9 +47,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:text="默认账本"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        android:background="?attr/listItem"/>
 
     <RelativeLayout
         android:id="@+id/chart"

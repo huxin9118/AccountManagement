@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -24,6 +27,7 @@ import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.activity.ChartDetailActivity;
 import com.swjtu.huxin.accountmanagement.activity.DateRangePickerActivity;
 import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
+import com.swjtu.huxin.accountmanagement.base.MyApplication;
 import com.swjtu.huxin.accountmanagement.base.OnItemClickListener;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
@@ -31,11 +35,14 @@ import com.swjtu.huxin.accountmanagement.utils.ConstantUtils;
 import com.swjtu.huxin.accountmanagement.utils.ItemXmlPullParserUtils;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
@@ -45,10 +52,12 @@ import lecho.lib.hellocharts.view.PieChartView;
  * Created by huxin on 2017/3/11.
  */
 
-public class ChartTabMemberFragment extends Fragment
+public class ChartTabMemberFragment extends Fragment implements Observer
 {
     private String mArgument;
     public static final String ARGUMENT = "argument";
+
+    private Handler dataChangeHandler;
 
     private ImageView left;
     private ImageView right;
@@ -79,6 +88,19 @@ public class ChartTabMemberFragment extends Fragment
         ChartTabMemberFragment contentFragment = new ChartTabMemberFragment();
         contentFragment.setArguments(bundle);
         return contentFragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MyApplication.getApplication().getDataChangeObservable().addObserver(this);
+        dataChangeHandler = new DataChangeHandler(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MyApplication.getApplication().getDataChangeObservable().deleteObserver(this);
     }
 
     @Override
@@ -114,7 +136,7 @@ public class ChartTabMemberFragment extends Fragment
                 end = TimeUtils.getMaxDayDate(end);
                 updateDatePickerText();
                 updateDateRangeChange();
-                updateData();
+                new DataChangeThread().start();
             }
         });
 
@@ -126,9 +148,17 @@ public class ChartTabMemberFragment extends Fragment
                 end = TimeUtils.getMaxDayDate(end);
                 updateDatePickerText();
                 updateDateRangeChange();
-                updateData();
+                new DataChangeThread().start();
             }
         });
+        int[] attrsArray = { R.attr.more_half_transparent_contrast };
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrsArray);
+        int color = typedArray.getColor(0,-1);
+        typedArray.recycle();
+        left.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        left.invalidate();
+        right.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        right.invalidate();
 
         btnSwitch = (ImageView)view.findViewById(R.id.btnSwitch);
         chart = (RelativeLayout) view.findViewById(R.id.chart);
@@ -138,7 +168,7 @@ public class ChartTabMemberFragment extends Fragment
             @Override
             public void onClick(View v) {
                 isShouru = isShouru?false:true;
-                updateData();
+                new DataChangeThread().start();
             }
         });
 
@@ -167,9 +197,43 @@ public class ChartTabMemberFragment extends Fragment
 
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());//添加/删除item默认的动画效果
-        updateData();
+        new DataChangeThread().start();
 
         return view;
+    }
+
+    class DataChangeThread extends Thread{
+        @Override
+        public void run() {
+            updateData();
+            dataChangeHandler.sendEmptyMessageDelayed(0, 0);
+        }
+    }
+
+    static class DataChangeHandler extends Handler {
+        WeakReference<ChartTabMemberFragment> mFragmentReference;
+        DataChangeHandler(ChartTabMemberFragment fragment) {
+            mFragmentReference= new WeakReference(fragment);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final ChartTabMemberFragment fragment = mFragmentReference.get();
+            if (fragment != null) {
+                if(fragment.records.size() == 0){
+                    fragment.empty.setVisibility(View.VISIBLE);
+                }
+                else{
+                    fragment.empty.setVisibility(View.GONE);
+                }
+                fragment.initRecyclerViewData();
+                fragment.initPieChartView();
+            }
+        }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        new DataChangeThread().start();
     }
 
     private void initPieChartView() {
@@ -202,7 +266,12 @@ public class ChartTabMemberFragment extends Fragment
         data.setHasLabelsOnlyForSelected(false);// 是否点击时才显示数据，一般为false
         data.setHasLabelsOutside(false);// 数据是否显示在外面
         data.setHasCenterCircle(true);// 设置饼图中间是否含有中间圈，显示Text这个必须为true
-//        data.setCenterCircleColor(int centerCircleColor);//设置饼图中间圈的颜色
+
+        int[] attrsArray1 = { R.attr.listItem };
+        TypedArray typedArray1 = getContext().obtainStyledAttributes(attrsArray1);
+        int color1 = typedArray1.getColor(0,-1);
+        typedArray1.recycle();
+        data.setCenterCircleColor(color1);//设置饼图中间圈的颜色
 //        data.setCenterCircleScale(float centerCircleScale);//设置中间圈的大小比例
         data.setValueLabelBackgroundEnabled(false);// 设置是否显示数据的背景颜色
 
@@ -213,16 +282,16 @@ public class ChartTabMemberFragment extends Fragment
         data.setValues(values);//为饼图添加数据
 
         Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltxh.ttf");
-        int[] attrsArray = { R.attr.textColor };
-        TypedArray typedArray = getContext().obtainStyledAttributes(attrsArray);
-        int color = typedArray.getColor(0,-1);
-        typedArray.recycle();
+        int[] attrsArray2 = { R.attr.textColor };
+        TypedArray typedArray2 = getContext().obtainStyledAttributes(attrsArray2);
+        int color2 = typedArray2.getColor(0,-1);
+        typedArray2.recycle();
         if (hasCenterText1) {
             if(isShouru)data.setCenterText1("总收入");
             else data.setCenterText1("总支出");
             data.setCenterText1Typeface(font);//设置文本字体
             data.setCenterText1FontSize(16);//设置文本大小
-            data.setCenterText1Color(color);//设置文本颜色
+            data.setCenterText1Color(color2);//设置文本颜色
         }
 
         if (hasCenterText2) {
@@ -230,7 +299,7 @@ public class ChartTabMemberFragment extends Fragment
             else data.setCenterText2(new DecimalFormat("0.00").format(totalMoney*-1));
             data.setCenterText2Typeface(font);//设置文本字体
             data.setCenterText2FontSize(22);
-            data.setCenterText2Color(color);
+            data.setCenterText2Color(color2);
         }
 
         if(records.size() == 0){
@@ -302,12 +371,12 @@ public class ChartTabMemberFragment extends Fragment
                     end = (Date)intent.getSerializableExtra("end");
                     updateDatePickerText();
                     updateDateRangePickerReturn();
-                    updateData();
+                    new DataChangeThread().start();
                 }
                 break;
             case 2:
                 if(resultCode == getActivity().RESULT_OK) {
-                    updateData();
+                    new DataChangeThread().start();
                 }
                 break;
         }
@@ -325,14 +394,6 @@ public class ChartTabMemberFragment extends Fragment
         AccountRecordService accountRecordService = new AccountRecordService();
         records = accountRecordService.getAccountRecordListGroupByMember(start,end,isShouru);
         totalMoney = accountRecordService.getRangeTotalMoneyByTime(start,end,isShouru).doubleValue();
-        if(records.size() == 0){
-            empty.setVisibility(View.VISIBLE);
-        }
-        else{
-            empty.setVisibility(View.GONE);
-        }
-        initRecyclerViewData();
-        initPieChartView();
     }
 }
 
@@ -342,6 +403,8 @@ class ChartTabMemberRecyclerAdapter extends BaseRecyclerViewAdapter {
     public ChartTabMemberRecyclerAdapter(Context context) {
         super(context);
         mContext = context;
+        mDatas.put("totalMoney",new ArrayList());
+        mDatas.put("records",new ArrayList<AccountRecord>());
     }
 
     @Override

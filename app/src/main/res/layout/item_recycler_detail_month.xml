@@ -29,11 +29,12 @@
 
     <TextView
         android:id="@+id/text"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/item_icon"
         android:layout_centerVertical="true"
         android:layout_marginRight="2dp"
         android:gravity="center"
-        android:text=""/>
+        android:text=""
+        android:background="?attr/listItem"/>
 </RelativeLayout>

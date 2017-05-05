@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.dao.AccountDao;
 import com.swjtu.huxin.accountmanagement.dao.DatabaseHelper;
+import com.swjtu.huxin.accountmanagement.dao.DatabaseManager;
 import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.utils.ConstantUtils;
 
@@ -17,44 +18,50 @@ import java.util.Map;
  */
 
 public class AccountService {
+    private DatabaseManager databaseManager;
+
+    public AccountService(){
+        databaseManager = DatabaseManager.getInstance(DatabaseHelper.getInstance());
+    }
 
     public long addAccount(Account record){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountDao dao = new AccountDao(db);
         long id = dao.insert(record);
-        db.close();
+        databaseManager.closeDatabase();
         return id;
     }
 
     public long removeAccount(Account record){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountDao dao = new AccountDao(db);
         long id = dao.delete(record);
-        db.close();
+        databaseManager.closeDatabase();
         return id;
     }
 
     public long updateAccount(Account record){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountDao dao = new AccountDao(db);
         long id = dao.update(record);
-        db.close();
+        databaseManager.closeDatabase();
         return id;
     }
 
     public Account findAccount(int recordID){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountDao dao = new AccountDao(db);
         Account record = dao.find(recordID);
-        db.close();
+        databaseManager.closeDatabase();
         return record;
     }
 
     public Map<Integer, Account> getAccountMap(){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountDao dao = new AccountDao(db);
         Map<Integer, Account> records = dao.getMap();
-        db.close();
+        databaseManager.closeDatabase();
         return records;
     }
 }
+

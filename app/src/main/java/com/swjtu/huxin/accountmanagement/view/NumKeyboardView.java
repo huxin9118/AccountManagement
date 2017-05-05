@@ -1,6 +1,7 @@
 package com.swjtu.huxin.accountmanagement.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
@@ -164,6 +165,14 @@ class KeyBoardAdapter extends BaseAdapter {
         }
 
         if (position == 3) {//退格键
+            int[] attrsArray = { R.attr.theme_isLight };
+            TypedArray typedArray = mContext.obtainStyledAttributes(attrsArray);
+            boolean isLight = typedArray.getBoolean(0,true);
+            typedArray.recycle();
+            if(isLight)
+                viewHolder.imgDelete.setBackgroundResource(R.drawable.ic_keyboard_delete_gray);
+            else
+                viewHolder.imgDelete.setBackgroundResource(R.drawable.ic_keyboard_delete_white);
             viewHolder.imgDelete.setVisibility(View.VISIBLE);
             viewHolder.btnKey.setBackgroundColor(mContext.getResources().getColor(R.color.functionKey));
         }

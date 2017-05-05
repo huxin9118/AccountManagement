@@ -3,8 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/mainBackgrount"
-    android:alpha="0.8">
+    android:background="?attr/mainBackgrount">
 
     <LinearLayout
         android:id="@+id/background"

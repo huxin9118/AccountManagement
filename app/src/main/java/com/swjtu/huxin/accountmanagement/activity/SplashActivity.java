@@ -41,17 +41,20 @@ import java.util.TreeSet;
 public class SplashActivity extends BaseAppCompatActivity {
     private Handler rotateHandler = new RotateHandler(this);
     private Handler skipHandler = new SkipHandler(this);
-    public ImageView imgXiaolian;
+    private ImageView imgXiaolian;
     private boolean isFirstRun;
     private TextView text1;
     private TextView text2;
     private Date firstTime;
 
+    private Thread loadDataThread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        checkFirstRun();
+
+        checkFirstRun();//为isFirstRun和firstTime赋值
         imgXiaolian = (ImageView) findViewById(R.id.ic_xiaolian_blue);
         text1 = (TextView) findViewById(R.id.text1);
         text2 = (TextView) findViewById(R.id.text2);
@@ -61,9 +64,20 @@ public class SplashActivity extends BaseAppCompatActivity {
         if(dayDistance < 1) text2.setText("你今天刚刚开始记账");
         else text2.setText("你坚持记账 "+dayDistance+" 天了");
 
-        rotateHandler.sendEmptyMessageDelayed(0, 800);
         skipHandler.sendEmptyMessageDelayed(0, 2000);
+        rotateHandler.sendEmptyMessageDelayed(0, 800);
 
+        loadDataThread = new Thread(){
+            @Override
+            public void run() {
+                initData();
+            }
+        };
+        loadDataThread.start();
+
+    }
+
+    private void initData(){
         MyApplication app = MyApplication.getApplication();
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -149,23 +163,23 @@ public class SplashActivity extends BaseAppCompatActivity {
             app.setMembers(member);
         }
         else{
-            Map<Integer, AccountBook> books = new TreeMap<Integer, AccountBook>();
+            Map<Integer, AccountBook> books;
             AccountBookService accountBookService = new AccountBookService();
             books = accountBookService.getAccountBookMap();
             app.setAccountBooks(books);
 
-            Map<Integer, Account> accounts = new TreeMap<Integer, Account>();
+            Map<Integer, Account> accounts;
             AccountService accountService = new AccountService();
             accounts = accountService.getAccountMap();
             app.setAccounts(accounts);
 
             SharedPreferences sharedPreferences = this.getSharedPreferences("userData", MODE_PRIVATE);
-            Set<String> defaultMember = new TreeSet<String>();
+            Set<String> defaultMember = new TreeSet();
             defaultMember.add("我");
             defaultMember.add("爸爸");
             defaultMember.add("妈妈");
             Set<String> member = sharedPreferences.getStringSet("member",defaultMember);
-            Set<String> sortMember = new TreeSet<String>(new Comparator<String>() {
+            Set<String> sortMember = new TreeSet(new Comparator<String>() {
                 @Override
                 public int compare(String o1, String o2) {
                     Collator instance = Collator.getInstance(Locale.CHINA);
@@ -174,18 +188,14 @@ public class SplashActivity extends BaseAppCompatActivity {
             });
             sortMember.addAll(member);
             app.setMembers(sortMember);
-
-//            String myTheme = sharedPreferences.getString("currentTheme","MyTheme_White");
-//            int themeResID = getResources().getIdentifier(myTheme, "style", getPackageName());
-//            app.setMyTheme(themeResID);
         }
     }
 
     private void checkFirstRun(){
         SharedPreferences sharedPreferences = this.getSharedPreferences("userData", MODE_PRIVATE);
         isFirstRun = sharedPreferences.getBoolean("isFirstRun", true);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
         if (isFirstRun)  {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
             Log.i("debug", "第一次运行");
             editor.putBoolean("isFirstRun", false);
             editor.putLong("firstTime", new Date().getTime());
@@ -204,16 +214,21 @@ public class SplashActivity extends BaseAppCompatActivity {
     static class SkipHandler extends Handler {
         WeakReference<SplashActivity> mActivityReference;
         SkipHandler(SplashActivity activity) {
-            mActivityReference= new WeakReference<SplashActivity>(activity);
+            mActivityReference= new WeakReference(activity);
         }
         @Override
         public void handleMessage(Message msg) {
             final SplashActivity activity = mActivityReference.get();
             if (activity != null) {
-                Intent intent = new Intent(activity, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                activity.startActivity(intent);
-                activity.finish();
+                if(!activity.loadDataThread.isAlive()) {
+                    Intent intent = new Intent(activity, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    activity.startActivity(intent);
+                    activity.finish();
+                }
+                else {
+                    activity.skipHandler.sendEmptyMessageDelayed(0, 100);
+                }
             }
         }
     }

@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.swjtu.huxin.accountmanagement.dao.AccountRecordDao;
 import com.swjtu.huxin.accountmanagement.dao.DatabaseHelper;
+import com.swjtu.huxin.accountmanagement.dao.DatabaseManager;
 import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
@@ -18,52 +19,58 @@ import java.util.List;
  */
 
 public class AccountRecordService {
+    private DatabaseManager databaseManager;
+    
+    public AccountRecordService(){
+        databaseManager = DatabaseManager.getInstance(DatabaseHelper.getInstance());
+    }
+    
 
     public long addAccountRecord(AccountRecord record){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
         long id = dao.insert(record);
-        db.close();
+        databaseManager.closeDatabase();
         return id;
     }
 
     public long removeAccountRecord(AccountRecord record){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
         long id = dao.delete(record);
-        db.close();
+        databaseManager.closeDatabase();
         return id;
     }
 
     public long updateAccountRecord(AccountRecord record){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
         long id = dao.update(record);
-        db.close();
+        databaseManager.closeDatabase();
         return id;
     }
 
     public AccountRecord findAccountRecord(int recordID){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
         AccountRecord record = dao.find(recordID);
-        db.close();
+        databaseManager.closeDatabase();
         return record;
     }
 
     public List<AccountRecord> getAccountRecordListByTime(long firsttime, long lasttime, String recordname, Account account,String member){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
         List<AccountRecord> records = dao.getListByTime(firsttime,lasttime,recordname,account,member);
-        db.close();
+        databaseManager.closeDatabase();
         return records;
     }
 
     public List<String> getMoneyByTime(long firsttime, long lasttime){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
         List<String> MoneyList = dao.getMoneyListByTime(firsttime,lasttime);
-        db.close();
+        databaseManager.closeDatabase();
         return MoneyList;
     }
 
@@ -124,26 +131,26 @@ public class AccountRecordService {
     }
 
     public List<AccountRecord> getAccountRecordListGroupByRecordname(Date firsttime, Date lasttime,boolean isPositive){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
         List<AccountRecord> records = dao.getListGroupByRecordname(firsttime,lasttime,isPositive);
-        db.close();
+        databaseManager.closeDatabase();
         return records;
     }
 
     public List<AccountRecord> getAccountRecordListGroupByMember(Date firsttime, Date lasttime,boolean isPositive){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
         List<AccountRecord> records = dao.getListGroupByMember(firsttime,lasttime,isPositive);
-        db.close();
+        databaseManager.closeDatabase();
         return records;
     }
 
     public String getRangeTotalMoneyByRecordname(Date firsttime, Date lasttime, String recordname){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
         String money = dao.getRangeTotalMoneyByRecordname(firsttime,lasttime,recordname);
-        db.close();
+        databaseManager.closeDatabase();
         return new DecimalFormat("0.00").format(Double.parseDouble(money));
     }
 
@@ -153,10 +160,10 @@ public class AccountRecordService {
      * @return
      */
     public String getTotalMoneyByAccount(Account Account){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
         String money = dao.getTotalMoneyByAccount(Account);
-        db.close();
+        databaseManager.closeDatabase();
         return money;
     }
 
@@ -169,10 +176,10 @@ public class AccountRecordService {
      * @return
      */
     public String getRangeTotalMoneyByAccount(Date firsttime, Date lasttime,Account Account,boolean isPositive){
-        SQLiteDatabase db = DatabaseHelper.getInstance().getWritableDatabase();
+        SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
         String money = dao.getRangeTotalMoneyByAccount(firsttime,lasttime,Account,isPositive);
-        db.close();
+        databaseManager.closeDatabase();
         return money;
     }
 }

@@ -27,7 +27,8 @@
                 android:layout_height="wrap_content"
                 android:text="2017年"
                 android:textSize="16sp"
-                android:textColor="@color/customBlue"/>
+                android:textColor="@color/customBlue"
+                android:background="?attr/listItem"/>
             <ImageView
                 android:id="@+id/date_right"
                 android:layout_width="18dp"

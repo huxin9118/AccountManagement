@@ -3,6 +3,8 @@ package com.swjtu.huxin.accountmanagement.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -35,7 +37,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
+import com.bumptech.glide.Glide;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
 import com.swjtu.huxin.accountmanagement.base.MyApplication;
@@ -47,12 +49,14 @@ import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.domain.AddItem;
 import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
 import com.swjtu.huxin.accountmanagement.utils.ConstantUtils;
-import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 import com.swjtu.huxin.accountmanagement.view.NumKeyboardView;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -63,8 +67,7 @@ import java.util.Map;
  * Created by huxin on 2017/2/25.
  */
 
-public class AddItemActivity extends BaseAppCompatActivity {
-
+public class AddItemActivity extends BaseAppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private ViewPager mViewPager;
     private PagerAdapter mPagerAdapter;
     private TextView btnShouru;
@@ -84,13 +87,16 @@ public class AddItemActivity extends BaseAppCompatActivity {
     private int indexAddItem = 0; //当前选取的项目数
     private Date timeAddItem;//当前的时间
     private AccountRecord editRecord; //编辑记录
-    private SwitchDateTimeDialogFragment dateTimeFragment;
+    private DatePickerDialog datePickerDialog;
+    private TimePickerDialog timePickerDialog;
+    public static final String DATEPICKER_TAG = "datepicker";
+    public static final String TIMEPICKER_TAG = "timepicker";
 
     private TextView btnAccount;
     private TextView btnDate;
     private TextView btnTime;
-    private Button btnRemark;
-    private Button btnMember;
+    private ImageView btnRemark;
+    private ImageView btnMember;
     private int selectAccount;
     private String selectMember;
     private String remark;
@@ -98,8 +104,6 @@ public class AddItemActivity extends BaseAppCompatActivity {
     private PopupWindow accountPopupWindow;
     private PopupWindow remarkPopupWindow;
     private PopupWindow memberPopupWindow;
-
-    public static final String DATEPICKER_TAG = "datepicker";
 
     private boolean isFloatingActionButton;
 //    public String[] nameShouru ={"工资","生活费","红包","零花钱","外快兼职","投资"};
@@ -168,14 +172,14 @@ public class AddItemActivity extends BaseAppCompatActivity {
                 showPopupWindow(accountPopupWindow);
             }
         });
-        btnRemark = (Button) findViewById(R.id.remark);
+        btnRemark = (ImageView) findViewById(R.id.remark);
         btnRemark.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPopupWindow(remarkPopupWindow);
             }
         });
-        btnMember = (Button) findViewById(R.id.member);
+        btnMember = (ImageView) findViewById(R.id.member);
         btnMember.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,64 +187,18 @@ public class AddItemActivity extends BaseAppCompatActivity {
             }
         });
 
-
         btnDate = (TextView) findViewById(R.id.date);
         btnTime = (TextView) findViewById(R.id.time);
-
-        dateTimeFragment = (SwitchDateTimeDialogFragment) getSupportFragmentManager().findFragmentByTag(DATEPICKER_TAG);
-        if(dateTimeFragment == null) {
-            dateTimeFragment = SwitchDateTimeDialogFragment.newInstance("日期时间选择","确定","取消");
-        }
-        dateTimeFragment.set24HoursMode(true);
-//        dateTimeFragment.setMinimumDateTime(new GregorianCalendar(2015, Calendar.JANUARY, 1).getTime());
-//        dateTimeFragment.setMaximumDateTime(new GregorianCalendar(2025, Calendar.DECEMBER, 31).getTime());
-//        dateTimeFragment.setDefaultDateTime(new GregorianCalendar(2017, Calendar.MARCH, 4, 15, 20).getTime());
-//        try {
-//            dateTimeFragment.setSimpleDateMonthAndDayFormat(new SimpleDateFormat("MM dd", Locale.getDefault()));
-//        } catch (SwitchDateTimeDialogFragment.SimpleDateMonthAndDayFormatException e) {
-//            e.printStackTrace();
-//        }
-
-        dateTimeFragment.setOnButtonClickListener(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
-            @Override
-            public void onPositiveButtonClick(Date date) {
-                if(date.getTime() > new Date().getTime()){
-                    showToast("不能选取未来的时间哦~~",Toast.LENGTH_SHORT);
-                }
-                else {
-                    timeAddItem = date;
-                    updateBtnDateAndTime(date);
-                }
-            }
-
-            @Override
-            public void onNegativeButtonClick(Date date) {
-            }
-        });
-
         btnDate.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                dateTimeFragment.setDefaultYear(TimeUtils.getTime(timeAddItem,TimeUtils.YEAR));
-                dateTimeFragment.setDefaultMonth(TimeUtils.getTime(timeAddItem,TimeUtils.MONTH)-1);
-                dateTimeFragment.setDefaultDay(TimeUtils.getTime(timeAddItem,TimeUtils.DAY));
-                dateTimeFragment.setDefaultHourOfDay(TimeUtils.getTime(timeAddItem,TimeUtils.HOUR));
-                dateTimeFragment.setDefaultMinute(TimeUtils.getTime(timeAddItem,TimeUtils.MINUTE));
-                dateTimeFragment.startAtCalendarView();
-                dateTimeFragment.show(getSupportFragmentManager(), DATEPICKER_TAG);
+                datePickerDialog.show(getFragmentManager(), DATEPICKER_TAG);
             }
         });
-
         btnTime.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                dateTimeFragment.setDefaultYear(TimeUtils.getTime(timeAddItem,TimeUtils.YEAR));
-                dateTimeFragment.setDefaultMonth(TimeUtils.getTime(timeAddItem,TimeUtils.MONTH));
-                dateTimeFragment.setDefaultDay(TimeUtils.getTime(timeAddItem,TimeUtils.DAY));
-                dateTimeFragment.setDefaultHourOfDay(TimeUtils.getTime(timeAddItem,TimeUtils.HOUR));
-                dateTimeFragment.setDefaultMinute(TimeUtils.getTime(timeAddItem,TimeUtils.MINUTE));
-                dateTimeFragment.startAtTimeView();
-                dateTimeFragment.show(getSupportFragmentManager(), DATEPICKER_TAG);
+                timePickerDialog.show(getFragmentManager(), TIMEPICKER_TAG);
             }
         });
 
@@ -280,9 +238,20 @@ public class AddItemActivity extends BaseAppCompatActivity {
 
                     Log.i("3: ", record.toString());
 
+                    SharedPreferences sharedPreferences = AddItemActivity.this.getSharedPreferences("userData", MODE_PRIVATE);
+                    long firstTimeMilliSeconds = sharedPreferences.getLong("firstTime", System.currentTimeMillis());
+                    boolean isUpdateFirstTime = record.getRecordtime() < firstTimeMilliSeconds;
+                    if(isUpdateFirstTime){
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putLong("firstTime", record.getRecordtime());
+                        editor.apply();
+                    }
+                    MyApplication.getApplication().getDataChangeObservable().dataChange();
+
                     Intent intent = new Intent();
                     intent.putExtra("data", record);
                     intent.putExtra("isFloatingActionButton", isFloatingActionButton);
+                    intent.putExtra("isUpdateFirstTime", isUpdateFirstTime);
                     setResult(RESULT_OK, intent);
                     finishAfterTransition();//带动画的退出
                 } else {//输入金额为0
@@ -334,8 +303,6 @@ public class AddItemActivity extends BaseAppCompatActivity {
 
             selectMember = editRecord.getMember();
             remark = editRecord.getRemark();
-            updateBtnMember();
-            updateBtnRemark();
         }
         else {
             timeAddItem = new Date();
@@ -349,15 +316,73 @@ public class AddItemActivity extends BaseAppCompatActivity {
 
             selectMember = "";
             remark = "";
-            updateBtnMember();
-            updateBtnRemark();
 
             btnZhichu.performClick();//默认点击
         }
-        dateTimeFragment.setDefaultDateTime(timeAddItem);
+
+        updateBtnMember();
+        updateBtnRemark();
+        initDatePickerDialog(timeAddItem);
+        initTimePickerDialog(timeAddItem);
+
         initAccountPopupWindow();
         initMemberPopupWindow();
         initRemarkPopupWindow();
+    }
+
+    private void initDatePickerDialog(Date time){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time);
+        int[] attrsArray = { R.attr.popupwindow_backgound };
+        TypedArray typedArray = obtainStyledAttributes(attrsArray);
+        int color = typedArray.getColor(0,-1);
+        typedArray.recycle();
+        datePickerDialog = DatePickerDialog.newInstance(this,calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.setAccentColor(color);
+        datePickerDialog.setVersion(DatePickerDialog.Version.VERSION_1);
+    }
+
+    private void initTimePickerDialog(Date time){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time);
+        int[] attrsArray = { R.attr.popupwindow_backgound };
+        TypedArray typedArray = obtainStyledAttributes(attrsArray);
+        int color = typedArray.getColor(0,-1);
+        typedArray.recycle();
+        timePickerDialog = TimePickerDialog.newInstance(this,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+        timePickerDialog.setAccentColor(color);
+        timePickerDialog.setVersion(TimePickerDialog.Version.VERSION_1);
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timeAddItem);
+        calendar.set(Calendar.YEAR,year);
+        calendar.set(Calendar.MONTH, monthOfYear);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        if(calendar.getTime().getTime() > new Date().getTime()){
+            showToast("不能选取未来的时间哦~~",Toast.LENGTH_SHORT);
+        }
+        else {
+            timeAddItem = calendar.getTime();
+            updateBtnDateAndTime(timeAddItem);
+        }
+    }
+
+    @Override
+    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timeAddItem);
+        calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
+        calendar.set(Calendar.MINUTE,minute);
+        if(calendar.getTime().getTime() > new Date().getTime()){
+            showToast("不能选取未来的时间哦~~",Toast.LENGTH_SHORT);
+        }
+        else {
+            timeAddItem = calendar.getTime();
+            updateBtnDateAndTime(timeAddItem);
+        }
     }
 
     private void updateBtnDateAndTime(Date time){
@@ -366,17 +391,33 @@ public class AddItemActivity extends BaseAppCompatActivity {
     }
 
     private void updateBtnMember(){
-        if("".equals(selectMember))
-            btnMember.setBackgroundResource(R.drawable.ic_chengyuan);
-        else
-            btnMember.setBackgroundResource(R.drawable.ic_chengyuan_blue);
+        if("".equals(selectMember)) {
+            int[] attrsArray = { R.attr.more_half_transparent_contrast };
+            TypedArray typedArray = obtainStyledAttributes(attrsArray);
+            int color = typedArray.getColor(0,-1);
+            typedArray.recycle();
+            btnMember.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            btnMember.invalidate();
+        }
+        else {
+            btnMember.getBackground().setColorFilter(getResources().getColor(R.color.customBlue), PorterDuff.Mode.SRC_ATOP);
+            btnMember.invalidate();
+        }
     }
 
     private void updateBtnRemark(){
-        if("".equals(remark))
-            btnRemark.setBackgroundResource(R.drawable.ic_beizhu);
-        else
-            btnRemark.setBackgroundResource(R.drawable.ic_beizhu_blue);
+        if("".equals(remark)) {
+            int[] attrsArray = { R.attr.more_half_transparent_contrast };
+            TypedArray typedArray = obtainStyledAttributes(attrsArray);
+            int color = typedArray.getColor(0,-1);
+            typedArray.recycle();
+            btnRemark.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            btnRemark.invalidate();
+        }
+        else {
+            btnRemark.getBackground().setColorFilter(getResources().getColor(R.color.customBlue), PorterDuff.Mode.SRC_ATOP);
+            btnRemark.invalidate();
+        }
     }
 
     private OnClickListener mTabClickListener = new OnClickListener() {
@@ -603,12 +644,16 @@ public class AddItemActivity extends BaseAppCompatActivity {
         nameAddItem.setText(Text);
         int resID = getResources().getIdentifier(icon, "drawable", getPackageName());
         iconAddItem.setBackgroundResource(resID);
+        int[] attrsArray = { R.attr.textColor };
+        TypedArray typedArray = obtainStyledAttributes(attrsArray);
+        int color = typedArray.getColor(0,-1);
+        typedArray.recycle();
         if(position == 0){
             btnShouru.setTextColor(getResources().getColor(R.color.customBlue));
-            btnZhichu.setTextColor(getResources().getColor(R.color.darkgray));
+            btnZhichu.setTextColor(color);
         }
         else{
-            btnShouru.setTextColor(getResources().getColor(R.color.darkgray));
+            btnShouru.setTextColor(color);
             btnZhichu.setTextColor(getResources().getColor(R.color.customBlue));
         }
     }
@@ -747,13 +792,15 @@ class AddItemRecyclerAdapter extends BaseRecyclerViewAdapter{
             ArrayList<AddItem> list = (ArrayList<AddItem>)mDatas.get("shouru");
             holder.item_str.setText(list.get(pos).getNameAddItem());
             int resID = mContent.getResources().getIdentifier(list.get(pos).getIconAddItem(), "drawable", mContent.getPackageName());
-            holder.item_icon.setBackgroundResource(resID);
+            Glide.with(mContent).load(resID).dontAnimate().into(holder.item_icon);
+//            holder.item_icon.setBackgroundResource(resID);
         }
         else{
             ArrayList<AddItem> list = (ArrayList<AddItem>)mDatas.get("zhichu");
             holder.item_str.setText(list.get(pos).getNameAddItem());
             int resID = mContent.getResources().getIdentifier(list.get(pos).getIconAddItem(), "drawable", mContent.getPackageName());
-            holder.item_icon.setBackgroundResource(resID);
+            Glide.with(mContent).load(resID).dontAnimate().into(holder.item_icon);
+//            holder.item_icon.setBackgroundResource(resID);
         }
 
         if( mOnItemClickListener!= null){//更换选中的项目

@@ -8,7 +8,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,9 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
+import com.swjtu.huxin.accountmanagement.base.MyApplication;
 import com.swjtu.huxin.accountmanagement.base.OnItemClickListener;
 import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
@@ -155,7 +157,7 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
 
         mRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onClick(View view, int pos,String viewName) {
+            public void onClick(View view,final int pos,String viewName) {
                 mRecyclerViewAdapter.getmItemSwipeHelpter().close();
                 if("item_edit".equals(viewName)) {
                     Intent intent = new Intent(AccountDetailActivity.this, AddItemActivity.class);
@@ -163,10 +165,25 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
                     startActivityForResult(intent, 2);
                 }
                 if("item_delete".equals(viewName)) {
-                    AccountRecord removedRecord = (AccountRecord) mRecyclerViewAdapter.getDatas("records").get(pos);
-                    AccountRecordService accountRecordService = new AccountRecordService();
-                    accountRecordService.removeAccountRecord(removedRecord);
-                    updateData();
+                    new MaterialDialog.Builder(AccountDetailActivity.this).title("提示").content("确定删除该账目？")
+                            .positiveText("是").negativeText("否")
+                            .backgroundColorAttr( R.attr.popupwindow_backgound)
+                            .contentColorAttr(R.attr.textColor).titleColorAttr(R.attr.textColor)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog dialog, DialogAction which) {
+                                    AccountRecord removedRecord = (AccountRecord) mRecyclerViewAdapter.getDatas("records").get(pos);
+                                    AccountRecordService accountRecordService = new AccountRecordService();
+                                    accountRecordService.removeAccountRecord(removedRecord);
+                                    updateData();
+                                    MyApplication.getApplication().getDataChangeObservable().dataChange();
+                                }})
+                            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog dialog, DialogAction which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
                 }
             }
         });
@@ -188,8 +205,8 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
             List<AccountRecord> records;
             AccountRecordService accountRecordService = new AccountRecordService();
             Date time = end;
-            long dayFirstMilliSeconds = TimeUtils.getDateFirstMilliSeconds(time);
-            long dayLastMilliSeconds = TimeUtils.getDateLastMilliSeconds(time);
+            long dayFirstMilliSeconds = TimeUtils.getDateDayFirstMilliSeconds(time);
+            long dayLastMilliSeconds = TimeUtils.getDateDayLastMilliSeconds(time);
             while (dayFirstMilliSeconds >= start.getTime()) {
                 records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds, dayLastMilliSeconds, null, account,null);
                 if (records.size() > 0) {//这一天有记录
@@ -200,8 +217,8 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
                 }
                 mRecyclerViewAdapter.getDatas("records").addAll(mRecyclerViewAdapter.getDatas("records").size(), records);//添加单日数据
                 time = TimeUtils.getIndexDate(time, 0, 0, -1);
-                dayFirstMilliSeconds = TimeUtils.getDateFirstMilliSeconds(time);
-                dayLastMilliSeconds = TimeUtils.getDateLastMilliSeconds(time);
+                dayFirstMilliSeconds = TimeUtils.getDateDayFirstMilliSeconds(time);
+                dayLastMilliSeconds = TimeUtils.getDateDayLastMilliSeconds(time);
             }
         }
         mRecyclerViewAdapter.notifyDataSetChanged();

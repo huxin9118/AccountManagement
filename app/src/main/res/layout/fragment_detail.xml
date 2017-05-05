@@ -15,9 +15,12 @@
             android:id="@+id/textbook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" 默认账本 "
+            android:text="默认账本"
+            android:gravity="center"
             android:background="@drawable/shape_button_detail_book"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"/>
         <View
             android:layout_width="0.5dp"
             android:layout_height="wrap_content"
@@ -58,8 +61,9 @@
         android:layout_below="@id/title"
         cube_ptr:ptr_resistance="1.7"
         cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
-        cube_ptr:ptr_duration_to_close="300"
-        cube_ptr:ptr_duration_to_close_header="2000"
+        cube_ptr:ptr_duration_to_back_refresh="2000"
+        cube_ptr:ptr_duration_to_back_header="3000"
+        cube_ptr:ptr_duration_to_back_footer="3000"
         cube_ptr:ptr_keep_header_when_refresh="true"
         cube_ptr:ptr_pull_to_fresh="false">
         <!--
@@ -101,25 +105,39 @@
                     wpv:WPV_radius="50dp"
                     wpv:WPV_radius_color="@color/silver" />
 
-                <TextView
-                    android:id="@+id/zhichu"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_toRightOf="@+id/wpv"
-                    android:text="3月支出\n0.00"
-                    android:gravity="center"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="10dp"
+                    android:layout_toRightOf="@+id/wpv">
+                    <TextView
+                        android:id="@+id/zhichu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="3月支出\n0.00"
+                        android:textSize="16sp"
+                        android:gravity="center"
+                        android:background="?attr/listItem"/>
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/shouru"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_toLeftOf="@+id/wpv"
-                    android:text="3月收入\n0.00"
-                    android:gravity="center"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
+                    android:layout_marginBottom="10dp"
+                    android:layout_toLeftOf="@+id/wpv">
+                    <TextView
+                        android:id="@+id/shouru"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="3月收入\n0.00"
+                        android:textSize="16sp"
+                        android:gravity="center"
+                        android:background="?attr/listItem"/>
+                </RelativeLayout>
 
             </RelativeLayout>
 

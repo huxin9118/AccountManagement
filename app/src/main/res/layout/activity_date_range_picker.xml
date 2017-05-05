@@ -108,7 +108,8 @@
             android:gravity="center"
             android:text="开始时间:"
             android:textSize="20sp"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            android:background="?attr/listItem"/>
 
         <com.swjtu.huxin.accountmanagement.view.DatePickerView
             android:id="@+id/startDatePicker"
@@ -123,7 +124,8 @@
             android:gravity="center"
             android:text="结束时间:"
             android:textSize="20sp"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp"
+            android:background="?attr/listItem"/>
 
         <com.swjtu.huxin.accountmanagement.view.DatePickerView
             android:id="@+id/endDatePicker"

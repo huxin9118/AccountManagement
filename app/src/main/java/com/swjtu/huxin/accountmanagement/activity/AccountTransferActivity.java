@@ -1,6 +1,8 @@
 package com.swjtu.huxin.accountmanagement.activity;
 
+import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
@@ -22,7 +24,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
+//import com.kunzisoft.switchdatetime.SwitchDateTimeDialogFragment;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.base.MyApplication;
@@ -32,12 +34,14 @@ import com.swjtu.huxin.accountmanagement.domain.Account;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
 import com.swjtu.huxin.accountmanagement.utils.ConstantUtils;
-import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 import com.swjtu.huxin.accountmanagement.view.NumKeyboardView;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,8 +51,7 @@ import java.util.Map;
  * Created by huxin on 2017/3/11.
  */
 
-public class AccountTransferActivity extends BaseAppCompatActivity {
-
+public class AccountTransferActivity extends BaseAppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private LinearLayout btnBack;
     
     private Account accountOut;
@@ -72,11 +75,13 @@ public class AccountTransferActivity extends BaseAppCompatActivity {
 
     private String remarkTransfer;
     private Date timeTransfer;
-    private SwitchDateTimeDialogFragment dateTimeFragment;
+    private DatePickerDialog datePickerDialog;
+    private TimePickerDialog timePickerDialog;
     public static final String DATEPICKER_TAG = "datepicker";
+    public static final String TIMEPICKER_TAG = "timepicker";
     private TextView btnDate;
     private TextView btnTime;
-    private Button btnRemark;
+    private ImageView btnRemark;
     private NumKeyboardView numKeyboardView;
     private GridView gridView;
 
@@ -136,55 +141,22 @@ public class AccountTransferActivity extends BaseAppCompatActivity {
 
         btnDate = (TextView) findViewById(R.id.date);
         btnTime = (TextView) findViewById(R.id.time);
-        dateTimeFragment = (SwitchDateTimeDialogFragment) getSupportFragmentManager().findFragmentByTag(DATEPICKER_TAG);
-        if(dateTimeFragment == null) {
-            dateTimeFragment = SwitchDateTimeDialogFragment.newInstance("日期时间选择","确定","取消");
-        }
-        dateTimeFragment.set24HoursMode(true);
-        dateTimeFragment.setOnButtonClickListener(new SwitchDateTimeDialogFragment.OnButtonClickListener() {
-            @Override
-            public void onPositiveButtonClick(Date date) {
-                if(date.getTime() > new Date().getTime()){
-                    showToast("不能选取未来的时间哦~~",Toast.LENGTH_SHORT);
-                }
-                else {
-                    timeTransfer = date;
-                    updateBtnDateAndTime(date);
-                }
-            }
-
-            @Override
-            public void onNegativeButtonClick(Date date) {
-            }
-        });
 
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dateTimeFragment.setDefaultYear(TimeUtils.getTime(timeTransfer,TimeUtils.YEAR));
-                dateTimeFragment.setDefaultMonth(TimeUtils.getTime(timeTransfer,TimeUtils.MONTH)-1);
-                dateTimeFragment.setDefaultDay(TimeUtils.getTime(timeTransfer,TimeUtils.DAY));
-                dateTimeFragment.setDefaultHourOfDay(TimeUtils.getTime(timeTransfer,TimeUtils.HOUR));
-                dateTimeFragment.setDefaultMinute(TimeUtils.getTime(timeTransfer,TimeUtils.MINUTE));
-                dateTimeFragment.startAtCalendarView();
-                dateTimeFragment.show(getSupportFragmentManager(), DATEPICKER_TAG);
+                datePickerDialog.show(getFragmentManager(), DATEPICKER_TAG);
             }
         });
 
         btnTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dateTimeFragment.setDefaultYear(TimeUtils.getTime(timeTransfer,TimeUtils.YEAR));
-                dateTimeFragment.setDefaultMonth(TimeUtils.getTime(timeTransfer,TimeUtils.MONTH));
-                dateTimeFragment.setDefaultDay(TimeUtils.getTime(timeTransfer,TimeUtils.DAY));
-                dateTimeFragment.setDefaultHourOfDay(TimeUtils.getTime(timeTransfer,TimeUtils.HOUR));
-                dateTimeFragment.setDefaultMinute(TimeUtils.getTime(timeTransfer,TimeUtils.MINUTE));
-                dateTimeFragment.startAtTimeView();
-                dateTimeFragment.show(getSupportFragmentManager(), DATEPICKER_TAG);
+                timePickerDialog.show(getFragmentManager(), TIMEPICKER_TAG);
             }
         });
 
-        btnRemark = (Button) findViewById(R.id.remark);
+        btnRemark = (ImageView) findViewById(R.id.remark);
         btnRemark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -263,10 +235,70 @@ public class AccountTransferActivity extends BaseAppCompatActivity {
 
         remarkTransfer = "";
         timeTransfer = new Date();
+
+        updateBtnRemark();
+        initDatePickerDialog(timeTransfer);
+        initTimePickerDialog(timeTransfer);
+
         updateBtnDateAndTime(timeTransfer);
         initAccountPopupWindowOut();
         initAccountPopupWindowIn();
         initRemarkPopupWindow();
+    }
+
+    private void initDatePickerDialog(Date time){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time);
+        int[] attrsArray = { R.attr.popupwindow_backgound };
+        TypedArray typedArray = obtainStyledAttributes(attrsArray);
+        int color = typedArray.getColor(0,-1);
+        typedArray.recycle();
+        datePickerDialog = DatePickerDialog.newInstance(this,calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.setAccentColor(color);
+        datePickerDialog.setVersion(DatePickerDialog.Version.VERSION_1);
+    }
+
+    private void initTimePickerDialog(Date time){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time);
+        int[] attrsArray = { R.attr.popupwindow_backgound };
+        TypedArray typedArray = obtainStyledAttributes(attrsArray);
+        int color = typedArray.getColor(0,-1);
+        typedArray.recycle();
+        timePickerDialog = TimePickerDialog.newInstance(this,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+        timePickerDialog.setAccentColor(color);
+        timePickerDialog.setVersion(TimePickerDialog.Version.VERSION_1);
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timeTransfer);
+        calendar.set(Calendar.YEAR,year);
+        calendar.set(Calendar.MONTH, monthOfYear);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        if(calendar.getTime().getTime() > new Date().getTime()){
+            showToast("不能选取未来的时间哦~~",Toast.LENGTH_SHORT);
+        }
+        else {
+            timeTransfer = calendar.getTime();
+            updateBtnDateAndTime(timeTransfer);
+        }
+    }
+
+    @Override
+    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timeTransfer);
+        calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
+        calendar.set(Calendar.MINUTE,minute);
+        if(calendar.getTime().getTime() > new Date().getTime()){
+            showToast("不能选取未来的时间哦~~",Toast.LENGTH_SHORT);
+        }
+        else {
+            timeTransfer = calendar.getTime();
+            updateBtnDateAndTime(timeTransfer);
+        }
     }
 
     private void updateBtnDateAndTime(Date time){
@@ -275,10 +307,18 @@ public class AccountTransferActivity extends BaseAppCompatActivity {
     }
 
     private void updateBtnRemark(){
-        if("".equals(remarkTransfer))
-            btnRemark.setBackgroundResource(R.drawable.ic_beizhu);
-        else
-            btnRemark.setBackgroundResource(R.drawable.ic_beizhu_blue);
+        if("".equals(remarkTransfer)) {
+            int[] attrsArray = { R.attr.more_half_transparent_contrast };
+            TypedArray typedArray = obtainStyledAttributes(attrsArray);
+            int color = typedArray.getColor(0,-1);
+            typedArray.recycle();
+            btnRemark.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+            btnRemark.invalidate();
+        }
+        else {
+            btnRemark.getBackground().setColorFilter(getResources().getColor(R.color.customBlue), PorterDuff.Mode.SRC_ATOP);
+            btnRemark.invalidate();
+        }
     }
     
     private void initAccountPopupWindowOut() {

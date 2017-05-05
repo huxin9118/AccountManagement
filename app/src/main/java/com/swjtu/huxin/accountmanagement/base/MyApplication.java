@@ -16,6 +16,7 @@ import com.swjtu.huxin.accountmanagement.domain.AddItem;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Set;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -26,8 +27,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  */
 
 public class MyApplication extends Application{
-    private static Context context;
     private static MyApplication application;
+    private Context context;
     private ArrayList<AddItem> shouruAddItems;
     private ArrayList<AddItem> zhichuAddItems;
     private Map<Integer,Account> accounts;
@@ -36,12 +37,13 @@ public class MyApplication extends Application{
     private int screenHeight;
     private int screenWidth;
     private String myTheme;
+    private DataChangeObservable dataChangeObservable;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        context = getApplicationContext();
         application = this;
+        context = getApplicationContext();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
@@ -53,6 +55,8 @@ public class MyApplication extends Application{
         String myTheme = sharedPreferences.getString("currentTheme","MyTheme_White");
         setMyTheme(myTheme);
 
+        dataChangeObservable = new DataChangeObservable();
+
 //        int[] attrsArray = { R.attr.mainBackgrount };
 //        TypedArray typedArray = obtainStyledAttributes(attrsArray);
 //        int imgResID = typedArray.getResourceId(0,-1);
@@ -60,12 +64,12 @@ public class MyApplication extends Application{
 //        Glide.with(this).load(imgResID).bitmapTransform(new BlurTransformation(this, 10)).into();
     }
 
-    public static Context getContext() {
-        return context;
-    }
-
     public static MyApplication getApplication() {
         return application;
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     public ArrayList<AddItem> getShouruAddItems() {
@@ -130,5 +134,9 @@ public class MyApplication extends Application{
 
     public void setMyTheme(String myTheme) {
         this.myTheme = myTheme;
+    }
+
+    public DataChangeObservable getDataChangeObservable() {
+        return dataChangeObservable;
     }
 }

@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.swjtu.huxin.accountmanagement.base.MyApplication;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 /**
  * Created by huxin on 2017/2/27.
@@ -41,7 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * 饿汉单例模式
      * 在类加载时就完成了初始化，所以类加载较慢，但获取对象的速度快,无法自定义参数
      */
-    private static final DatabaseHelper instance = new DatabaseHelper(MyApplication.getContext(), "accountmanagement.db",null,1);//静态私有成员，已初始化
+    private static final DatabaseHelper instance = new DatabaseHelper(MyApplication.getApplication().getContext(), "accountmanagement.db",null,1);//静态私有成员，已初始化
 
     public static DatabaseHelper getInstance(){
         return instance;

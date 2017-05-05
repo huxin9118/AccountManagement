@@ -11,7 +11,10 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 
 import android.support.v4.app.Fragment;
@@ -27,6 +30,9 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.swjtu.huxin.accountmanagement.activity.BudgetActivity;
 import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
 import com.swjtu.huxin.accountmanagement.base.OnItemClickListener;
@@ -36,23 +42,31 @@ import com.swjtu.huxin.accountmanagement.activity.AddItemActivity;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
+import com.swjtu.huxin.accountmanagement.view.CustomPtrFooter;
 import com.swjtu.huxin.accountmanagement.view.CustomPtrHeader;
 import com.swjtu.huxin.accountmanagement.view.WaveProgressView;
 
+import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-import in.srain.cube.views.ptr.PtrDefaultHandler;
+import in.srain.cube.views.ptr.PtrClassicDefaultFooter;
+import in.srain.cube.views.ptr.PtrDefaultHandler2;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 
-public class DetailFragment extends Fragment {
+public class DetailFragment extends Fragment implements Observer{
 
     private String mArgument;
     public static final String ARGUMENT = "argument";
+    private Handler dataChangeHandler;
+    private Handler loadMoreHandler;
     private boolean isRecyclerViewTop = true;
+    private boolean isRecyclerViewBottom = false;
     private Date firstTime;
 
     private View longerLine;
@@ -60,10 +74,17 @@ public class DetailFragment extends Fragment {
     private WaveProgressView wpv;
     private TextView txtZhichu;
     private TextView txtShouru;
+    private TextView textFooter;
+
+    private ArrayList<AccountRecord> records;
+    private ArrayList<AccountRecord> moreRecords;
+    private Long firstLoadTime;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private DetailRecyclerAdapter mRecyclerViewAdapter;
     private CustomPtrHeader mHeaderView;
+    private CustomPtrFooter mFooterView;
+//    private PtrClassicDefaultHeader mHeaderView;
     private FloatingActionButton mFloatingActionButton;
     private boolean isBudget;
     private BigDecimal totalMoney;
@@ -100,51 +121,22 @@ public class DetailFragment extends Fragment {
         // mArgument = getActivity().getIntent().getStringExtra(ARGUMENT);
         Bundle bundle = getArguments();
         if (bundle != null) mArgument = bundle.getString(ARGUMENT);
+
+        MyApplication.getApplication().getDataChangeObservable().addObserver(this);
+        dataChangeHandler = new DataChangeHandler(this);
+        loadMoreHandler = new LoadMoreHandler(this);
+        firstLoadTime = TimeUtils.getDateMonthFirstMilliSeconds(TimeUtils.getIndexDate(new Date(),0,-2,0));
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
+    public void onDestroy() {
+        super.onDestroy();
+        MyApplication.getApplication().getDataChangeObservable().deleteObserver(this);
+    }
+
+    @Override
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail,container,false);
-
-        longerLine = view.findViewById(R.id.line);
-
-        //创建自定义刷新头部view
-        mHeaderView = new CustomPtrHeader(getContext(),longerLine);
-//        mHeaderView = new PtrClassicDefaultHeader(getContext());
-        mPtrFrameLayout = (PtrFrameLayout) view.findViewById(R.id.ptr_frame);
-        //设置刷新头部view
-        mPtrFrameLayout.setHeaderView(mHeaderView);
-        //设置下拉时UI变化监听
-        mPtrFrameLayout.addPtrUIHandler(mHeaderView);
-        //设置下拉刷新监听
-        mPtrFrameLayout.setPtrHandler(new PtrDefaultHandler() {
-            @Override
-            //需要加载数据时触发
-            public void onRefreshBegin(PtrFrameLayout frame) {
-                frame.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mPtrFrameLayout.refreshComplete();
-                    }
-                }, 2000);
-            }
-            @Override
-            //检查是否可以执行下来刷新
-            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                // return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
-                return isRecyclerViewTop;
-            }
-        });
-
-        //启动时自动刷新
-        mPtrFrameLayout.autoRefresh(false);
-        //设置下拉过程中，content的内容布局保持不动
-        mPtrFrameLayout.setPinContent(false);
-        //下拉时阻止事件分发
-        mPtrFrameLayout.setInterceptEventWhileWorking(true);
-        //横向滑动不刷新，和ViewPager配合使用
-        mPtrFrameLayout.disableWhenHorizontalMove(true);
-
 
         mFloatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -158,54 +150,7 @@ public class DetailFragment extends Fragment {
         });
         mFloatingActionButton.setVisibility(View.INVISIBLE);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        //创建线性布局
-        mLayoutManager = new LinearLayoutManager(getContext());
-        //垂直方向
-        mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
-        //给RecyclerView设置布局管理器
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        //创建适配器，并且设置
-        mRecyclerViewAdapter = new DetailRecyclerAdapter(getContext());
-
-        View header = inflater.inflate(R.layout.item_recycler_detail_header, container, false);
-        mRecyclerViewAdapter.setHeaderView(header);
-        ImageView imgHeader = (ImageView)header.findViewById(R.id.item_icon);
-        imgHeader.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                mRecyclerViewAdapter.hideDeleteAndEidt();
-                Intent intent = new Intent(getActivity(),AddItemActivity.class);
-                //startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(), view, "sharedView").toBundle());
-                startActivityForResult(intent,1, ActivityOptions.makeSceneTransitionAnimation(getActivity(), view, "sharedView").toBundle());
-            }
-        });
-
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userData", Context.MODE_PRIVATE);
-        View footer = inflater.inflate(R.layout.item_recycler_detail_footer, container, false);
-        mRecyclerViewAdapter.setFooterView(footer);
-        long firstTimeMilliSeconds = sharedPreferences.getLong("firstTime", System.currentTimeMillis());
-        firstTime = new Date(firstTimeMilliSeconds);
-        TextView textFooter = (TextView)footer.findViewById(R.id.text);
-        textFooter.setText(new SimpleDateFormat("yyyy年MM月dd日").format(firstTime)+"\n你开启了记账之旅");
-
-        initRecyclerViewData();//初始化列表数据
-
-        txtShouru = (TextView) view.findViewById(R.id.shouru);
-        txtZhichu = (TextView) view.findViewById(R.id.zhichu);
-        if(nowHeaderTime != 0) {
-            int headerMonth = TimeUtils.getTime(new Date(nowHeaderTime), TimeUtils.MONTH);
-            int headerYear = TimeUtils.getTime(new Date(nowHeaderTime), TimeUtils.YEAR);
-            AccountRecordService accountRecordService = new AccountRecordService();
-            String[] money = accountRecordService.getMonthMoneyByTime(headerMonth, headerYear - TimeUtils.getTime(new Date(), TimeUtils.YEAR));
-            txtShouru.setText(headerMonth + "月收入\n" + money[0]);
-            txtZhichu.setText(headerMonth + "月支出\n" + money[1]);
-        }
-        else {
-            txtShouru.setText(TimeUtils.getTime(new Date(),TimeUtils.MONTH) + "月收入\n0.00");
-            txtZhichu.setText(TimeUtils.getTime(new Date(),TimeUtils.MONTH) + "月支出\n0.00");
-        }
-
         AccountRecordService accountRecordService = new AccountRecordService();
         String[] nowMoney = accountRecordService.getMonthMoneyByTime(TimeUtils.getTime(new Date(),TimeUtils.MONTH),0);
         totalMoney = new BigDecimal(sharedPreferences.getString("totalMoney","3000.00"));
@@ -233,12 +178,46 @@ public class DetailFragment extends Fragment {
             }
         });
 
+        txtShouru = (TextView) view.findViewById(R.id.shouru);
+        txtZhichu = (TextView) view.findViewById(R.id.zhichu);
+        updateHeader();
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        //创建线性布局
+        mLayoutManager = new LinearLayoutManager(getContext());
+        //垂直方向
+        mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
+        //给RecyclerView设置布局管理器
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        //创建适配器，并且设置
+        mRecyclerViewAdapter = new DetailRecyclerAdapter(getContext());
+
+        View header = inflater.inflate(R.layout.item_recycler_detail_header, container, false);
+        mRecyclerViewAdapter.setHeaderView(header);
+        ImageView imgHeader = (ImageView)header.findViewById(R.id.item_icon);
+        imgHeader.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                mRecyclerViewAdapter.hideDeleteAndEidt();
+                Intent intent = new Intent(getActivity(),AddItemActivity.class);
+                //startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity(), view, "sharedView").toBundle());
+                startActivityForResult(intent,1, ActivityOptions.makeSceneTransitionAnimation(getActivity(), view, "sharedView").toBundle());
+            }
+        });
+
+        View footer = inflater.inflate(R.layout.item_recycler_detail_footer, container, false);
+        mRecyclerViewAdapter.setFooterView(footer);
+        long firstTimeMilliSeconds = sharedPreferences.getLong("firstTime", System.currentTimeMillis());
+        firstTime = new Date(firstTimeMilliSeconds);
+        textFooter = (TextView)footer.findViewById(R.id.text);
+        textFooter.setText(new SimpleDateFormat("yyyy年MM月dd日").format(firstTime)+"\n你开启了记账之旅");
+
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());//添加/删除item默认的动画效果
 
         mRecyclerViewAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onClick(View view, int pos,String viewName) {
+            public void onClick(View view, final int pos,String viewName) {
                 mRecyclerViewAdapter.hideDeleteAndEidt();
                 if("item_edit".equals(viewName)) {
                     Intent intent = new Intent(getActivity(), AddItemActivity.class);
@@ -246,31 +225,46 @@ public class DetailFragment extends Fragment {
                     startActivityForResult(intent, 2);
                 }
                 if("item_delete".equals(viewName)){
-                    AccountRecord removedRecord = mRecyclerViewAdapter.removeItem(pos);
-                    AccountRecordService accountRecordService = new AccountRecordService();
-                    accountRecordService.removeAccountRecord(removedRecord);
+                    new MaterialDialog.Builder(getActivity()).title("提示").content("确定删除该账目？")
+                            .positiveText("是").negativeText("否")
+                            .backgroundColorAttr( R.attr.popupwindow_backgound)
+                            .contentColorAttr(R.attr.textColor).titleColorAttr(R.attr.textColor)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog dialog, DialogAction which) {
+                                    AccountRecord removedRecord = mRecyclerViewAdapter.removeItem(pos);
+                                    AccountRecordService accountRecordService = new AccountRecordService();
+                                    accountRecordService.removeAccountRecord(removedRecord);
 
-                    int day = TimeUtils.getTime(new Date(removedRecord.getRecordtime()),TimeUtils.DAY);
-                    int month = TimeUtils.getTime(new Date(removedRecord.getRecordtime()),TimeUtils.MONTH);
-                    int year = TimeUtils.getTime(new Date(removedRecord.getRecordtime()),TimeUtils.YEAR);
-                    String[] Daymoney = accountRecordService.getDayMoneyByTime(day,month - TimeUtils.getTime(new Date(),TimeUtils.MONTH),year - TimeUtils.getTime(new Date(),TimeUtils.YEAR));
-                    String[] Monthmoney = accountRecordService.getMonthMoneyByTime(month,year - TimeUtils.getTime(new Date(),TimeUtils.YEAR));
-                    if(Daymoney[0].equals("0.00")&& Daymoney[1].equals("0.00")) {
-                        mRecyclerViewAdapter.removeItem(pos - 1);
-                    }
-                    else{//该日还有其它记录
-                        int i;
-                        for(i = 1; i < pos; i++){
-                            if("DAY".equals(((AccountRecord)mRecyclerViewAdapter.getDatas("records").get(pos - i)).getRecordname()))
-                                break;
-                        }
-                        mRecyclerViewAdapter.updateItemMoney(pos - i,removedRecord.getMoney(),false);
-                    }
-                    if(Monthmoney[0].equals("0.00")&& Monthmoney[1].equals("0.00")) {
-                        mRecyclerViewAdapter.removeItem(pos - 2);
-                    }
-                    updateHeader();
-                    updateWAV();
+                                    int day = TimeUtils.getTime(new Date(removedRecord.getRecordtime()),TimeUtils.DAY);
+                                    int month = TimeUtils.getTime(new Date(removedRecord.getRecordtime()),TimeUtils.MONTH);
+                                    int year = TimeUtils.getTime(new Date(removedRecord.getRecordtime()),TimeUtils.YEAR);
+                                    String[] Daymoney = accountRecordService.getDayMoneyByTime(day,month - TimeUtils.getTime(new Date(),TimeUtils.MONTH),year - TimeUtils.getTime(new Date(),TimeUtils.YEAR));
+                                    String[] Monthmoney = accountRecordService.getMonthMoneyByTime(month,year - TimeUtils.getTime(new Date(),TimeUtils.YEAR));
+                                    if(Daymoney[0].equals("0.00")&& Daymoney[1].equals("0.00")) {
+                                        mRecyclerViewAdapter.removeItem(pos - 1);
+                                    }
+                                    else{//该日还有其它记录
+                                        int i;
+                                        for(i = 1; i < pos; i++){
+                                            if("DAY".equals(((AccountRecord)mRecyclerViewAdapter.getDatas("records").get(pos - i)).getRecordname()))
+                                                break;
+                                        }
+                                        mRecyclerViewAdapter.updateItemMoney(pos - i,removedRecord.getMoney(),false);
+                                    }
+                                    if(Monthmoney[0].equals("0.00")&& Monthmoney[1].equals("0.00")) {
+                                        mRecyclerViewAdapter.removeItem(pos - 2);
+                                    }
+                                    updateHeader();
+                                    updateWAV();
+                                    MyApplication.getApplication().getDataChangeObservable().dataChange();
+                                }})
+                            .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(MaterialDialog dialog, DialogAction which) {
+                                    dialog.dismiss();
+                                }
+                            }).show();
                 }
             }
         });
@@ -290,6 +284,7 @@ public class DetailFragment extends Fragment {
                 //RecyclerView.canScrollVertically(1) 的值表示 从底部看是否有Y偏移
                 //RecyclerView.canScrollVertically(-1) 的值表示 从顶部看是否有Y偏移
                 isRecyclerViewTop = !recyclerView.canScrollVertically(-1);
+                isRecyclerViewBottom = !recyclerView.canScrollVertically(1);
                 int visibleItemCount = mLayoutManager.getChildCount();
                 int totalItemCount = mLayoutManager.getItemCount();
                 int firstVisiblesItemPosition = mLayoutManager.findFirstVisibleItemPosition();
@@ -309,80 +304,231 @@ public class DetailFragment extends Fragment {
                         String[] money = accountRecordService.getMonthMoneyByTime(headerMonth, headerYear - TimeUtils.getTime(new Date(),TimeUtils.YEAR));
                         txtShouru.setText(headerMonth + "月收入\n" + money[0]);
                         txtZhichu.setText(headerMonth + "月支出\n" + money[1]);
-                        nowHeaderTime = TimeUtils.getMonthFirstMilliSeconds(headerMonth,headerYear);
+                        nowHeaderTime = TimeUtils.getMonthFirstMilliSeconds(headerMonth,headerYear - TimeUtils.getTime(new Date(),TimeUtils.YEAR));
                     }
                 }
 
                 mRecyclerViewAdapter.hideDeleteAndEidt();
             }
         });
+
+        longerLine = view.findViewById(R.id.line);
+        //创建自定义刷新头部view
+        mHeaderView = new CustomPtrHeader(getContext(),longerLine);
+//        mHeaderView = new PtrClassicDefaultHeader(getContext());
+        mFooterView = new CustomPtrFooter(getContext());
+        mPtrFrameLayout = (PtrFrameLayout) view.findViewById(R.id.ptr_frame);
+
+        mPtrFrameLayout.setHeaderView(mHeaderView);//设置刷新头部view
+        mPtrFrameLayout.setFooterView(mFooterView);//设置刷新尾部iew
+        mPtrFrameLayout.addPtrUIHandler(mHeaderView);//设置下拉时UI变化监听
+        mPtrFrameLayout.addPtrUIHandler(mFooterView);
+        //设置下拉刷新监听
+        mPtrFrameLayout.setPtrHandler(new PtrDefaultHandler2() {
+            @Override
+            //需要加载数据时触发
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                new DataChangeThread().start();
+            }
+
+            @Override
+            public void onLoadMoreBegin(PtrFrameLayout frame) {
+                new LoadMoreThread().start();
+            }
+
+            @Override
+            //检查是否可以执行下来刷新
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                // return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+                return isRecyclerViewTop;
+            }
+
+            @Override
+            public boolean checkCanDoLoadMore(PtrFrameLayout frame, View content, View footer) {
+                return isRecyclerViewBottom;
+            }
+        });
+
+        //启动时自动刷新
+        mPtrFrameLayout.autoRefresh(true);
+        //设置下拉过程中，content的内容布局保持不动
+        mPtrFrameLayout.setPinContent(false);
+        //下拉时阻止事件分发
+        mPtrFrameLayout.setInterceptEventWhileWorking(true);
+        //横向滑动不刷新，和ViewPager配合使用
+        mPtrFrameLayout.disableWhenHorizontalMove(true);
         return view;
     }
 
-    private void initRecyclerViewData(){
-        List<AccountRecord> records;
-        AccountRecordService accountRecordService = new AccountRecordService();
-        Date now = new Date();
-
-        int indexMaxDay = TimeUtils.getTime(now,TimeUtils.DAY);//今天是几号
-        boolean isShowMonth = false;
-        for(int i = indexMaxDay; i >= 1; i--){
-            long dayFirstMilliSeconds = TimeUtils.getDayFirstMilliSeconds(i,0,0);
-            long dayLastMilliSeconds = TimeUtils.getDayLastMilliSeconds(i,0,0);
-            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds,null,null,null);
-
-            if(records.size()>0) {//这一天有记录
-                String[] money = accountRecordService.getDayMoneyByRecords(records);
-                AccountRecord recordDay = new AccountRecord();
-                recordDay.setRecordname("DAY");
-                recordDay.setMoney(money[0]);
-                recordDay.setRemark(money[1]);
-                recordDay.setId(i);
-                records.add(0, recordDay);
-
-                if(!isShowMonth){ //是否插入过月份头
-                    isShowMonth = true;
-                    int month = TimeUtils.getTime(new Date(dayFirstMilliSeconds),TimeUtils.MONTH);
-                    AccountRecord recordMonth = new AccountRecord();
-                    recordMonth.setRecordname("MONTH");
-                    recordMonth.setId(month);
-                    recordMonth.setRecordtime(dayFirstMilliSeconds);
-                    nowHeaderTime = dayFirstMilliSeconds;
-                    records.add(0, recordMonth);
-                }
-            }
-            mRecyclerViewAdapter.addItemList(mRecyclerViewAdapter.getDatas("records").size(), records);
-        }
-        indexMaxDay = TimeUtils.getMaxDay(now, -1,0);//上个月有多少天
-        isShowMonth = false;
-        for(int i = indexMaxDay; i >= 1; i--){
-            long dayFirstMilliSeconds = TimeUtils.getDayFirstMilliSeconds(i,-1,0);
-            long dayLastMilliSeconds = TimeUtils.getDayLastMilliSeconds(i,-1,0);
-            records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds,dayLastMilliSeconds,null,null,null);
-
-            if(records.size()>0) {
-                String[] money = accountRecordService.getDayMoneyByRecords(records);
-                AccountRecord recordDay = new AccountRecord();
-                recordDay.setRecordname("DAY");
-                recordDay.setMoney(money[0]);
-                recordDay.setRemark(money[1]);
-                recordDay.setId(i);
-                records.add(0, recordDay);
-
-                if(!isShowMonth){ //是否插入过月份头
-                    isShowMonth = true;
-                    int month = TimeUtils.getTime(new Date(dayFirstMilliSeconds),TimeUtils.MONTH);
-                    AccountRecord recordMonth = new AccountRecord();
-                    recordMonth.setRecordname("MONTH");
-                    recordMonth.setId(month);
-                    recordMonth.setRecordtime(dayFirstMilliSeconds);
-                    if(nowHeaderTime == 0)nowHeaderTime = dayFirstMilliSeconds;
-                    records.add(0, recordMonth);
-                }
-            }
-            mRecyclerViewAdapter.addItemList(mRecyclerViewAdapter.getDatas("records").size(), records);
+    class DataChangeThread extends Thread{
+        @Override
+        public void run() {
+            initRecyclerViewData();
+            dataChangeHandler.sendEmptyMessageDelayed(0, 0);
         }
     }
+
+    static class DataChangeHandler extends Handler {
+        WeakReference<DetailFragment> mFragmentReference;
+        DataChangeHandler(DetailFragment fragment) {
+            mFragmentReference= new WeakReference(fragment);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final DetailFragment fragment = mFragmentReference.get();
+            if (fragment != null) {
+                fragment.mRecyclerViewAdapter.addDatas("records",fragment.records);//清空原有数据
+                fragment.mRecyclerViewAdapter.notifyDataSetChanged();
+                fragment.updateHeader();
+                fragment.mPtrFrameLayout.refreshComplete();
+            }
+        }
+    }
+
+    class LoadMoreThread extends Thread{
+        @Override
+        public void run() {
+            while (!loadMoreRecyclerViewData()){
+                if(moreRecords.size() != 0) {//还有更多数据且此次获得了数据
+                    loadMoreHandler.sendEmptyMessageDelayed(0, 0);
+                    return;
+                }
+                //还有更多数据且此次未获得数据
+                firstLoadTime = TimeUtils.getDateMonthFirstMilliSeconds(new Date(firstLoadTime - 1));
+            }
+            loadMoreHandler.sendEmptyMessageDelayed(1, 0);//没有更多的数据了
+        }
+    }
+
+    static class LoadMoreHandler extends Handler {
+        WeakReference<DetailFragment> mFragmentReference;
+        LoadMoreHandler(DetailFragment fragment) {
+            mFragmentReference= new WeakReference(fragment);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            Log.i("===", msg.what+"");
+            if(msg.what == 0) {
+                final DetailFragment fragment = mFragmentReference.get();
+                if (fragment != null) {
+                    fragment.mRecyclerViewAdapter.getDatas("records").addAll(fragment.moreRecords);
+                    fragment.mRecyclerViewAdapter.notifyDataSetChanged();
+                    fragment.updateHeader();
+                    fragment.mPtrFrameLayout.refreshComplete();
+                    fragment.moreRecords = new ArrayList();
+                }
+            }
+            else{//没有更多的数据了
+                final DetailFragment fragment = mFragmentReference.get();
+                if (fragment != null) {
+                    fragment.mRecyclerViewAdapter.getDatas("records").addAll(fragment.moreRecords);
+                    fragment.mRecyclerViewAdapter.notifyDataSetChanged();
+                    fragment.updateHeader();
+                    fragment.mFooterView.setLoadMoreFinish("没有更多记录了~~~");
+                    fragment.mPtrFrameLayout.refreshComplete();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        Log.i(o.getClass()+"", "数据更新啦~~");
+        new DataChangeThread().start();
+    }
+
+    private void initRecyclerViewData(){
+        records = new ArrayList();
+        AccountRecordService accountRecordService = new AccountRecordService();
+        Date now = new Date();
+        int indexMaxDay = TimeUtils.getTime(now,TimeUtils.DAY);//今天是几号
+        int j = 0;
+        while (true){
+            boolean isShowMonth = false;
+            for (int i = indexMaxDay; i >= 1; i--) {
+                long dayFirstMilliSeconds = TimeUtils.getDayFirstMilliSeconds(i, -1 * j, 0);
+                if(dayFirstMilliSeconds < firstLoadTime) return;
+
+                long dayLastMilliSeconds = TimeUtils.getDayLastMilliSeconds(i, -1 * j, 0);
+                List<AccountRecord> dayrecords = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds, dayLastMilliSeconds, null, null, null);
+                if (dayrecords.size() > 0) {//这一天有记录
+                    String[] money = accountRecordService.getDayMoneyByRecords(dayrecords);
+                    AccountRecord recordDay = new AccountRecord();
+                    recordDay.setRecordname("DAY");
+                    recordDay.setMoney(money[0]);
+                    recordDay.setRemark(money[1]);
+                    recordDay.setId(i);
+                    dayrecords.add(0, recordDay);
+
+                    if (!isShowMonth) { //是否插入过月份头
+                        isShowMonth = true;
+                        int month = TimeUtils.getTime(new Date(dayFirstMilliSeconds), TimeUtils.MONTH);
+                        AccountRecord recordMonth = new AccountRecord();
+                        recordMonth.setRecordname("MONTH");
+                        recordMonth.setId(month);
+                        recordMonth.setRecordtime(dayFirstMilliSeconds);
+                        if(nowHeaderTime == 0){
+                            nowHeaderTime = dayFirstMilliSeconds;
+                        }
+                        dayrecords.add(0, recordMonth);
+                    }
+                }
+                records.addAll(dayrecords);
+            }
+            j++;
+            indexMaxDay = TimeUtils.getMaxDay(now, -1 * j ,0);//上个月有多少天
+        }
+    }
+
+    /**
+     *
+     * @return 是否加载完所有数据
+     */
+    private boolean loadMoreRecyclerViewData(){
+        moreRecords = new ArrayList();
+        AccountRecordService accountRecordService = new AccountRecordService();
+        Date lastLoadTime = new Date(firstLoadTime - 1);
+        int indexMaxDay = TimeUtils.getTime(lastLoadTime,TimeUtils.DAY);//今天是几号
+
+        boolean isShowMonth = false;
+        for (int i = indexMaxDay; i >= 1; i--) {
+            long dayFirstMilliSeconds = TimeUtils.getDateDayFirstMilliSeconds(TimeUtils.getIndexDate(lastLoadTime, 0, 0, -1 * (indexMaxDay - i)));
+            if (dayFirstMilliSeconds < firstTime.getTime()) {
+                Log.i("000", "龟儿子~~~~~~~~~~");
+                return true;
+            }
+
+            long dayLastMilliSeconds = TimeUtils.getDateDayLastMilliSeconds(TimeUtils.getIndexDate(lastLoadTime, 0, 0, -1 * (indexMaxDay - i)));
+            List<AccountRecord> dayrecords = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds, dayLastMilliSeconds, null, null, null);
+            if (dayrecords.size() > 0) {//这一天有记录
+                if (dayFirstMilliSeconds < firstLoadTime) firstLoadTime = TimeUtils.getDateMonthFirstMilliSeconds(new Date(dayFirstMilliSeconds));
+                String[] money = accountRecordService.getDayMoneyByRecords(dayrecords);
+                AccountRecord recordDay = new AccountRecord();
+                recordDay.setRecordname("DAY");
+                recordDay.setMoney(money[0]);
+                recordDay.setRemark(money[1]);
+                recordDay.setId(i);
+                dayrecords.add(0, recordDay);
+
+                if (!isShowMonth) { //是否插入过月份头
+                    isShowMonth = true;
+                    int month = TimeUtils.getTime(new Date(dayFirstMilliSeconds), TimeUtils.MONTH);
+                    AccountRecord recordMonth = new AccountRecord();
+                    recordMonth.setRecordname("MONTH");
+                    recordMonth.setId(month);
+                    recordMonth.setRecordtime(dayFirstMilliSeconds);
+                    if (nowHeaderTime == 0) {
+                        nowHeaderTime = dayFirstMilliSeconds;
+                    }
+                    dayrecords.add(0, recordMonth);
+                }
+            }
+            moreRecords.addAll(dayrecords);
+        }
+        Log.i("111", "咋回事儿~~~~~~~~~~");
+        return false;
+    }
+
 
     /**
      * 记录RecyclerView当前位置
@@ -423,12 +569,18 @@ public class DetailFragment extends Fragment {
     }
 
     private void updateHeader(){
-        int headerMonth = Integer.parseInt(txtShouru.getText().toString().substring(0,1));
-        int headerYear = TimeUtils.getTime(new Date(nowHeaderTime),TimeUtils.YEAR);
-        AccountRecordService accountRecordService = new AccountRecordService();
-        String[] money = accountRecordService.getMonthMoneyByTime(headerMonth,headerYear - TimeUtils.getTime(new Date(),TimeUtils.YEAR));
-        txtShouru.setText(headerMonth+"月收入\n"+money[0]);
-        txtZhichu.setText(headerMonth+"月支出\n"+money[1]);
+        if(nowHeaderTime == 0){
+            txtShouru.setText(TimeUtils.getTime(new Date(),TimeUtils.MONTH) + "月收入\n0.00");
+            txtZhichu.setText(TimeUtils.getTime(new Date(),TimeUtils.MONTH) + "月支出\n0.00");
+        }
+        else {
+            int headerMonth = TimeUtils.getTime(new Date(nowHeaderTime), TimeUtils.MONTH);
+            int headerYear = TimeUtils.getTime(new Date(nowHeaderTime), TimeUtils.YEAR);
+            AccountRecordService accountRecordService = new AccountRecordService();
+            String[] money = accountRecordService.getMonthMoneyByTime(headerMonth, headerYear - TimeUtils.getTime(new Date(), TimeUtils.YEAR));
+            txtShouru.setText(headerMonth + "月收入\n" + money[0]);
+            txtZhichu.setText(headerMonth + "月支出\n" + money[1]);
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent){
@@ -439,6 +591,7 @@ public class DetailFragment extends Fragment {
                 if(resultCode == getActivity().RESULT_OK){
                     boolean isFloatingActionButton = intent.getBooleanExtra("isFloatingActionButton",false);
                     if(isFloatingActionButton) mRecyclerView.scrollToPosition(0);
+
                     AccountRecord record = (AccountRecord)intent.getSerializableExtra("data");
                     AccountRecordService accountRecordService = new AccountRecordService();
 
@@ -489,9 +642,7 @@ public class DetailFragment extends Fragment {
                             }
                         }
                         else{
-                            mRecyclerViewAdapter.addDatas("records",new ArrayList<AccountRecord>());//清空数据
-                            initRecyclerViewData();//重新写入
-                            mRecyclerViewAdapter.notifyDataSetChanged();
+                            new DataChangeThread().start();
                         }
                     }
                     else{//第一次启动，没有添加月和日
@@ -506,12 +657,18 @@ public class DetailFragment extends Fragment {
                 break;
             case 2://编辑Item
                 if(resultCode == getActivity().RESULT_OK){
+                    boolean isUpdateFirstTime = intent.getBooleanExtra("isUpdateFirstTime",false);
+                    if(isUpdateFirstTime) {
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("userData", Context.MODE_PRIVATE);
+                        long firstTimeMilliSeconds = sharedPreferences.getLong("firstTime", System.currentTimeMillis());
+                        firstTime = new Date(firstTimeMilliSeconds);
+                        textFooter.setText(new SimpleDateFormat("yyyy年MM月dd日").format(firstTime)+"\n你开启了记账之旅");
+                    }
+
                     AccountRecord record = (AccountRecord)intent.getSerializableExtra("data");
                     AccountRecordService accountRecordService = new AccountRecordService();
                     accountRecordService.updateAccountRecord(record);
-                    mRecyclerViewAdapter.addDatas("records",new ArrayList<AccountRecord>());//清空数据
-                    initRecyclerViewData();//重新写入
-                    mRecyclerViewAdapter.notifyDataSetChanged();
+                    new DataChangeThread().start();
 
                     updateHeader();
                     updateWAV();
@@ -611,7 +768,9 @@ class DetailRecyclerAdapter extends BaseRecyclerViewAdapter{
             int resID = mContent.getResources().getIdentifier(((AccountRecord) mDatas.get("records").get(pos)).getIcon(), "drawable", mContent.getPackageName());
             holder.item_delete.setVisibility(View.INVISIBLE);
             holder.item_edit.setVisibility(View.INVISIBLE);
-            holder.item_icon.setBackgroundResource(resID);
+
+            Glide.with(mContent).load(resID).dontAnimate().into(holder.item_icon);
+//            holder.item_icon.setBackgroundResource(resID);
             holder.item_icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

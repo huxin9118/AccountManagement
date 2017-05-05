@@ -15,15 +15,14 @@
             android:background="@drawable/selector_gird_item"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:textColor="#333333"
             android:textSize="26sp" />
 
         <ImageView
             android:id="@+id/imgDelete"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/ic_keyboard_delete" />
+            android:scaleType="centerCrop"
+            android:layout_centerInParent="true"/>
 
         <View
             android:layout_width="match_parent"

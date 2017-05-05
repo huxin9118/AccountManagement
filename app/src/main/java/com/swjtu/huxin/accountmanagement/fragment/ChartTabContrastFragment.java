@@ -3,7 +3,10 @@ package com.swjtu.huxin.accountmanagement.fragment;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -21,17 +24,21 @@ import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
+import com.swjtu.huxin.accountmanagement.base.MyApplication;
 import com.swjtu.huxin.accountmanagement.base.OnItemClickListener;
 import com.swjtu.huxin.accountmanagement.domain.AccountRecord;
 import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
 import com.swjtu.huxin.accountmanagement.utils.ItemXmlPullParserUtils;
 import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 
+import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -46,10 +53,12 @@ import lecho.lib.hellocharts.view.LineChartView;
  * Created by huxin on 2017/3/11.
  */
 
-public class ChartTabContrastFragment extends Fragment
+public class ChartTabContrastFragment extends Fragment implements Observer
 {
     private String mArgument;
     public static final String ARGUMENT = "argument";
+
+    private Handler dataChangeHandler;
 
     private ImageView left;
     private ImageView right;
@@ -79,6 +88,19 @@ public class ChartTabContrastFragment extends Fragment
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        MyApplication.getApplication().getDataChangeObservable().addObserver(this);
+        dataChangeHandler = new DataChangeHandler(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MyApplication.getApplication().getDataChangeObservable().deleteObserver(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_chart_tab_contrast,container,false);
@@ -96,7 +118,7 @@ public class ChartTabContrastFragment extends Fragment
             public void onClick(View v) {
                 date--;
                 year.setText(date+"年");
-                updateData();
+                new DataChangeThread().start();
             }
         });
 
@@ -105,16 +127,24 @@ public class ChartTabContrastFragment extends Fragment
             public void onClick(View v) {
                 date++;
                 year.setText(date+"年");
-                updateData();
+                new DataChangeThread().start();
             }
         });
+        int[] attrsArray = { R.attr.more_half_transparent_contrast };
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrsArray);
+        int color = typedArray.getColor(0,-1);
+        typedArray.recycle();
+        left.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        left.invalidate();
+        right.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        right.invalidate();
 
         btnSwitch = (ImageView) view.findViewById(R.id.btnSwitch);
         btnSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isShouru = isShouru?false:true;
-                updateData();
+                new DataChangeThread().start();
             }
         });
 
@@ -166,8 +196,45 @@ public class ChartTabContrastFragment extends Fragment
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());//添加/删除item默认的动画效果
 
-        updateData();
+        new DataChangeThread().start();
         return view;
+    }
+
+
+    class DataChangeThread extends Thread{
+        @Override
+        public void run() {
+            updateData();
+            dataChangeHandler.sendEmptyMessageDelayed(0, 0);
+        }
+    }
+
+    static class DataChangeHandler extends Handler {
+        WeakReference<ChartTabContrastFragment> mFragmentReference;
+        DataChangeHandler(ChartTabContrastFragment fragment) {
+            mFragmentReference= new WeakReference(fragment);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final ChartTabContrastFragment fragment = mFragmentReference.get();
+            if (fragment != null) {
+                if(fragment.records.size() == 0){
+                    fragment.empty.setVisibility(View.VISIBLE);
+                    fragment.content.setVisibility(View.GONE);
+                }
+                else {
+                    fragment.empty.setVisibility(View.GONE);
+                    fragment.content.setVisibility(View.VISIBLE);
+                    fragment.initRecyclerViewData();
+                    fragment.initLineChart();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        new DataChangeThread().start();
     }
 
     private void updateData(){
@@ -187,16 +254,6 @@ public class ChartTabContrastFragment extends Fragment
             }
             months.add(month);
         }
-        if(records.size() == 0){
-            empty.setVisibility(View.VISIBLE);
-            content.setVisibility(View.GONE);
-        }
-        else {
-            empty.setVisibility(View.GONE);
-            content.setVisibility(View.VISIBLE);
-            initRecyclerViewData();
-            initLineChart();
-        }
     }
 
     private void initRecyclerViewData(){
@@ -208,18 +265,23 @@ public class ChartTabContrastFragment extends Fragment
     }
 
     private void initLineChart(){
+        int[] attrsArray = { R.attr.textColor };
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrsArray);
+        int color = typedArray.getColor(0,-1);
+        typedArray.recycle();
+
         Axis axisY = new Axis();// Y轴属性
         Axis axisX = new Axis();// X轴属性
 //        axisY.setName(String yName);//设置Y轴显示名称
 //        axisX.setName(String xName);//设置X轴显示名称
-//        axisX.setTextColor(Color color);// 设置X轴文字颜色
-//        axisY.setTextColor(Color color);// 设置Y轴文字颜色
+        axisX.setTextColor(color);// 设置X轴文字颜色
+        axisY.setTextColor(color);// 设置Y轴文字颜色
 //        axisX.setTextSize(14);// 设置X轴文字大小
 //        axisX.setTypeface(Typeface.DEFAULT);// 设置文字样式，此处为默认
 //        axisX.setHasTiltedLabels(false);// 设置X轴文字向左旋转45度
 //        axisX.setInside(false);// 设置X轴文字是否在X轴内部
-        axisX.setLineColor(getResources().getColor(R.color.lightgray));// 设置X轴轴线颜色
-        axisY.setLineColor(getResources().getColor(R.color.lightgray));// 设置Y轴轴线颜色
+        axisX.setLineColor(color);// 设置X轴轴线颜色
+        axisY.setLineColor(color);// 设置Y轴轴线颜色
         axisX.setHasLines(false);// 是否显示X轴网格线
         axisY.setHasLines(true);// 是否显示Y轴网格线
         axisX.setHasSeparationLine(true);// 设置是否有轴线
@@ -309,6 +371,8 @@ class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
     public ChartTabContrastRecyclerAdapter(Context context) {
         super(context);
         mContext = context;
+        mDatas.put("months",new ArrayList<Integer>());
+        mDatas.put("records",new ArrayList<AccountRecord>());
     }
 
     @Override

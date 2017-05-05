@@ -53,6 +53,7 @@ public class ChartFragment extends Fragment {
         mPagerAdapter = new MyPagerAdapter(getChildFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOnPageChangeListener(mPageChangeListener);
+        mViewPager.setOffscreenPageLimit(3);//缓存页面3+1个
 
         btnTab[0].performClick();
         return view;
@@ -60,10 +61,15 @@ public class ChartFragment extends Fragment {
 
     private void updateTab(int position){
         for(int i = 0; i < 4; i++){
-            if(i == position)
+            if(i == position) {
                 btnTab[i].setTextColor(getResources().getColor(R.color.customBlue));
+            }
             else {
-                btnTab[i].setTextColor(getResources().getColor(R.color.darkgray));
+                int[] attrsArray = { R.attr.textColor };
+                TypedArray typedArray = getContext().obtainStyledAttributes(attrsArray);
+                int color = typedArray.getColor(0,-1);
+                typedArray.recycle();
+                btnTab[i].setTextColor(color);
             }
         }
     }

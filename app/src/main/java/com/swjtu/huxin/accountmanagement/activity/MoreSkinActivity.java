@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.content.IntentCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,9 +17,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
@@ -97,10 +102,17 @@ public class MoreSkinActivity extends BaseAppCompatActivity {
         myThemes.add("MyTheme_White");
         myThemes.add("MyTheme_Cat");
         myThemes.add("MyTheme_Sea");
-        myThemes.add("MyTheme_Constellation");
         myThemes.add("MyTheme_Dark");
         myThemes.add("MyTheme_Paris");
+        myThemes.add("MyTheme_Constellation");
         myThemes.add("MyTheme_Volcano");
+        myThemes.add("MyTheme_CherryBlossoms");
+        myThemes.add("MyTheme_MapleLeaves");
+        myThemes.add("MyTheme_YourName_1");
+        myThemes.add("MyTheme_YourName_2");
+        myThemes.add("MyTheme_YourName_3");
+        myThemes.add("MyTheme_Byousoku_1");
+        myThemes.add("MyTheme_Colorful");
         mRecyclerViewAdapter.addDatas("myThemes",myThemes);
         mRecyclerViewAdapter.notifyDataSetChanged();
     }
@@ -133,22 +145,44 @@ class MoreSkinRecyclerAdapter extends BaseRecyclerViewAdapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        Holder holder = (Holder)viewHolder;
+        final Holder holder = (Holder)viewHolder;
         final int pos = getRealPosition(holder);
         if(getItemViewType(position) == TYPE_HEADER || getItemViewType(position) == TYPE_FOOTER) return;
         if(getItemViewType(position) == TYPE_NORMAL) {
-            List<String> myThemes = (ArrayList<String>)mDatas.get("myThemes");
+            holder.loading.setImageResource(R.drawable.animation_list_loading_black);
+            final AnimationDrawable animationDrawable = (AnimationDrawable) holder.loading.getDrawable();
+
+            final List<String> myThemes = (ArrayList<String>)mDatas.get("myThemes");
             int themeResID = mContent.getResources().getIdentifier(myThemes.get(pos), "style", mContent.getPackageName());
-            int[] attrsArray = { R.attr.mainBackgrount };
-            TypedArray typedArray = mContext.obtainStyledAttributes(themeResID,attrsArray);
-            int imgResID = typedArray.getResourceId(0,-1);
-            typedArray.recycle();
-            Glide.with(mContent).load(imgResID).override(640,360).bitmapTransform(new RoundedCornersTransformation(mContext,
-                    DensityUtils.dp2px(mContext,20),DensityUtils.dp2px(mContext,20))).into(holder.img);
-            if(myThemes.get(pos).equals(MyApplication.getApplication().getMyTheme()))
-                holder.btnSelector.setVisibility(View.VISIBLE);
-            else
-                holder.btnSelector.setVisibility(View.GONE);
+            int[] attrsArray1 = { R.attr.mainBackgrount};
+            TypedArray typedArray1 = mContext.obtainStyledAttributes(themeResID,attrsArray1);
+            int imgResID = typedArray1.getResourceId(0,-1);
+            typedArray1.recycle();
+            MyApplication app = MyApplication.getApplication();
+            Glide.with(mContent).load(imgResID).override(app.getScreenWidth()/2,app.getScreenHeight()/2)
+                    .dontAnimate().bitmapTransform(new RoundedCornersTransformation(mContext
+                    ,DensityUtils.dp2px(mContext,20),DensityUtils.dp2px(mContext,20))).into(
+                    new GlideDrawableImageViewTarget(holder.img) {
+                        @Override
+                        public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
+                            super.onResourceReady(drawable, anim);
+                            //在这里添加一些图片加载完成的操作
+                            animationDrawable.stop();
+                            holder.loading.setVisibility(View.GONE);
+
+                            if(myThemes.get(pos).equals(MyApplication.getApplication().getMyTheme()))
+                                holder.btnSelector.setVisibility(View.VISIBLE);
+                            else
+                                holder.btnSelector.setVisibility(View.GONE);
+                        }
+                    });
+            animationDrawable.start();
+
+            int[] attrsArray2 = { R.attr.theme_name};
+            TypedArray typedArray2 = mContext.obtainStyledAttributes(themeResID,attrsArray2);
+            String themeName =  typedArray2.getString(0);
+            typedArray2.recycle();
+            holder.name.setText(themeName);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -160,13 +194,17 @@ class MoreSkinRecyclerAdapter extends BaseRecyclerViewAdapter {
 
     static class Holder extends RecyclerView.ViewHolder {
         public ImageView img;
+        public ImageView loading;
         public RelativeLayout btnSelector;
+        public TextView name;
         public Holder(View itemView, int viewType) {
             super(itemView);
             if(viewType == TYPE_HEADER || viewType == TYPE_FOOTER) return;
             if(viewType == TYPE_NORMAL) {
                 img = (ImageView) itemView.findViewById(R.id.img);
+                loading = (ImageView) itemView.findViewById(R.id.loading);
                 btnSelector = (RelativeLayout) itemView.findViewById(R.id.btnSelector);
+                name = (TextView) itemView.findViewById(R.id.name);
             }
         }
     }

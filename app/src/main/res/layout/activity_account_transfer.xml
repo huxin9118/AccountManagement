@@ -58,7 +58,8 @@
                 android:layout_height="60dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="5dp"
                 app:cardCornerRadius="6dp"
                 app:cardElevation="0dp"
                 app:cardBackgroundColor="@color/transparent"
@@ -68,7 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="8dp"
-                    android:background="@drawable/shape_account_bai">
+                    android:background="@drawable/shape_account_sum_money">
 
                     <ImageView
                         android:id="@+id/iconOut"
@@ -145,7 +146,7 @@
                 android:id="@+id/btnIn"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="15dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
@@ -158,7 +159,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingLeft="8dp"
-                    android:background="@drawable/shape_account_bai">
+                    android:background="@drawable/shape_account_sum_money">
 
                     <ImageView
                         android:id="@+id/iconIn"
@@ -238,7 +239,7 @@
             android:layout_centerInParent="true"
             android:src="@drawable/ic_account_arrow"
             app:civ_border_width="8dp"
-            app:civ_border_color="?attr/listItem" />
+            app:civ_border_color="?attr/popupwindow_backgound" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="45dp"
@@ -269,19 +270,17 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/listItem"
-            android:padding="5dp">
+            android:layout_height="35dp"
+            android:background="?attr/listItem">
 
             <TextView
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:text="03月02日"
-                android:background="@drawable/shape_button_numkeyborad_date"
-                />
+                android:background="@drawable/shape_button_numkeyborad_date"/>
 
             <TextView
                 android:id="@+id/time"
@@ -291,17 +290,22 @@
                 android:layout_toRightOf="@id/date"
                 android:layout_marginLeft="5dp"
                 android:text="23:22"
-                android:background="@drawable/shape_button_numkeyborad_time"
-                />
+                android:background="@drawable/shape_button_numkeyborad_time" />
 
-            <Button
-                android:id="@+id/remark"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/ic_beizhu" />
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:id="@+id/remark"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/ic_beizhu_blue" />
+            </LinearLayout>
 
         </RelativeLayout>
 

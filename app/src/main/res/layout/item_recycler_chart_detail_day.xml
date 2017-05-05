@@ -12,8 +12,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:text="3月20日"
-        android:textSize="15sp"
-        android:textColor="@color/gray"/>
+        android:textSize="15sp"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"

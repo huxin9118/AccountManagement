@@ -52,7 +52,8 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:text="工资 100.00"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:background="?attr/listItem"/>
     <TextView
         android:id="@+id/item_remark_left"
         android:layout_width="wrap_content"
@@ -63,9 +64,9 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="3dp"
         android:textSize="10sp"
-        android:textColor="@color/gray"
         android:maxLines="2"
-        android:ellipsize="end"/>
+        android:ellipsize="end"
+        android:background="?attr/listItem"/>
     <TextView
         android:id="@+id/item_right"
         android:layout_width="wrap_content"
@@ -74,7 +75,8 @@
         android:gravity="left"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:background="?attr/listItem"/>
     <TextView
         android:id="@+id/item_remark_right"
         android:layout_width="wrap_content"
@@ -87,7 +89,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="2dp"
         android:textSize="10sp"
-        android:textColor="@color/gray"
         android:maxLines="2"
-        android:ellipsize="end"/>
+        android:ellipsize="end"
+        android:background="?attr/listItem"/>
 </RelativeLayout>

@@ -102,13 +102,15 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="?attr/listBackgrount"/>
 
     <LinearLayout
         android:id="@+id/keybord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
@@ -117,16 +119,15 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/listItem"
-            android:padding="5dp">
+            android:layout_height="35dp"
+            android:background="?attr/listItem">
 
             <TextView
                 android:id="@+id/account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:text="现金"
                 android:background="@drawable/shape_button_numkeyborad_account"
                 />
@@ -150,26 +151,30 @@
                 android:layout_toRightOf="@id/date"
                 android:layout_marginLeft="5dp"
                 android:text="23:22"
-                android:background="@drawable/shape_button_numkeyborad_time"
-                />
+                android:background="@drawable/shape_button_numkeyborad_time" />
 
-            <Button
-                android:id="@+id/remark"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/ic_beizhu" />
-
-            <Button
-                android:id="@+id/member"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/remark"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/ic_chengyuan" />
+                android:gravity="center_vertical">
+                <ImageView
+                    android:id="@+id/remark"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/ic_beizhu_blue" />
+
+                <ImageView
+                    android:id="@+id/member"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/ic_chengyuan_blue" />
+            </LinearLayout>
         </RelativeLayout>
 
         <View

@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -32,14 +34,19 @@ import com.swjtu.huxin.accountmanagement.service.AccountRecordService;
 import com.swjtu.huxin.accountmanagement.service.AccountService;
 import com.swjtu.huxin.accountmanagement.utils.ConstantUtils;
 
+import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class AccountFragment extends Fragment {
+public class AccountFragment extends Fragment implements Observer {
 
     private String mArgument;
     public static final String ARGUMENT = "argument";
+
+    private Handler dataChangeHandler;
 
     private TextView money;
     private TextView btnTransfer;
@@ -48,6 +55,9 @@ public class AccountFragment extends Fragment {
     private LinearLayoutManager mLayoutManager;
     private AccountRecyclerAdapter mRecyclerViewAdapter;
 
+    private List<Account> accounts;
+    private BigDecimal totalJinE;
+    private BigDecimal totalMoney;
     /**
      * 传入需要的参数，设置给arguments
      *
@@ -70,6 +80,14 @@ public class AccountFragment extends Fragment {
         if (bundle != null)
             mArgument = bundle.getString(ARGUMENT);
 
+        MyApplication.getApplication().getDataChangeObservable().addObserver(this);
+        dataChangeHandler = new DataChangeHandler(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MyApplication.getApplication().getDataChangeObservable().deleteObserver(this);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,23 +120,49 @@ public class AccountFragment extends Fragment {
         });
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());//添加/删除item默认的动画效果
-        initRecyclerViewData();
+        new DataChangeThread().start();
         return view;
+    }
+
+    class DataChangeThread extends Thread{
+        @Override
+        public void run() {
+            initRecyclerViewData();
+            dataChangeHandler.sendEmptyMessageDelayed(0, 0);
+        }
+    }
+
+    static class DataChangeHandler extends Handler {
+        WeakReference<AccountFragment> mFragmentReference;
+        DataChangeHandler(AccountFragment fragment) {
+            mFragmentReference= new WeakReference(fragment);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            final AccountFragment fragment = mFragmentReference.get();
+            if (fragment != null) {
+                fragment.mRecyclerViewAdapter.addDatas("accounts",fragment.accounts);//清空原有数据
+                fragment.mRecyclerViewAdapter.notifyDataSetChanged();
+                fragment.money.setText(fragment.totalJinE.add(fragment.totalMoney).toString());
+            }
+        }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        new DataChangeThread().start();
     }
 
     private void initRecyclerViewData(){
         MyApplication app = MyApplication.getApplication();
-        List<Account> accounts = new ArrayList<Account>(app.getAccounts().values());
-        BigDecimal totalJinE = new BigDecimal("0.00");
+        accounts = new ArrayList(app.getAccounts().values());
+        totalJinE = new BigDecimal("0.00");
         for(int i = 0; i < accounts.size(); i++){
             totalJinE = totalJinE.add(new BigDecimal(accounts.get(i).getMoney()));
         }
-        AccountRecordService accountRecordService = new AccountRecordService();
-        String totalMoney = accountRecordService.getTotalMoneyByAccount(null);
-        money.setText(totalJinE.add(new BigDecimal(totalMoney)).toString());
 
-        mRecyclerViewAdapter.addDatas("accounts",accounts);
-        mRecyclerViewAdapter.notifyDataSetChanged();
+        AccountRecordService accountRecordService = new AccountRecordService();
+        totalMoney = new BigDecimal(accountRecordService.getTotalMoneyByAccount(null));
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -129,7 +173,7 @@ public class AccountFragment extends Fragment {
                     Account account = (Account) intent.getSerializableExtra("account");
                     MyApplication app = MyApplication.getApplication();
                     app.getAccounts().put(account.getId(),account);
-                    initRecyclerViewData();
+                    new DataChangeThread().start();
 
                     AccountService accountService = new AccountService();
                     accountService.updateAccount(account);
@@ -137,7 +181,7 @@ public class AccountFragment extends Fragment {
                 break;
             case 2:
                 if(resultCode == getActivity().RESULT_OK) {
-                    initRecyclerViewData();
+                    new DataChangeThread().start();
                 }
                 break;
         }
@@ -151,6 +195,7 @@ class AccountRecyclerAdapter extends BaseRecyclerViewAdapter {
     public AccountRecyclerAdapter(Context context) {
         super(context);
         mContext = context;
+        mDatas.put("accounts",new ArrayList<Account>());
     }
 
     @Override

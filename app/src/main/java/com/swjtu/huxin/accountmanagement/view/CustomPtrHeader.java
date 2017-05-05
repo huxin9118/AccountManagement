@@ -1,6 +1,7 @@
 package com.swjtu.huxin.accountmanagement.view;
 
 import in.srain.cube.views.ptr.PtrFrameLayout;
+
 import in.srain.cube.views.ptr.PtrUIHandler;
 import in.srain.cube.views.ptr.indicator.PtrIndicator;
 
@@ -9,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -158,7 +158,7 @@ public class CustomPtrHeader extends FrameLayout implements PtrUIHandler {
         if (frame.isPullToRefresh()) {
             mTitleTextView.setText("下拉刷新");
         } else {
-            mTitleTextView.setText("下拉");
+            mTitleTextView.setText("下拉刷新");
         }
     }
 
@@ -168,20 +168,19 @@ public class CustomPtrHeader extends FrameLayout implements PtrUIHandler {
         hideRotateView();
         mProgressBar.setVisibility(VISIBLE);
         mTitleTextView.setVisibility(VISIBLE);
-        mTitleTextView.setText("加载中...");
+        mTitleTextView.setText("正在刷新...");
 
         tryUpdateLastUpdateTime();
         mLastUpdateTimeUpdater.stop();
     }
 
     @Override
-    public void onUIRefreshComplete(PtrFrameLayout frame) {
-
+    public void onUIRefreshComplete(PtrFrameLayout frame,boolean isHeader) {
         hideRotateView();
         mProgressBar.setVisibility(INVISIBLE);
 
         mTitleTextView.setVisibility(VISIBLE);
-        mTitleTextView.setText("更新完成");
+        mTitleTextView.setText("刷新完成");
 
         // update last update time
         SharedPreferences sharedPreferences = getContext().getSharedPreferences(KEY_SharedPreferences, 0);
@@ -251,8 +250,6 @@ public class CustomPtrHeader extends FrameLayout implements PtrUIHandler {
         final int currentPos = ptrIndicator.getCurrentPosY();
         final int lastPos = ptrIndicator.getLastPosY();
 
-        Log.i("===", line.getLayoutParams().height+"==="+currentPos);
-
         line.getLayoutParams().height = currentPos;
         line.requestLayout();
 
@@ -287,7 +284,7 @@ public class CustomPtrHeader extends FrameLayout implements PtrUIHandler {
         if (frame.isPullToRefresh()) {
             mTitleTextView.setText("下拉刷新");
         } else {
-            mTitleTextView.setText("下拉");
+            mTitleTextView.setText("下拉刷新");
 
         }
     }

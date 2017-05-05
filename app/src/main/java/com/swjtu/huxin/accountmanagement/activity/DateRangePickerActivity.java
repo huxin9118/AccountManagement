@@ -2,7 +2,6 @@ package com.swjtu.huxin.accountmanagement.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
@@ -87,8 +86,8 @@ public class DateRangePickerActivity extends BaseAppCompatActivity {
                     showToast("结束时间要大于开始时间哦~", Toast.LENGTH_SHORT);
                 }
                 else {
-                    start = new Date(TimeUtils.getDateFirstMilliSeconds(startDatePicker.getValue()));
-                    end = new Date(TimeUtils.getDateLastMilliSeconds(endDatePicker.getValue()));
+                    start = new Date(TimeUtils.getDateDayFirstMilliSeconds(startDatePicker.getValue()));
+                    end = new Date(TimeUtils.getDateDayLastMilliSeconds(endDatePicker.getValue()));
                     Intent intent = new Intent();
                     intent.putExtra("start", start);
                     intent.putExtra("end", end);

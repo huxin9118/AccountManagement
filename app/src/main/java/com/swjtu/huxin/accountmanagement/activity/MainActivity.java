@@ -3,12 +3,14 @@ package com.swjtu.huxin.accountmanagement.activity;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.transition.TransitionInflater;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -16,8 +18,12 @@ import android.widget.Toast;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
+import com.swjtu.huxin.accountmanagement.base.MyApplication;
 import com.swjtu.huxin.accountmanagement.fragment.MoreFragment;
 import com.swjtu.huxin.accountmanagement.fragment.DetailFragment;
 import com.swjtu.huxin.accountmanagement.fragment.ChartFragment;
@@ -28,7 +34,7 @@ import java.util.ArrayList;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 public class MainActivity extends BaseAppCompatActivity implements BottomNavigationBar.OnTabSelectedListener{
-//    private ArrayList<Fragment> fragments;
+    private ArrayList<Fragment> fragments;
     private long exitTime = 0;
 
     @Override
@@ -77,17 +83,34 @@ public class MainActivity extends BaseAppCompatActivity implements BottomNavigat
         bottomNavigationBar.setTabSelectedListener(this);
 
         ImageView background = (ImageView)findViewById(R.id.background);
-        int[] attrsArray = { R.attr.mainBackgrount };
-        TypedArray typedArray = obtainStyledAttributes(attrsArray);
-        int imgResID = typedArray.getResourceId(0,-1);
-        typedArray.recycle();
-        Glide.with(this).load(imgResID).placeholder(R.drawable.ic_loading1).dontAnimate()
-                .bitmapTransform(new BlurTransformation(this, 8)).into(background);
+        final ImageView loading = (ImageView)findViewById(R.id.loading);
+        loading.setImageResource(R.drawable.animation_list_loading_blue);
+        final AnimationDrawable animationDrawable = (AnimationDrawable) loading.getDrawable();
+
+        int[] attrsArray1 = { R.attr.mainBackgrount };
+        TypedArray typedArray1 = obtainStyledAttributes(attrsArray1);
+        int imgResID = typedArray1.getResourceId(0,-1);
+        typedArray1.recycle();
+        int[] attrsArray2 = { R.attr.theme_alpha };
+        TypedArray typedArray2 = obtainStyledAttributes(attrsArray2);
+        int alpha = typedArray2.getInteger(0,8);
+        typedArray2.recycle();
+        Glide.with(this).load(imgResID).dontAnimate().bitmapTransform(new BlurTransformation(this, alpha)).into(
+                new GlideDrawableImageViewTarget(background) {
+                    @Override
+                    public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
+                        super.onResourceReady(drawable, anim);
+                        //在这里添加一些图片加载完成的操作
+                        animationDrawable.stop();
+                        loading.setVisibility(View.GONE);
+                    }
+                });
+        animationDrawable.start();
     }
 
     public void onBackPressed() {
         if((System.currentTimeMillis()-exitTime) > 2000){
-            Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            showToast("再按一次退出程序", Toast.LENGTH_SHORT);
             exitTime = System.currentTimeMillis();
         } else {
             finishAfterTransition();
@@ -95,25 +118,20 @@ public class MainActivity extends BaseAppCompatActivity implements BottomNavigat
         }
     }
 
-//    private ArrayList<Fragment> getFragments() {
-//        ArrayList<Fragment> fragments = new ArrayList<>();
-//        fragments.add(DetailFragment.newInstance("明细"));
-//        fragments.add(AccountFragment.newInstance("账户"));
-//        fragments.add(ChartFragment.newInstance("图表"));
-//        fragments.add(MoreFragment.newInstance("更多"));
-//        return fragments;
-//    }
-//
+    private ArrayList<Fragment> getFragments() {
+        ArrayList<Fragment> fragments = new ArrayList<>();
+        fragments.add(DetailFragment.newInstance("明细"));
+        fragments.add(AccountFragment.newInstance("账户"));
+        fragments.add(ChartFragment.newInstance("图表"));
+        fragments.add(MoreFragment.newInstance("更多"));
+        return fragments;
+    }
+
     private void setDefaultFragment(int defaultPosition) {
-//        fragments = getFragments();
+        fragments = getFragments();
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        switch (defaultPosition){
-            case 0:transaction.replace(R.id.layFrame, DetailFragment.newInstance("明细"));break;
-            case 1:transaction.replace(R.id.layFrame, AccountFragment.newInstance("账户"));break;
-            case 2:transaction.replace(R.id.layFrame, ChartFragment.newInstance("图表"));break;
-            case 3:transaction.replace(R.id.layFrame, MoreFragment.newInstance("更多"));break;
-        }
+        transaction.add(R.id.layFrame, fragments.get(defaultPosition));
         transaction.commit();
     }
 
@@ -130,38 +148,39 @@ public class MainActivity extends BaseAppCompatActivity implements BottomNavigat
     @Override
     //未选中 -> 选中
     public void onTabSelected(int position) {
-//        if (fragments != null) {
-//            if (position < fragments.size()) {
-//                FragmentManager fm = getSupportFragmentManager();
-//                FragmentTransaction ft = fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//                Fragment fragment = fragments.get(position);
-//                if (fragment.isAdded()) {
-//                    ft.show(fragment);
-//                } else {
-//                    ft.add(R.id.layFrame, fragment);
-//                }
-//                ft.commit();
-//            }
-//        }
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        Fragment fragment = getFragment(position);
-        ft.replace(R.id.layFrame, fragment);
-        ft.commit();
+        MyApplication.getApplication().getDataChangeObservable().notifyObservers();
+        if (fragments != null) {
+            if (position < fragments.size()) {
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                Fragment fragment = fragments.get(position);
+                if (fragment.isAdded()) {
+                    ft.show(fragment);
+                } else {
+                    ft.add(R.id.layFrame, fragment);
+                }
+                ft.commit();
+            }
+        }
+//        FragmentManager fm = getSupportFragmentManager();
+//        FragmentTransaction ft = fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//        Fragment fragment = getFragment(position);
+//        ft.replace(R.id.layFrame, fragment);
+//        ft.commit();
     }
 
     @Override
     //选中 -> 未选中
     public void onTabUnselected(int position) {
-//        if (fragments != null) {
-//            if (position < fragments.size()) {
-//                FragmentManager fm = getSupportFragmentManager();
-//                FragmentTransaction ft = fm.beginTransaction();
-//                Fragment fragment = fragments.get(position);
-//                ft.hide(fragment);
-//                ft.commit();
-//            }
-//        }
+        if (fragments != null) {
+            if (position < fragments.size()) {
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                Fragment fragment = fragments.get(position);
+                ft.hide(fragment);
+                ft.commit();
+            }
+        }
     }
 
     @Override

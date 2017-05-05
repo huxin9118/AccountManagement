@@ -14,8 +14,6 @@
             android:background="@color/silver"
             android:layout_centerInParent="true"/>
 
-
-
         <LinearLayout
             android:id="@+id/ptr_classic_header_rotate_view_header_text"
             android:layout_width="wrap_content"
@@ -30,13 +28,15 @@
                 android:id="@+id/ptr_classic_header_rotate_view_header_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:background="?attr/listItem"/>
 
             <TextView
                 android:id="@+id/ptr_classic_header_rotate_view_header_last_update"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:background="?attr/listItem"/>
         </LinearLayout>
 
         <FrameLayout

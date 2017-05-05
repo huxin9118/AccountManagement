@@ -14,6 +14,9 @@
 
 
     <declare-styleable name="myTheme">
+        <attr name="theme_name" format="string"/>
+        <attr name="theme_isLight" format="boolean"/>
+        <attr name="theme_alpha" format="integer"/>
         <attr name="listBackgrount" format="reference"/>
         <attr name="listItem" format="reference"/>
         <attr name="mainBackgrount" format="reference"/>

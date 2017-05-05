@@ -3,25 +3,33 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/img"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
+        android:layout_width="120dp"
+        android:layout_height="160dp"
         android:scaleType="fitXY"
         android:layout_centerHorizontal="true">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/loading"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/animation_list_loading_black">
     </ImageView>
 
     <RelativeLayout
         android:id="@+id/btnSelector"
         android:layout_alignRight="@id/img"
         android:layout_alignBottom="@id/img"
+        android:layout_marginRight="20dp"
         android:layout_marginBottom="15dp"
-        android:layout_marginRight="15dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="22dp"
             android:layout_height="22dp"
@@ -35,5 +43,14 @@
             android:layout_centerInParent="true"
             android:src="@drawable/ic_selector_white"/>
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@id/img"
+        android:background="?attr/listItem"/>
 
 </RelativeLayout>

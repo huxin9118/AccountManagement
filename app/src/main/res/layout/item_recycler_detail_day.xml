@@ -41,7 +41,8 @@
         android:layout_toLeftOf="@id/item_icon"
         android:gravity="right"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginRight="10dp"
+        android:background="?attr/listItem"/>
     <TextView
         android:id="@+id/item_right"
         android:layout_width="wrap_content"
@@ -49,5 +50,6 @@
         android:layout_toRightOf="@id/item_icon"
         android:gravity="left"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        android:background="?attr/listItem"/>
 </RelativeLayout>
