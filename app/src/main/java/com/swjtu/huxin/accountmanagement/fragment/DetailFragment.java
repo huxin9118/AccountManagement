@@ -84,7 +84,6 @@ public class DetailFragment extends Fragment implements Observer{
     private DetailRecyclerAdapter mRecyclerViewAdapter;
     private CustomPtrHeader mHeaderView;
     private CustomPtrFooter mFooterView;
-//    private PtrClassicDefaultHeader mHeaderView;
     private FloatingActionButton mFloatingActionButton;
     private boolean isBudget;
     private BigDecimal totalMoney;
@@ -228,7 +227,7 @@ public class DetailFragment extends Fragment implements Observer{
                     new MaterialDialog.Builder(getActivity()).title("提示").content("确定删除该账目？")
                             .positiveText("是").negativeText("否")
                             .backgroundColorAttr( R.attr.popupwindow_backgound)
-                            .contentColorAttr(R.attr.textColor).titleColorAttr(R.attr.textColor)
+                            .contentColorAttr(R.attr.textSecondaryColor).titleColorAttr(R.attr.textColor)
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
                                 public void onClick(MaterialDialog dialog, DialogAction which) {
@@ -380,6 +379,7 @@ public class DetailFragment extends Fragment implements Observer{
                 fragment.mRecyclerViewAdapter.addDatas("records",fragment.records);//清空原有数据
                 fragment.mRecyclerViewAdapter.notifyDataSetChanged();
                 fragment.updateHeader();
+                fragment.updateWAV();
                 fragment.mPtrFrameLayout.refreshComplete();
             }
         }
@@ -390,12 +390,14 @@ public class DetailFragment extends Fragment implements Observer{
         public void run() {
             while (!loadMoreRecyclerViewData()){
                 if(moreRecords.size() != 0) {//还有更多数据且此次获得了数据
+                    isRecyclerViewBottom = false;
                     loadMoreHandler.sendEmptyMessageDelayed(0, 0);
                     return;
                 }
                 //还有更多数据且此次未获得数据
                 firstLoadTime = TimeUtils.getDateMonthFirstMilliSeconds(new Date(firstLoadTime - 1));
             }
+            isRecyclerViewBottom = false;
             loadMoreHandler.sendEmptyMessageDelayed(1, 0);//没有更多的数据了
         }
     }
@@ -494,7 +496,6 @@ public class DetailFragment extends Fragment implements Observer{
         for (int i = indexMaxDay; i >= 1; i--) {
             long dayFirstMilliSeconds = TimeUtils.getDateDayFirstMilliSeconds(TimeUtils.getIndexDate(lastLoadTime, 0, 0, -1 * (indexMaxDay - i)));
             if (dayFirstMilliSeconds < firstTime.getTime()) {
-                Log.i("000", "龟儿子~~~~~~~~~~");
                 return true;
             }
 
@@ -525,7 +526,6 @@ public class DetailFragment extends Fragment implements Observer{
             }
             moreRecords.addAll(dayrecords);
         }
-        Log.i("111", "咋回事儿~~~~~~~~~~");
         return false;
     }
 

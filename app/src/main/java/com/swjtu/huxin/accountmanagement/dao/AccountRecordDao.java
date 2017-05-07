@@ -171,8 +171,12 @@ public class AccountRecordDao {
         return records;
     }
 
-    public String getRangeTotalMoneyByRecordname(Date firsttime, Date lasttime,String recordname){
-        String sql = "SELECT SUM(money) money FROM account_record WHERE accountbook_id != -1 AND recordname = ? AND recordtime between ? and ?";
+    public String getRangeTotalMoneyByRecordname(Date firsttime, Date lasttime,String recordname,boolean isPositive){
+        String sql;
+        if(isPositive)
+            sql = "SELECT SUM(money) money FROM account_record WHERE accountbook_id != -1 AND money > 0 AND recordname = ? AND recordtime between ? and ?";
+        else
+            sql = "SELECT SUM(money) money FROM account_record WHERE accountbook_id != -1 AND money < 0 AND recordname = ? AND recordtime between ? and ?";
         Cursor cs = db.rawQuery(sql, new String[]{recordname,firsttime.getTime()+"",lasttime.getTime()+""});
         cs.moveToNext();
         String money = cs.getString(cs.getColumnIndex("money"));

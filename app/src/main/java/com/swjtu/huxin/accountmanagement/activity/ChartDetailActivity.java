@@ -2,6 +2,7 @@ package com.swjtu.huxin.accountmanagement.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
@@ -34,14 +36,17 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
  * Created by huxin on 2017/3/19.
  */
 
 public class ChartDetailActivity extends BaseAppCompatActivity {
-    private LinearLayout background;
+    private LinearLayout background_color;
 
     private LinearLayout back;
     private TextView backText;
@@ -67,11 +72,25 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chart_detail);
+        initBackground();
         initView();
     }
 
+    void initBackground(){
+        ImageView background = (ImageView)findViewById(R.id.background);
+        int[] attrsArray1 = { R.attr.mainBackgrount };
+        TypedArray typedArray1 = obtainStyledAttributes(attrsArray1);
+        int imgResID = typedArray1.getResourceId(0,-1);
+        typedArray1.recycle();
+        int[] attrsArray2 = { R.attr.theme_alpha };
+        TypedArray typedArray2 = obtainStyledAttributes(attrsArray2);
+        int alpha = typedArray2.getInteger(0,8);
+        typedArray2.recycle();
+        Glide.with(this).load(imgResID).dontAnimate().bitmapTransform(new BlurTransformation(this, alpha)).into(background);
+    }
+
     private void initView(){
-        background = (LinearLayout) findViewById(R.id.background);
+        background_color = (LinearLayout) findViewById(R.id.background_color);
 
         back = (LinearLayout) findViewById(R.id.back);
         backText = (TextView) findViewById(R.id.back_text);
@@ -124,7 +143,7 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
         updateDateRangeChange();
         backText.setText(intent.getStringExtra("back"));
         record = (AccountRecord) intent.getSerializableExtra("record");
-        if("tab_member".equals(intent.getStringExtra("from"))) {
+        if("成员".equals(intent.getStringExtra("back"))) {
             String member = record.getMember();
             if("".equals(member))member = "无成员";
             title.setText(member + "明细");
@@ -136,17 +155,17 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
             if (Double.parseDouble(record.getMoney()) > 0) {
                 text.setText("收入");
                 money.setText(new DecimalFormat("0.00").format(Double.parseDouble(record.getMoney())));
-                if("tab_member".equals(intent.getStringExtra("from")))
-                    background.setBackgroundColor(Color.parseColor(getColorByMember(record.getMember())));
+                if("成员".equals(intent.getStringExtra("back")))
+                    background_color.setBackgroundColor(Color.parseColor(getColorByMember(record.getMember())));
                 else
-                    background.setBackgroundColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(this, "shouru.xml", record.getIcon())));
+                    background_color.setBackgroundColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(this, "shouru.xml", record.getIcon())));
             } else {
                 text.setText("支出");
                 money.setText(new DecimalFormat("0.00").format(Double.parseDouble(record.getMoney())*-1));
-                if("tab_member".equals(intent.getStringExtra("from")))
-                    background.setBackgroundColor(Color.parseColor(getColorByMember(record.getMember())));
+                if("成员".equals(intent.getStringExtra("back")))
+                    background_color.setBackgroundColor(Color.parseColor(getColorByMember(record.getMember())));
                 else
-                    background.setBackgroundColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(this, "zhichu.xml", record.getIcon())));
+                    background_color.setBackgroundColor(Color.parseColor(ItemXmlPullParserUtils.parseIconColor(this, "zhichu.xml", record.getIcon())));
             }
         }
         catch (Exception e){
@@ -175,7 +194,7 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
                     new MaterialDialog.Builder(ChartDetailActivity.this).title("提示").content("确定删除该账目？")
                             .positiveText("是").negativeText("否")
                             .backgroundColorAttr( R.attr.popupwindow_backgound)
-                            .contentColorAttr(R.attr.textColor).titleColorAttr(R.attr.textColor)
+                            .contentColorAttr(R.attr.textSecondaryColor).titleColorAttr(R.attr.textColor)
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
                                 public void onClick(MaterialDialog dialog, DialogAction which) {
@@ -275,6 +294,24 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
             long dayLastMilliSeconds = TimeUtils.getDateDayLastMilliSeconds(time);
             while (dayFirstMilliSeconds >= start.getTime()) {
                 records = accountRecordService.getAccountRecordListByTime(dayFirstMilliSeconds, dayLastMilliSeconds, record.getRecordname(),null,record.getMember());
+                if (Double.parseDouble(record.getMoney()) > 0){//剔除收入和支出都有的类型中多余的AccountRecord
+                    Iterator<AccountRecord> it = records.iterator();
+                    while(it.hasNext()){
+                        AccountRecord x = it.next();
+                        if(Double.parseDouble(x.getMoney()) < 0){
+                            it.remove();
+                        }
+                    }
+                }
+                if (Double.parseDouble(record.getMoney()) < 0){
+                    Iterator<AccountRecord> it = records.iterator();
+                    while(it.hasNext()){
+                        AccountRecord x = it.next();
+                        if(Double.parseDouble(x.getMoney()) > 0){
+                            it.remove();
+                        }
+                    }
+                }
                 if (records.size() > 0) {//这一天有记录
                     AccountRecord recordDay = new AccountRecord();
                     recordDay.setRecordname("DAY");
@@ -292,7 +329,11 @@ public class ChartDetailActivity extends BaseAppCompatActivity {
 
     private void updateData(){
         AccountRecordService accountRecordService = new AccountRecordService();
-        String totalMoney = accountRecordService.getRangeTotalMoneyByRecordname(start, end, record.getRecordname());
+        String totalMoney;
+        if (Double.parseDouble(record.getMoney()) > 0)
+            totalMoney = accountRecordService.getRangeTotalMoneyByRecordname(start, end, record.getRecordname(),true);
+        else
+            totalMoney = accountRecordService.getRangeTotalMoneyByRecordname(start, end, record.getRecordname(),false);
         if("0.00".equals(totalMoney)) {
             empty.setVisibility(View.VISIBLE);
             money.setText("0.00");

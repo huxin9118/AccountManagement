@@ -24,25 +24,10 @@
         <item name="theme_isLight">true</item>
         <item name="theme_alpha">2</item>
         <item name="mainBackgrount">@drawable/ic_theme_white</item>
-        <item name="listBackgrount">@color/listBackgrount</item>
-        <item name="listItem">@color/listItem</item>
+        <item name="listBackgrount">@color/listBackgrount_white</item>
+        <item name="listItem">@color/listItem_white</item>
         <item name="textColor">#333333</item>
-        <item name="textSecondaryColor">#666666</item>
-        <item name="less_half_transparent_contrast">@color/less_half_transparent_black</item>
-        <item name="half_transparent_contrast">@color/half_transparent_black</item>
-        <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
-        <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
-    </style>
-
-    <style name="MyTheme_Cat" parent="MyTheme">
-        <item name="theme_name">喵星人</item>
-        <item name="theme_isLight">true</item>
-        <item name="theme_alpha">6</item>
-        <item name="mainBackgrount">@drawable/ic_theme_cat</item>
-        <item name="listBackgrount">@color/listBackgrount</item>
-        <item name="listItem">@color/listItem</item>
-        <item name="textColor">#333333</item>
-        <item name="textSecondaryColor">#666666</item>
+        <item name="textSecondaryColor">#7e7b7b</item>
         <item name="less_half_transparent_contrast">@color/less_half_transparent_black</item>
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
@@ -57,7 +42,37 @@
         <item name="listBackgrount">@color/listBackgrount</item>
         <item name="listItem">@color/listItem</item>
         <item name="textColor">#333333</item>
-        <item name="textSecondaryColor">#666666</item>
+        <item name="textSecondaryColor">#7e7b7b</item>
+        <item name="less_half_transparent_contrast">@color/less_half_transparent_black</item>
+        <item name="half_transparent_contrast">@color/half_transparent_black</item>
+        <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
+        <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
+    </style>
+
+    <style name="MyTheme_Cat" parent="MyTheme">
+        <item name="theme_name">喵星人</item>
+        <item name="theme_isLight">true</item>
+        <item name="theme_alpha">6</item>
+        <item name="mainBackgrount">@drawable/ic_theme_cat</item>
+        <item name="listBackgrount">@color/listBackgrount</item>
+        <item name="listItem">@color/listItem</item>
+        <item name="textColor">#333333</item>
+        <item name="textSecondaryColor">#7e7b7b</item>
+        <item name="less_half_transparent_contrast">@color/less_half_transparent_black</item>
+        <item name="half_transparent_contrast">@color/half_transparent_black</item>
+        <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
+        <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
+    </style>
+
+    <style name="MyTheme_Dog" parent="MyTheme">
+        <item name="theme_name">汪星人</item>
+        <item name="theme_isLight">true</item>
+        <item name="theme_alpha">6</item>
+        <item name="mainBackgrount">@drawable/ic_theme_dog</item>
+        <item name="listBackgrount">@color/listBackgrount</item>
+        <item name="listItem">@color/listItem</item>
+        <item name="textColor">#333333</item>
+        <item name="textSecondaryColor">#7e7b7b</item>
         <item name="less_half_transparent_contrast">@color/less_half_transparent_black</item>
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
@@ -73,39 +88,55 @@
         <item name="listItem">@color/listItem</item>
         <item name="android:textColor">#FFFAFA</item>
         <item name="textColor">#FFFAFA</item>
-        <item name="textSecondaryColor">#EEEEEE</item>
+        <item name="textSecondaryColor">#d6d0d0</item>
         <item name="less_half_transparent_contrast">@color/less_half_transparent_white</item>
         <item name="half_transparent_contrast">@color/half_transparent_white</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_white</item>
         <item name="popupwindow_backgound">@color/more_half_transparent_black</item>
     </style>
 
-    <style name="MyTheme_Paris" parent="MyTheme">
-        <item name="theme_name">塞纳河畔</item>
+    <style name="MyTheme_Dusk" parent="MyTheme">
+        <item name="theme_name">黄昏</item>
         <item name="theme_isLight">false</item>
         <item name="theme_alpha">6</item>
-        <item name="mainBackgrount">@drawable/ic_theme_paris</item>
+        <item name="mainBackgrount">@drawable/ic_theme_dusk</item>
         <item name="listBackgrount">@color/listBackgrount_middle_dark</item>
         <item name="listItem">@color/listItem_middle_dark</item>
         <item name="android:textColor">#FFFAFA</item>
         <item name="textColor">#FFFAFA</item>
-        <item name="textSecondaryColor">#EEEEEE</item>
+        <item name="textSecondaryColor">#d6d0d0</item>
         <item name="less_half_transparent_contrast">@color/less_half_transparent_white</item>
         <item name="half_transparent_contrast">@color/half_transparent_white</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_white</item>
         <item name="popupwindow_backgound">@color/more_half_transparent_black</item>
     </style>
 
-    <style name="MyTheme_Constellation" parent="MyTheme">
-        <item name="theme_name">星宿传说</item>
+    <style name="MyTheme_RosyClouds" parent="MyTheme">
+        <item name="theme_name">彩霞</item>
+        <item name="theme_isLight">false</item>
+        <item name="theme_alpha">6</item>
+        <item name="mainBackgrount">@drawable/ic_theme_rosy_clouds</item>
+        <item name="listBackgrount">@color/listBackgrount_middle_dark</item>
+        <item name="listItem">@color/listItem_middle_dark</item>
+        <item name="android:textColor">#FFFAFA</item>
+        <item name="textColor">#FFFAFA</item>
+        <item name="textSecondaryColor">#d6d0d0</item>
+        <item name="less_half_transparent_contrast">@color/less_half_transparent_white</item>
+        <item name="half_transparent_contrast">@color/half_transparent_white</item>
+        <item name="more_half_transparent_contrast">@color/more_half_transparent_white</item>
+        <item name="popupwindow_backgound">@color/more_half_transparent_black</item>
+    </style>
+
+    <style name="MyTheme_StarrySky" parent="MyTheme">
+        <item name="theme_name">星空</item>
         <item name="theme_isLight">false</item>
         <item name="theme_alpha">5</item>
-        <item name="mainBackgrount">@drawable/ic_theme_constellation</item>
+        <item name="mainBackgrount">@drawable/ic_theme_starry_sky</item>
         <item name="listBackgrount">@color/listBackgrount</item>
         <item name="listItem">@color/listItem</item>
         <item name="android:textColor">#FFFAFA</item>
         <item name="textColor">#FFFAFA</item>
-        <item name="textSecondaryColor">#EEEEEE</item>
+        <item name="textSecondaryColor">#d6d0d0</item>
         <item name="less_half_transparent_contrast">@color/less_half_transparent_white</item>
         <item name="half_transparent_contrast">@color/half_transparent_white</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_white</item>
@@ -121,7 +152,7 @@
         <item name="listItem">@color/listItem</item>
         <item name="android:textColor">#FFFAFA</item>
         <item name="textColor">#FFFAFA</item>
-        <item name="textSecondaryColor">#EEEEEE</item>
+        <item name="textSecondaryColor">#d6d0d0</item>
         <item name="less_half_transparent_contrast">@color/less_half_transparent_white</item>
         <item name="half_transparent_contrast">@color/half_transparent_white</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_white</item>
@@ -137,7 +168,7 @@
         <item name="listItem">@color/listItem_middle_dark</item>
         <item name="android:textColor">#FFFAFA</item>
         <item name="textColor">#FFFAFA</item>
-        <item name="textSecondaryColor">#EEEEEE</item>
+        <item name="textSecondaryColor">#d6d0d0</item>
         <item name="less_half_transparent_contrast">@color/less_half_transparent_white</item>
         <item name="half_transparent_contrast">@color/half_transparent_white</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_white</item>
@@ -152,7 +183,7 @@
         <item name="listBackgrount">@color/listBackgrount_middle_light</item>
         <item name="listItem">@color/listItem_middle_light</item>
         <item name="textColor">#333333</item>
-        <item name="textSecondaryColor">#666666</item>
+        <item name="textSecondaryColor">#7e7b7b</item>
         <item name="less_half_transparent_contrast">@color/less_half_transparent_black</item>
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
@@ -168,7 +199,7 @@
         <item name="listItem">@color/listItem_middle_dark</item>
         <item name="android:textColor">#FFFAFA</item>
         <item name="textColor">#FFFAFA</item>
-        <item name="textSecondaryColor">#EEEEEE</item>
+        <item name="textSecondaryColor">#d6d0d0</item>
         <item name="less_half_transparent_contrast">@color/less_half_transparent_white</item>
         <item name="half_transparent_contrast">@color/half_transparent_white</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_white</item>
@@ -183,7 +214,7 @@
         <item name="listBackgrount">@color/listBackgrount_middle_light</item>
         <item name="listItem">@color/listItem_middle_light</item>
         <item name="textColor">#333333</item>
-        <item name="textSecondaryColor">#666666</item>
+        <item name="textSecondaryColor">#7e7b7b</item>
         <item name="less_half_transparent_contrast">@color/less_half_transparent_black</item>
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
@@ -198,7 +229,7 @@
         <item name="listBackgrount">@color/listBackgrount_middle_light</item>
         <item name="listItem">@color/listItem_middle_light</item>
         <item name="textColor">#333333</item>
-        <item name="textSecondaryColor">#666666</item>
+        <item name="textSecondaryColor">#7e7b7b</item>
         <item name="less_half_transparent_contrast">@color/less_half_transparent_black</item>
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
@@ -213,7 +244,7 @@
         <item name="listBackgrount">@color/listBackgrount</item>
         <item name="listItem">@color/listItem</item>
         <item name="textColor">#333333</item>
-        <item name="textSecondaryColor">#666666</item>
+        <item name="textSecondaryColor">#7e7b7b</item>
         <item name="less_half_transparent_contrast">@color/less_half_transparent_black</item>
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
@@ -229,7 +260,7 @@
         <item name="listItem">@color/listItem_middle_dark</item>
         <item name="android:textColor">#FFFAFA</item>
         <item name="textColor">#FFFAFA</item>
-        <item name="textSecondaryColor">#EEEEEE</item>
+        <item name="textSecondaryColor">#d6d0d0</item>
         <item name="less_half_transparent_contrast">@color/less_half_transparent_white</item>
         <item name="half_transparent_contrast">@color/half_transparent_white</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_white</item>

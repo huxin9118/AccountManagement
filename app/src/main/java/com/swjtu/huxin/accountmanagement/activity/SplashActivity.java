@@ -2,6 +2,7 @@ package com.swjtu.huxin.accountmanagement.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,6 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.base.MyApplication;
 import com.swjtu.huxin.accountmanagement.R;
@@ -34,6 +36,8 @@ import java.util.TreeMap;
 import java.util.Map;
 import java.util.TreeSet;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
+
 /**
  * Created by huxin on 2017/2/28.
  */
@@ -53,6 +57,8 @@ public class SplashActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        initBackground();
 
         checkFirstRun();//为isFirstRun和firstTime赋值
         imgXiaolian = (ImageView) findViewById(R.id.ic_xiaolian_blue);
@@ -74,7 +80,19 @@ public class SplashActivity extends BaseAppCompatActivity {
             }
         };
         loadDataThread.start();
+    }
 
+    void initBackground(){
+        ImageView background = (ImageView)findViewById(R.id.background);
+        int[] attrsArray1 = { R.attr.mainBackgrount };
+        TypedArray typedArray1 = obtainStyledAttributes(attrsArray1);
+        int imgResID = typedArray1.getResourceId(0,-1);
+        typedArray1.recycle();
+        int[] attrsArray2 = { R.attr.theme_alpha };
+        TypedArray typedArray2 = obtainStyledAttributes(attrsArray2);
+        int alpha = typedArray2.getInteger(0,8);
+        typedArray2.recycle();
+        Glide.with(this).load(imgResID).dontAnimate().bitmapTransform(new BlurTransformation(this, alpha)).into(background);
     }
 
     private void initData(){

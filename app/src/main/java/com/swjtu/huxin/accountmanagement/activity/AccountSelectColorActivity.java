@@ -2,6 +2,7 @@ package com.swjtu.huxin.accountmanagement.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
@@ -29,6 +31,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 
 /**
@@ -57,7 +61,20 @@ public class AccountSelectColorActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_select_color);
+        initBackground();
         initView();
+    }
+    void initBackground(){
+        ImageView background = (ImageView)findViewById(R.id.background);
+        int[] attrsArray1 = { R.attr.mainBackgrount };
+        TypedArray typedArray1 = obtainStyledAttributes(attrsArray1);
+        int imgResID = typedArray1.getResourceId(0,-1);
+        typedArray1.recycle();
+        int[] attrsArray2 = { R.attr.theme_alpha };
+        TypedArray typedArray2 = obtainStyledAttributes(attrsArray2);
+        int alpha = typedArray2.getInteger(0,8);
+        typedArray2.recycle();
+        Glide.with(this).load(imgResID).dontAnimate().bitmapTransform(new BlurTransformation(this, alpha)).into(background);
     }
 
     private void initView() {

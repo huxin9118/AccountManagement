@@ -185,7 +185,6 @@ public class ChartTabSortFragment extends Fragment implements Observer
             public void onClick(View view,int pos,String viewName) {
                 if ("itemView".equals(viewName)) {
                     Intent intent = new Intent(getActivity(), ChartDetailActivity.class);
-                    intent.putExtra("from","tab_sort");
                     intent.putExtra("back", "分类");
                     intent.putExtra("start", start);
                     intent.putExtra("end",end);
@@ -290,7 +289,7 @@ public class ChartTabSortFragment extends Fragment implements Observer
         data.setValues(values);//为饼图添加数据
 
         Typeface font = Typeface.createFromAsset(getContext().getAssets(), "fonts/fzltxh.ttf");
-        int[] attrsArray2 = { R.attr.textColor };
+        int[] attrsArray2 = { R.attr.textSecondaryColor };
         TypedArray typedArray2 = getContext().obtainStyledAttributes(attrsArray2);
         int color2 = typedArray2.getColor(0,-1);
         typedArray2.recycle();

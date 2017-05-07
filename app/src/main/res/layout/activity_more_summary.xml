@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/mainBackgrount">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,6 +19,7 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
+                android:layout_marginRight="5dp"
                 android:background="@drawable/ic_back_blue"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -43,13 +43,20 @@
         android:layout_height="1px"
         android:background="@color/listLine"/>
 
-    <fr.castorflex.android.verticalviewpager.VerticalViewPager
-        android:id="@+id/viewPager"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@drawable/ic_summary_back">
-    </fr.castorflex.android.verticalviewpager.VerticalViewPager>
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:alpha="0.9"/>
 
-
+        <fr.castorflex.android.verticalviewpager.VerticalViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"/>
+    </RelativeLayout>
 </LinearLayout>

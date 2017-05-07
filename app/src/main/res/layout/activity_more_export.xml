@@ -1,222 +1,234 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/mainBackgrount">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <ImageView
+        android:id="@+id/background"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:padding="15dp"
-        android:background="?attr/listItem">
-
-        <LinearLayout
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:background="@drawable/ic_back_blue"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="更多"
-                android:textSize="16sp"
-                android:textColor="@color/customBlue"
-                android:layout_toRightOf="@id/back" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="导出数据"
-            android:textSize="18sp"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/listLine"/>
-
-    <RelativeLayout
-        android:id="@+id/btnAccountbook"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="20dp"
-        android:padding="15dp"
-        android:background="@drawable/shape_more_export_account">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="账本"
-            android:textSize="16sp"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/textAccountbook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="默认账本"
-                android:textSize="14sp"
-                android:textColor="@color/darkgray"
-                android:layout_marginRight="5dp"/>
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:background="@drawable/ic_enter_gray"/>
-        </LinearLayout>
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/btnTime"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="-1dp"
-        android:padding="15dp"
-        android:background="@drawable/shape_more_export_time">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="时间"
-            android:textSize="16sp"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/textTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="4.1 - 4.31"
-                android:textSize="14sp"
-                android:textColor="@color/darkgray"
-                android:layout_marginRight="5dp"/>
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:background="@drawable/ic_enter_gray"/>
-        </LinearLayout>
-    </RelativeLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginBottom="2dp"
-        android:text="将数据导出至以下路径："
-        android:background="?attr/listItem"/>
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:alpha="0.9"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:background="@drawable/shape_more_export_destination">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/text_sdcard"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="请单击选择路径"
-            android:textColorHint="?attr/textSecondaryColor"
-            android:textSize="16sp"/>
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:background="@color/listLine"/>
         <RelativeLayout
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:background="?attr/listBackgrount">
-            <ImageView
-                android:id="@+id/send_sdcard"
-                android:layout_width="30dp"
-                android:layout_height="20dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_export_send"/>
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:padding="15dp"
+            android:background="?attr/listItem">
+
+            <LinearLayout
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/ic_back_blue"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="更多"
+                    android:textSize="16sp"
+                    android:textColor="@color/customBlue"
+                    android:layout_toRightOf="@id/back" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="导出数据"
+                android:textSize="18sp"
+                android:layout_centerInParent="true" />
         </RelativeLayout>
-    </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginBottom="2dp"
-        android:text="发送数据到Email："
-        android:background="?attr/listItem"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/listLine"/>
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:gravity="center_vertical"
-        android:paddingLeft="15dp"
-        android:background="@drawable/shape_more_export_destination"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
-
-        <EditText
-            android:id="@+id/edit_email"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:singleLine="true"
-            android:hint="请输入收件箱地址"
-            android:textColorHint="?attr/textSecondaryColor"
-            android:textSize="16sp"
-            android:inputType="textEmailAddress"/>
-
-        <ImageView
-            android:id="@+id/clear_email"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+        <RelativeLayout
+            android:id="@+id/btnAccountbook"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:src="@drawable/ic_edit_clear" />
+            android:layout_marginTop="20dp"
+            android:padding="15dp"
+            android:background="@drawable/shape_more_export_account">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="账本"
+                android:textSize="16sp"/>
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:background="@color/listLine"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center">
 
-        <RelativeLayout
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:background="?attr/listBackgrount">
-            <ImageView
-                android:id="@+id/send_email"
-                android:layout_width="30dp"
-                android:layout_height="20dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_export_send"/>
+                <TextView
+                    android:id="@+id/textAccountbook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="默认账本"
+                    android:textSize="14sp"
+                    android:textColor="?attr/textSecondaryColor"
+                    android:layout_marginRight="5dp"/>
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/ic_enter_gray"/>
+            </LinearLayout>
         </RelativeLayout>
-    </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/btnTime"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="-1dp"
+            android:padding="15dp"
+            android:background="@drawable/shape_more_export_time">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="时间"
+                android:textSize="16sp"/>
 
-</LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/textTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4.1 - 4.31"
+                    android:textSize="14sp"
+                    android:textColor="?attr/textSecondaryColor"
+                    android:layout_marginRight="5dp"/>
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/ic_enter_gray"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="2dp"
+            android:text="将数据导出至以下路径："
+            android:background="?attr/listItem"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:background="@drawable/shape_more_export_destination">
+
+            <TextView
+                android:id="@+id/text_sdcard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="请单击选择路径"
+                android:textColorHint="?attr/textSecondaryColor"
+                android:textSize="16sp"/>
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/listLine"/>
+            <RelativeLayout
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="?attr/listBackgrount">
+                <ImageView
+                    android:id="@+id/send_sdcard"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_export_send"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="2dp"
+            android:text="发送数据到Email："
+            android:background="?attr/listItem"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:background="@drawable/shape_more_export_destination"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <EditText
+                android:id="@+id/edit_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:singleLine="true"
+                android:hint="请输入收件箱地址"
+                android:textColorHint="?attr/textSecondaryColor"
+                android:textSize="16sp"
+                android:inputType="textEmailAddress"/>
+
+            <ImageView
+                android:id="@+id/clear_email"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_edit_clear" />
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/listLine"/>
+
+            <RelativeLayout
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="?attr/listBackgrount">
+                <ImageView
+                    android:id="@+id/send_email"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_export_send"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

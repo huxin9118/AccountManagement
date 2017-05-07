@@ -1,13 +1,16 @@
 package com.swjtu.huxin.accountmanagement.activity;
 
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.base.OnDatePickerChangedListener;
@@ -15,6 +18,8 @@ import com.swjtu.huxin.accountmanagement.utils.TimeUtils;
 import com.swjtu.huxin.accountmanagement.view.DatePickerView;
 
 import java.util.Date;
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
  * Created by huxin on 2017/3/12.
@@ -39,7 +44,20 @@ public class DateRangePickerActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date_range_picker);
+        initBackground();
         initView();
+    }
+    void initBackground(){
+        ImageView background = (ImageView)findViewById(R.id.background);
+        int[] attrsArray1 = { R.attr.mainBackgrount };
+        TypedArray typedArray1 = obtainStyledAttributes(attrsArray1);
+        int imgResID = typedArray1.getResourceId(0,-1);
+        typedArray1.recycle();
+        int[] attrsArray2 = { R.attr.theme_alpha };
+        TypedArray typedArray2 = obtainStyledAttributes(attrsArray2);
+        int alpha = typedArray2.getInteger(0,8);
+        typedArray2.recycle();
+        Glide.with(this).load(imgResID).dontAnimate().bitmapTransform(new BlurTransformation(this, alpha)).into(background);
     }
 
     private void initView() {
@@ -52,20 +70,24 @@ public class DateRangePickerActivity extends BaseAppCompatActivity {
 
         startDatePicker = (DatePickerView) findViewById(R.id.startDatePicker);
         endDatePicker = (DatePickerView) findViewById(R.id.endDatePicker);
+        int[] attrsArray = { R.attr.textSecondaryColor };
+        TypedArray typedArray = obtainStyledAttributes(attrsArray);
+        final int color = typedArray.getColor(0,-1);
+        typedArray.recycle();
         startDatePicker.setOnDatePickerChangedListener(new OnDatePickerChangedListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                week.setTextColor(getResources().getColor(R.color.darkgray));
-                month.setTextColor(getResources().getColor(R.color.darkgray));
-                year.setTextColor(getResources().getColor(R.color.darkgray));
+                week.setTextColor(color);
+                month.setTextColor(color);
+                year.setTextColor(color);
             }
         });
         endDatePicker.setOnDatePickerChangedListener(new OnDatePickerChangedListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                week.setTextColor(getResources().getColor(R.color.darkgray));
-                month.setTextColor(getResources().getColor(R.color.darkgray));
-                year.setTextColor(getResources().getColor(R.color.darkgray));
+                week.setTextColor(color);
+                month.setTextColor(color);
+                year.setTextColor(color);
             }
         });
 
@@ -101,8 +123,8 @@ public class DateRangePickerActivity extends BaseAppCompatActivity {
             @Override
             public void onClick(View v) {
                 week.setTextColor(getResources().getColor(R.color.customBlue));
-                month.setTextColor(getResources().getColor(R.color.darkgray));
-                year.setTextColor(getResources().getColor(R.color.darkgray));
+                month.setTextColor(color);
+                year.setTextColor(color);
                 start = new Date(TimeUtils.getWeekFirstMilliSeconds());
                 end = new Date(TimeUtils.getWeekLastMilliSeconds());
                 startDatePicker.setValue(start);
@@ -113,9 +135,9 @@ public class DateRangePickerActivity extends BaseAppCompatActivity {
         month.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                week.setTextColor(getResources().getColor(R.color.darkgray));
+                week.setTextColor(color);
                 month.setTextColor(getResources().getColor(R.color.customBlue));
-                year.setTextColor(getResources().getColor(R.color.darkgray));
+                year.setTextColor(color);
                 start = new Date(TimeUtils.getMonthFirstMilliSeconds(TimeUtils.getTime(new Date(),TimeUtils.MONTH),0));
                 end = new Date(TimeUtils.getMonthLastMilliSeconds(TimeUtils.getTime(new Date(),TimeUtils.MONTH),0));
                 startDatePicker.setValue(start);
@@ -126,8 +148,8 @@ public class DateRangePickerActivity extends BaseAppCompatActivity {
         year.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                week.setTextColor(getResources().getColor(R.color.darkgray));
-                month.setTextColor(getResources().getColor(R.color.darkgray));
+                week.setTextColor(color);
+                month.setTextColor(color);
                 year.setTextColor(getResources().getColor(R.color.customBlue));
                 start = TimeUtils.getYearFirstMilliSeconds(TimeUtils.getTime(new Date(),TimeUtils.YEAR));
                 end = TimeUtils.getYearLastMilliSeconds(TimeUtils.getTime(new Date(),TimeUtils.YEAR));

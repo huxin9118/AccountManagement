@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -53,7 +52,20 @@ public class MoreSkinActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_more_skin);
+        initBackground();
         initView();
+    }
+    void initBackground(){
+        ImageView background = (ImageView)findViewById(R.id.background);
+        int[] attrsArray1 = { R.attr.mainBackgrount };
+        TypedArray typedArray1 = obtainStyledAttributes(attrsArray1);
+        int imgResID = typedArray1.getResourceId(0,-1);
+        typedArray1.recycle();
+        int[] attrsArray2 = { R.attr.theme_alpha };
+        TypedArray typedArray2 = obtainStyledAttributes(attrsArray2);
+        int alpha = typedArray2.getInteger(0,8);
+        typedArray2.recycle();
+        Glide.with(this).load(imgResID).dontAnimate().bitmapTransform(new BlurTransformation(this, alpha)).into(background);
     }
 
     private void initView() {
@@ -67,7 +79,7 @@ public class MoreSkinActivity extends BaseAppCompatActivity {
         });
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mLayoutManager = new GridLayoutManager(this,3);
+        mLayoutManager = new GridLayoutManager(this,4);
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerViewAdapter = new MoreSkinRecyclerAdapter(this);
@@ -84,11 +96,11 @@ public class MoreSkinActivity extends BaseAppCompatActivity {
                     MyApplication.getApplication().setMyTheme(myThemes.get(pos));
                     finish();
                     Intent intent = new Intent(MoreSkinActivity.this, MainActivity.class);
+                    intent.putExtra("isChangSkin",true);
                     intent.putExtra("defaultPosition",3);
                     intent.setFlags(IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     overridePendingTransition(0,0);
-                    showToast("皮肤更换成功", Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -100,21 +112,27 @@ public class MoreSkinActivity extends BaseAppCompatActivity {
     private void initRecyclerViewData(){
         List<String> myThemes = new ArrayList<String>();
         myThemes.add("MyTheme_White");
-        myThemes.add("MyTheme_Cat");
         myThemes.add("MyTheme_Sea");
+        myThemes.add("MyTheme_Cat");
+        myThemes.add("MyTheme_Dog");
         myThemes.add("MyTheme_Dark");
-        myThemes.add("MyTheme_Paris");
-        myThemes.add("MyTheme_Constellation");
+        myThemes.add("MyTheme_Dusk");
+        myThemes.add("MyTheme_RosyClouds");
+        myThemes.add("MyTheme_StarrySky");
         myThemes.add("MyTheme_Volcano");
         myThemes.add("MyTheme_CherryBlossoms");
         myThemes.add("MyTheme_MapleLeaves");
+        myThemes.add("MyTheme_Colorful");
         myThemes.add("MyTheme_YourName_1");
         myThemes.add("MyTheme_YourName_2");
         myThemes.add("MyTheme_YourName_3");
         myThemes.add("MyTheme_Byousoku_1");
-        myThemes.add("MyTheme_Colorful");
         mRecyclerViewAdapter.addDatas("myThemes",myThemes);
-        mRecyclerViewAdapter.notifyDataSetChanged();
+        try {
+            mRecyclerViewAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 
@@ -201,7 +219,7 @@ class MoreSkinRecyclerAdapter extends BaseRecyclerViewAdapter {
             super(itemView);
             if(viewType == TYPE_HEADER || viewType == TYPE_FOOTER) return;
             if(viewType == TYPE_NORMAL) {
-                img = (ImageView) itemView.findViewById(R.id.img);
+                img = (ImageView) itemView.findViewById(R.id.github_img);
                 loading = (ImageView) itemView.findViewById(R.id.loading);
                 btnSelector = (RelativeLayout) itemView.findViewById(R.id.btnSelector);
                 name = (TextView) itemView.findViewById(R.id.name);

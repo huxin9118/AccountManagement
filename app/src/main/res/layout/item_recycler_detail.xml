@@ -64,6 +64,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="3dp"
         android:textSize="10sp"
+        android:textColor="?attr/textSecondaryColor"
         android:maxLines="2"
         android:ellipsize="end"
         android:background="?attr/listItem"/>
@@ -89,6 +90,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="2dp"
         android:textSize="10sp"
+        android:textColor="?attr/textSecondaryColor"
         android:maxLines="2"
         android:ellipsize="end"
         android:background="?attr/listItem"/>

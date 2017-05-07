@@ -38,6 +38,51 @@
 
 
     <RelativeLayout
+        android:id="@+id/btnSkin"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="?attr/listItem">
+        <android.support.v7.widget.CardView
+            android:id="@+id/iconSkin"
+            android:layout_width="30dp"
+            android:layout_height="30sp"
+            android:layout_centerVertical="true"
+            app:contentPadding="6dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="5dp"
+            app:cardBackgroundColor="@color/more_skin">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_skin_white"/>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iconSkin"
+            android:layout_marginLeft="10dp"
+            android:text="更换皮肤"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_enter_gray"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/listLine"/>
+
+    <RelativeLayout
         android:id="@+id/btnSummary"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -77,6 +122,16 @@
             android:background="@drawable/ic_enter_gray"/>
 
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/listLine"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="?attr/listBackgrount"/>
 
     <View
         android:layout_width="match_parent"
@@ -129,34 +184,34 @@
         android:background="@color/listLine"/>
 
     <RelativeLayout
-        android:id="@+id/btnSkin"
+        android:id="@+id/btnBackup"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:background="?attr/listItem">
         <android.support.v7.widget.CardView
-            android:id="@+id/iconSkin"
+            android:id="@+id/iconBackup"
             android:layout_width="30dp"
             android:layout_height="30sp"
             android:layout_centerVertical="true"
             app:contentPadding="6dp"
             app:cardElevation="0dp"
             app:cardCornerRadius="5dp"
-            app:cardBackgroundColor="@color/more_skin">
+            app:cardBackgroundColor="@color/more_export">
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_skin_white"/>
+                android:src="@drawable/ic_backup"/>
         </android.support.v7.widget.CardView>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/iconSkin"
+            android:layout_toRightOf="@id/iconBackup"
             android:layout_marginLeft="10dp"
-            android:text="更换皮肤"
+            android:text="数据备份"
             android:textSize="16sp"/>
 
         <ImageView
@@ -165,6 +220,210 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:background="@drawable/ic_enter_gray"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/listLine"/>
+
+    <RelativeLayout
+        android:id="@+id/btnRestore"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="?attr/listItem">
+        <android.support.v7.widget.CardView
+            android:id="@+id/iconRestore"
+            android:layout_width="30dp"
+            android:layout_height="30sp"
+            android:layout_centerVertical="true"
+            app:contentPadding="6dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="5dp"
+            app:cardBackgroundColor="@color/more_export">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_restore"/>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iconRestore"
+            android:layout_marginLeft="10dp"
+            android:text="数据还原"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_enter_gray"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/listLine"/>
+
+    <RelativeLayout
+        android:id="@+id/btnClear"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="?attr/listItem">
+        <android.support.v7.widget.CardView
+            android:id="@+id/iconClear"
+            android:layout_width="30dp"
+            android:layout_height="30sp"
+            android:layout_centerVertical="true"
+            app:contentPadding="6dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="5dp"
+            app:cardBackgroundColor="@color/more_export">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_clear"/>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iconClear"
+            android:layout_marginLeft="10dp"
+            android:text="清除缓存"
+            android:textSize="16sp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true">
+
+            <TextView
+                android:id="@+id/sumCache"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="100.00M"
+                android:textSize="14sp"
+                android:textColor="?attr/textSecondaryColor"/>
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:background="@drawable/ic_enter_gray"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/listLine"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="?attr/listBackgrount"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/listLine"/>
+
+    <RelativeLayout
+        android:id="@+id/btnOpenSource"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="?attr/listItem">
+        <android.support.v7.widget.CardView
+            android:id="@+id/iconOpenSource"
+            android:layout_width="30dp"
+            android:layout_height="30sp"
+            android:layout_centerVertical="true"
+            app:contentPadding="6dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="5dp"
+            app:cardBackgroundColor="@color/more_our_information">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_open_source"/>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iconOpenSource"
+            android:layout_marginLeft="10dp"
+            android:text="开源声明"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_enter_gray"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/listLine"/>
+
+    <RelativeLayout
+        android:id="@+id/btnOurInformation"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="?attr/listItem">
+        <android.support.v7.widget.CardView
+            android:id="@+id/iconOurInformation"
+            android:layout_width="30dp"
+            android:layout_height="30sp"
+            android:layout_centerVertical="true"
+            app:contentPadding="6dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="5dp"
+            app:cardBackgroundColor="@color/more_our_information">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_our_information"/>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iconOurInformation"
+            android:layout_marginLeft="10dp"
+            android:text="关于我们"
+            android:textSize="16sp"/>
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ic_enter_gray"/>
 
     </RelativeLayout>
 

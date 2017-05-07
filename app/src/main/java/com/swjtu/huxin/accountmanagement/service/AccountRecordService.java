@@ -146,10 +146,10 @@ public class AccountRecordService {
         return records;
     }
 
-    public String getRangeTotalMoneyByRecordname(Date firsttime, Date lasttime, String recordname){
+    public String getRangeTotalMoneyByRecordname(Date firsttime, Date lasttime, String recordname,boolean isPositive){
         SQLiteDatabase db = databaseManager.getWritableDatabase();
         AccountRecordDao dao = new AccountRecordDao(db);
-        String money = dao.getRangeTotalMoneyByRecordname(firsttime,lasttime,recordname);
+        String money = dao.getRangeTotalMoneyByRecordname(firsttime,lasttime,recordname,isPositive);
         databaseManager.closeDatabase();
         return new DecimalFormat("0.00").format(Double.parseDouble(money));
     }

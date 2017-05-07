@@ -1,79 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/mainBackgrount">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <ImageView
+        android:id="@+id/background"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:padding="15dp"
-        android:background="?attr/listItem">
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:alpha="0.9"/>
 
-        <LinearLayout
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:background="@drawable/ic_back_blue"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:padding="15dp"
+            android:background="?attr/listItem">
+
+            <LinearLayout
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/ic_back_blue"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="明细"
+                    android:textSize="16sp"
+                    android:textColor="@color/customBlue"
+                    android:layout_toRightOf="@id/back" />
+            </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="明细"
-                android:textSize="16sp"
-                android:textColor="@color/customBlue"
-                android:layout_toRightOf="@id/back" />
+                android:text="预算"
+                android:textSize="18sp"
+                android:layout_centerInParent="true" />
+
+            <LinearLayout
+                android:id="@+id/setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="设置"
+                    android:textSize="16sp"
+                    android:textColor="@color/customBlue"/>
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/ic_shezhi_blue" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/listItem">
+
+            <TextView
+                android:id="@+id/money"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="3000.00"
+                android:textSize="35sp"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="本月剩余预算"
+                android:textSize="15sp"
+                android:layout_marginBottom="20dp"/>
+
+            <com.daimajia.numberprogressbar.NumberProgressBar
+                xmlns:custom="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+
+                custom:progress_unreached_color="@color/gainsboro"
+                custom:progress_reached_color="@color/customBlue"
+
+                custom:progress_unreached_bar_height="30dp"
+                custom:progress_reached_bar_height="30dp"
+
+                custom:progress_text_size="10sp"
+                custom:progress_text_color="#3498DB"
+                custom:progress_text_offset="1dp"
+                custom:progress_text_visibility="invisible"
+
+                custom:progress_max="100"
+                custom:progress_current="80"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="0.00"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/progress_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:text="3500.00"
+                    android:textSize="15sp"/>
+            </RelativeLayout>
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="预算"
-            android:textSize="18sp"
-            android:layout_centerInParent="true" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/listLine"/>
 
-        <ImageView
-            android:id="@+id/setting"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/ic_shezhi_blue"/>
-    </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="?attr/listBackgrount"/>
 
-    <FrameLayout
-        android:id="@+id/fragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/listItem">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/listLine"/>
 
-    </FrameLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/listLine"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="?attr/listBackgrount"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/listLine"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:cacheColorHint="@null"
-        android:scrollbars="vertical"/>
-</LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"/>
+    </LinearLayout>
+</RelativeLayout>

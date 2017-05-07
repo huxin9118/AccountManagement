@@ -290,7 +290,7 @@ public class ChartTabTrendFragment extends Fragment implements Observer
     }
 
     private void initLineChart(){
-        int[] attrsArray = { R.attr.textColor };
+        int[] attrsArray = { R.attr.textSecondaryColor };
         TypedArray typedArray = getContext().obtainStyledAttributes(attrsArray);
         int color = typedArray.getColor(0,-1);
         typedArray.recycle();

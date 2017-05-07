@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
@@ -44,6 +46,7 @@ import java.util.List;
 import java.util.Date;
 
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
@@ -64,7 +67,12 @@ public class MoreSummaryActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_more_summary);
+        initBackground();
         initView();
+    }
+    void initBackground(){
+        ImageView background = (ImageView)findViewById(R.id.background);
+        Glide.with(this).load(R.drawable.ic_summary_back).dontAnimate().into(background);
     }
 
     private void initView() {
@@ -243,7 +251,7 @@ public class MoreSummaryActivity extends BaseAppCompatActivity {
             for(int i = 1;i <= 12;i++){
                 Date start = new Date(TimeUtils.getMonthFirstMilliSeconds(i,year - TimeUtils.getTime(new Date(),TimeUtils.YEAR)));
                 Date end = new Date(TimeUtils.getMonthLastMilliSeconds(i,year - TimeUtils.getTime(new Date(),TimeUtils.YEAR)));
-                BigDecimal money = new BigDecimal(accountRecordService.getRangeTotalMoneyByRecordname(start,end,"话费")).negate();
+                BigDecimal money = new BigDecimal(accountRecordService.getRangeTotalMoneyByRecordname(start,end,"话费",false)).negate();
                 sumMoney = sumMoney.add(money);
                 if(maxMoney.doubleValue() < money.doubleValue()) {
                     maxMoney = money;

@@ -1,137 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/mainBackgrount">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <ImageView
+        android:id="@+id/background"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:padding="15dp"
-        android:background="?attr/listItem">
-
-        <LinearLayout
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:background="@drawable/ic_back_blue"/>
-            <TextView
-                android:id="@+id/back_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="分类"
-                android:textSize="16sp"
-                android:textColor="@color/customBlue"
-                android:layout_toRightOf="@id/back" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="选择时间"
-            android:textSize="18sp"
-            android:layout_centerInParent="true" />
-
-        <TextView
-            android:id="@+id/ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:text="确定"
-            android:textSize="16sp"
-            android:textColor="@color/customBlue"/>
-    </RelativeLayout>
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:alpha="0.9"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="?attr/listBackgrount">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/listLine"/>
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="60dp"
+            android:padding="15dp"
+            android:background="?attr/listItem">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_centerInParent="true"
-                android:layout_margin="20dp">
+                android:layout_centerVertical="true"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/ic_back_blue"/>
                 <TextView
-                    android:id="@+id/week"
-                    android:layout_width="0dp"
+                    android:id="@+id/back_text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="本周"
+                    android:text="分类"
                     android:textSize="16sp"
-                    android:background="@drawable/shape_button_left_radius"/>
-                <TextView
-                    android:id="@+id/month"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="本月"
-                    android:textSize="16sp"
-                    android:background="@drawable/shape_button_center_radius"/>
-                <TextView
-                    android:id="@+id/year"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="本年"
-                    android:textSize="16sp"
-                    android:background="@drawable/shape_button_right_radius"/>
+                    android:textColor="@color/customBlue"
+                    android:layout_toRightOf="@id/back" />
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选择时间"
+                android:textSize="18sp"
+                android:layout_centerInParent="true" />
+
+            <LinearLayout
+                android:id="@+id/btnTransfer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/ok"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="确定"
+                    android:textSize="16sp"
+                    android:textColor="@color/customBlue"/>
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/ic_selector_blue" />
+            </LinearLayout>
         </RelativeLayout>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="开始时间:"
-            android:textSize="20sp"
-            android:layout_margin="10dp"
-            android:background="?attr/listItem"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="?attr/listBackgrount">
 
-        <com.swjtu.huxin.accountmanagement.view.DatePickerView
-            android:id="@+id/startDatePicker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="20dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/listLine"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="结束时间:"
-            android:textSize="20sp"
-            android:layout_margin="10dp"
-            android:background="?attr/listItem"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <com.swjtu.huxin.accountmanagement.view.DatePickerView
-            android:id="@+id/endDatePicker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="20dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="20dp">
+                    <TextView
+                        android:id="@+id/week"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="本周"
+                        android:textSize="16sp"
+                        android:textColor="?attr/textSecondaryColor"
+                        android:background="@drawable/shape_button_left_radius"/>
+                    <TextView
+                        android:id="@+id/month"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="本月"
+                        android:textSize="16sp"
+                        android:textColor="?attr/textSecondaryColor"
+                        android:background="@drawable/shape_button_center_radius"/>
+                    <TextView
+                        android:id="@+id/year"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="本年"
+                        android:textSize="16sp"
+                        android:textColor="?attr/textSecondaryColor"
+                        android:background="@drawable/shape_button_right_radius"/>
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="开始时间:"
+                android:textSize="20sp"
+                android:layout_margin="10dp"
+                android:background="?attr/listItem"/>
+
+            <com.swjtu.huxin.accountmanagement.view.DatePickerView
+                android:id="@+id/startDatePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="20dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="结束时间:"
+                android:textSize="20sp"
+                android:layout_margin="10dp"
+                android:background="?attr/listItem"/>
+
+            <com.swjtu.huxin.accountmanagement.view.DatePickerView
+                android:id="@+id/endDatePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="20dp"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

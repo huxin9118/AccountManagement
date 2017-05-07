@@ -11,21 +11,32 @@
         android:background="?attr/listItem">
 
         <TextView
-            android:id="@+id/btnTransfer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_alignParentRight="true"
-            android:text="转账"
-            android:textSize="16sp"
-            android:textColor="@color/customBlue"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="我的账户"
             android:textSize="18sp"
             android:layout_centerInParent="true" />
+
+        <LinearLayout
+            android:id="@+id/btnTransfer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="转账"
+                android:textSize="16sp"
+                android:textColor="@color/customBlue"/>
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/ic_transfer_blue" />
+        </LinearLayout>
     </RelativeLayout>
 
     <View

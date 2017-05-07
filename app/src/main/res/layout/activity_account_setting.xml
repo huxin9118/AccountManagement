@@ -1,285 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="?attr/mainBackgrount">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <ImageView
+        android:id="@+id/background"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:padding="15dp"
-        android:background="?attr/listItem">
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:alpha="0.9"/>
 
-        <LinearLayout
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:background="@drawable/ic_back_blue"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="返回"
-                android:textSize="16sp"
-                android:textColor="@color/customBlue"
-                android:layout_toRightOf="@id/back" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true">
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="现金"
-                android:textSize="18sp" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="设置"
-                android:textSize="18sp" />
-        </LinearLayout>
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/listLine"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="?attr/listBackgrount"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/listLine"/>
-
-    <RelativeLayout
-        android:id="@+id/type_enter"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:padding="15dp"
-        android:background="?attr/listItem">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="账户类型"
-            android:textSize="16sp"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="现金"
-                android:textSize="14sp"
-                android:textColor="@color/darkgray"
-                android:layout_marginRight="5dp"/>
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:background="@null"/>
-        </LinearLayout>
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/listLine"/>
-
-    <RelativeLayout
-        android:id="@+id/name_enter"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:padding="15dp"
-        android:background="?attr/listItem">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="账户名称"
-            android:textSize="16sp"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="现金"
-                android:textSize="14sp"
-                android:textColor="@color/darkgray"
-                android:layout_marginRight="5dp"/>
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:background="@drawable/ic_enter_gray"/>
-
-        </LinearLayout>
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/listLine"/>
-
-    <RelativeLayout
-        android:id="@+id/detail2_enter"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:padding="15dp"
-        android:background="?attr/listItem">
-        <TextView
-            android:id="@+id/detail1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="现金类型"
-            android:textSize="16sp"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/detail2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="生活费"
-                android:textSize="14sp"
-                android:textColor="@color/darkgray"
-                android:layout_marginRight="5dp"/>
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:background="@drawable/ic_enter_gray"/>
-
-        </LinearLayout>
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/listLine"/>
-
-    <RelativeLayout
-        android:id="@+id/money_enter"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:padding="15dp"
-        android:background="?attr/listItem">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="账户初始金额"
-            android:textSize="16sp"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/money"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="800.00"
-                android:textSize="14sp"
-                android:textColor="@color/darkgray"
-                android:layout_marginRight="5dp"/>
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:background="@drawable/ic_enter_gray"/>
-
-        </LinearLayout>
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/listLine"/>
-
-    <RelativeLayout
-        android:id="@+id/color_enter"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:padding="15dp"
-        android:background="?attr/listItem">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="选择账户颜色"
-            android:textSize="16sp"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:gravity="center">
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/color"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                app:cardBackgroundColor="@color/account_color_5"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="0dp"
-                android:layout_marginRight="5dp"/>
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:background="@drawable/ic_enter_gray"/>
-
-        </LinearLayout>
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/listLine"/>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="?attr/listBackgrount"/>
     <LinearLayout
-        android:id="@+id/key_text_board"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:padding="15dp"
+            android:background="?attr/listItem">
+
+            <LinearLayout
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/ic_back_blue"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="返回"
+                    android:textSize="16sp"
+                    android:textColor="@color/customBlue"
+                    android:layout_toRightOf="@id/back" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="现金"
+                    android:textSize="18sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="设置"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/listLine"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="?attr/listBackgrount"/>
 
         <View
             android:layout_width="match_parent"
@@ -287,39 +76,80 @@
             android:background="@color/listLine"/>
 
         <RelativeLayout
+            android:id="@+id/type_enter"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="50dp"
+            android:padding="15dp"
             android:background="?attr/listItem">
-
             <TextView
-                android:id="@+id/key_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
+                android:layout_centerVertical="true"
+                android:text="账户类型"
+                android:textSize="16sp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="现金"
+                    android:textSize="14sp"
+                    android:textColor="?attr/textSecondaryColor"
+                    android:layout_marginRight="5dp"/>
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@null"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/listLine"/>
+
+        <RelativeLayout
+            android:id="@+id/name_enter"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:padding="15dp"
+            android:background="?attr/listItem">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="账户名称"
-                android:textSize="20sp"/>
+                android:textSize="16sp"/>
 
-            <EditText
-                android:id="@+id/key_text"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:background="@null"
-                android:singleLine="true"
-                android:imeOptions="actionDone"
-                android:textSize="20sp"
-                android:textColor="@color/darkgray"
-                android:text="现金"/>
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="现金"
+                    android:textSize="14sp"
+                    android:textColor="?attr/textSecondaryColor"
+                    android:layout_marginRight="5dp"/>
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/ic_enter_gray"/>
+
+            </LinearLayout>
         </RelativeLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/key_num_board"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
@@ -327,51 +157,232 @@
             android:background="@color/listLine"/>
 
         <RelativeLayout
+            android:id="@+id/detail2_enter"
             android:layout_width="match_parent"
-            android:layout_height="35dp"
+            android:layout_height="60dp"
+            android:padding="15dp"
             android:background="?attr/listItem">
-
             <TextView
+                android:id="@+id/detail1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
                 android:layout_centerVertical="true"
-                android:text="账户初始金额"
-                android:textSize="20sp"/>
+                android:text="现金类型"
+                android:textSize="16sp"/>
 
-            <TextView
-                android:id="@+id/key_num"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:inputType="numberDecimal"
-                android:textSize="20sp"
-                android:text="0.00"/>
-            <TextView
-                android:id="@+id/key_symbol"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/key_num"
-                android:inputType="numberDecimal"
-                android:textSize="20sp"
-                android:textColor="@color/darkgray"
-                android:text="+"/>
-        </RelativeLayout>
+                android:gravity="center">
 
+                <TextView
+                    android:id="@+id/detail2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="生活费"
+                    android:textSize="14sp"
+                    android:textColor="?attr/textSecondaryColor"
+                    android:layout_marginRight="5dp"/>
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/ic_enter_gray"/>
+
+            </LinearLayout>
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="@color/listLine"/>
 
-        <com.swjtu.huxin.accountmanagement.view.NumKeyboardView
-            android:id="@+id/numKeyboardView"
+        <RelativeLayout
+            android:id="@+id/money_enter"
             android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:padding="15dp"
+            android:background="?attr/listItem">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="账户初始金额"
+                android:textSize="16sp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="800.00"
+                    android:textSize="14sp"
+                    android:textColor="?attr/textSecondaryColor"
+                    android:layout_marginRight="5dp"/>
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/ic_enter_gray"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/listLine"/>
+
+        <RelativeLayout
+            android:id="@+id/color_enter"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:padding="15dp"
+            android:background="?attr/listItem">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="选择账户颜色"
+                android:textSize="16sp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:gravity="center">
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/color"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:cardBackgroundColor="@color/account_color_5"
+                    app:cardCornerRadius="2dp"
+                    app:cardElevation="0dp"
+                    android:layout_marginRight="5dp"/>
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/ic_enter_gray"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/listLine"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="?attr/listBackgrount"/>
+        <LinearLayout
+            android:id="@+id/key_text_board"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"/>
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/listLine"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="?attr/listItem">
+
+                <TextView
+                    android:id="@+id/key_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_centerVertical="true"
+                    android:text="账户名称"
+                    android:textSize="20sp"/>
+
+                <EditText
+                    android:id="@+id/key_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"
+                    android:textSize="20sp"
+                    android:textColor="?attr/textSecondaryColor"
+                    android:text="现金"/>
+            </RelativeLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/key_num_board"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/listLine"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="?attr/listItem">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_centerVertical="true"
+                    android:text="账户初始金额"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/key_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:inputType="numberDecimal"
+                    android:textSize="20sp"
+                    android:text="0.00"/>
+                <TextView
+                    android:id="@+id/key_symbol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/key_num"
+                    android:inputType="numberDecimal"
+                    android:textSize="20sp"
+                    android:textColor="?attr/textSecondaryColor"
+                    android:text="+"/>
+            </RelativeLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/listLine"/>
+
+            <com.swjtu.huxin.accountmanagement.view.NumKeyboardView
+                android:id="@+id/numKeyboardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

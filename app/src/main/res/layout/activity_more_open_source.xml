@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_view"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:padding="15dp"
+        android:background="?attr/listItem">
+
+        <LinearLayout
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/ic_back_blue"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="更多"
+                android:textSize="16sp"
+                android:textColor="@color/customBlue"
+                android:layout_toRightOf="@id/back" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="源代码"
+            android:textSize="18sp"
+            android:layout_centerInParent="true" />
+
+        <LinearLayout
+            android:id="@+id/btnRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="刷新"
+                android:textSize="16sp"
+                android:textColor="@color/customBlue"/>
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/ic_switch_circle" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <com.daimajia.numberprogressbar.NumberProgressBar
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+
+        custom:progress_unreached_color="@color/gainsboro"
+        custom:progress_reached_color="@color/customBlue"
+
+        custom:progress_unreached_bar_height="30dp"
+        custom:progress_reached_bar_height="30dp"
+
+        custom:progress_text_size="10sp"
+        custom:progress_text_color="#3498DB"
+        custom:progress_text_offset="1dp"
+        custom:progress_text_visibility="invisible"
+
+        custom:progress_max="100"
+        custom:progress_current="80"
+        />
+
+
+</LinearLayout>

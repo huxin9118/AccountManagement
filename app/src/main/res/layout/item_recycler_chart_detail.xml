@@ -67,7 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="备注"
-                    android:textColor="@color/darkgray"
+                    android:textColor="?attr/textSecondaryColor"
                     android:textSize="12sp"
                     android:maxWidth="200dp"
                     android:maxLines="1"

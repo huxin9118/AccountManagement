@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.swjtu.huxin.accountmanagement.R;
@@ -49,7 +50,7 @@ public class AccountFragment extends Fragment implements Observer {
     private Handler dataChangeHandler;
 
     private TextView money;
-    private TextView btnTransfer;
+    private LinearLayout btnTransfer;
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -94,7 +95,7 @@ public class AccountFragment extends Fragment implements Observer {
         View view = inflater.inflate(R.layout.fragment_account,container,false);
 
         money = (TextView) view.findViewById(R.id.money);
-        btnTransfer = (TextView) view.findViewById(R.id.btnTransfer);
+        btnTransfer = (LinearLayout) view.findViewById(R.id.btnTransfer);
         btnTransfer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

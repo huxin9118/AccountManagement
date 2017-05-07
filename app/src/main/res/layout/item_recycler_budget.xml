@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:background="?attr/listItem">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/listLine"
+        android:layout_alignParentBottom="true"/>
+
+    <ImageView
+        android:id="@+id/item_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/icon_yiban"/>
+
+    <ImageView
+        android:id="@+id/enter"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/ic_enter_gray"/>
+
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_toRightOf="@id/item_icon"
+        android:layout_toLeftOf="@id/enter">
+
+        <com.daimajia.numberprogressbar.NumberProgressBar
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/item_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+
+            custom:progress_unreached_color="@color/gainsboro"
+            custom:progress_reached_color="@color/customBlue"
+            custom:progress_unreached_bar_height="8dp"
+            custom:progress_reached_bar_height="8dp"
+
+            custom:progress_text_size="10sp"
+            custom:progress_text_color="#3498DB"
+            custom:progress_text_offset="1dp"
+            custom:progress_text_visibility="invisible" />
+
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/item_progress"
+            android:layout_marginBottom="5dp"
+            android:text="一般"
+            android:textSize="14sp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_progress"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:id="@+id/item_label1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="预算"
+                android:textSize="10sp"
+                android:textColor="?attr/textSecondaryColor"/>
+            <TextView
+                android:id="@+id/item_totalMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="90.00"
+                android:textSize="10sp"
+                android:textColor="?attr/textSecondaryColor"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/item_progress"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp">
+            <TextView
+                android:id="@+id/item_label2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="剩余"
+                android:textSize="10sp"
+                android:textColor="?attr/textSecondaryColor"/>
+            <TextView
+                android:id="@+id/item_remainingMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="40.00"
+                android:textSize="10sp"
+                android:textColor="?attr/textSecondaryColor"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -168,9 +168,9 @@ public class ChartTabContrastFragment extends Fragment implements Observer
                         Date start = new Date(TimeUtils.getMonthFirstMilliSeconds(i,date - TimeUtils.getTime(new Date(),TimeUtils.YEAR)));
                         Date end = new Date(TimeUtils.getMonthLastMilliSeconds(i,date - TimeUtils.getTime(new Date(),TimeUtils.YEAR)));
                         if(isShouru)
-                            money.add(new BigDecimal(accountRecordService.getRangeTotalMoneyByRecordname(start,end,records.get(pos).getRecordname())));
+                            money.add(new BigDecimal(accountRecordService.getRangeTotalMoneyByRecordname(start,end,records.get(pos).getRecordname(),true)));
                         else
-                            money.add(new BigDecimal(accountRecordService.getRangeTotalMoneyByRecordname(start,end,records.get(pos).getRecordname())).negate());
+                            money.add(new BigDecimal(accountRecordService.getRangeTotalMoneyByRecordname(start,end,records.get(pos).getRecordname(),false)).negate());
                     }
                     if(isShouru){
                         try {
@@ -248,7 +248,12 @@ public class ChartTabContrastFragment extends Fragment implements Observer
             for (int i = 1; i <= 12; i++) {
                 Date start = new Date(TimeUtils.getMonthFirstMilliSeconds(i, date - TimeUtils.getTime(new Date(), TimeUtils.YEAR)));
                 Date end = new Date(TimeUtils.getMonthLastMilliSeconds(i, date - TimeUtils.getTime(new Date(), TimeUtils.YEAR)));
-                if(new BigDecimal(accountRecordService.getRangeTotalMoneyByRecordname(start, end, records.get(j).getRecordname())).doubleValue() != 0){
+                if (Double.parseDouble(records.get(j).getMoney()) > 0 && new BigDecimal(accountRecordService
+                        .getRangeTotalMoneyByRecordname(start, end, records.get(j).getRecordname(),true)).doubleValue() != 0){
+                    month++;
+                }
+                if (Double.parseDouble(records.get(j).getMoney()) < 0 && new BigDecimal(accountRecordService
+                        .getRangeTotalMoneyByRecordname(start, end, records.get(j).getRecordname(),false)).doubleValue() != 0){
                     month++;
                 }
             }
@@ -265,7 +270,7 @@ public class ChartTabContrastFragment extends Fragment implements Observer
     }
 
     private void initLineChart(){
-        int[] attrsArray = { R.attr.textColor };
+        int[] attrsArray = { R.attr.textSecondaryColor };
         TypedArray typedArray = getContext().obtainStyledAttributes(attrsArray);
         int color = typedArray.getColor(0,-1);
         typedArray.recycle();

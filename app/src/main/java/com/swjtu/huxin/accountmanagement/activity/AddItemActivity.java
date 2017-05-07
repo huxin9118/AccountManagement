@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,6 +39,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
 import com.swjtu.huxin.accountmanagement.base.MyApplication;
@@ -61,6 +65,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 
 /**
@@ -118,7 +124,21 @@ public class AddItemActivity extends BaseAppCompatActivity implements DatePicker
         super.onCreate(savedInstanceState);
         initAnim();
         setContentView(R.layout.activity_additem);
+        initBackground();
         initView();
+    }
+
+    void initBackground(){
+        ImageView background = (ImageView)findViewById(R.id.background);
+        int[] attrsArray1 = { R.attr.mainBackgrount };
+        TypedArray typedArray1 = obtainStyledAttributes(attrsArray1);
+        int imgResID = typedArray1.getResourceId(0,-1);
+        typedArray1.recycle();
+        int[] attrsArray2 = { R.attr.theme_alpha };
+        TypedArray typedArray2 = obtainStyledAttributes(attrsArray2);
+        int alpha = typedArray2.getInteger(0,8);
+        typedArray2.recycle();
+        Glide.with(this).load(imgResID).dontAnimate().bitmapTransform(new BlurTransformation(this, alpha)).into(background);
     }
 
     private void initAnim() {
@@ -644,7 +664,7 @@ public class AddItemActivity extends BaseAppCompatActivity implements DatePicker
         nameAddItem.setText(Text);
         int resID = getResources().getIdentifier(icon, "drawable", getPackageName());
         iconAddItem.setBackgroundResource(resID);
-        int[] attrsArray = { R.attr.textColor };
+        int[] attrsArray = { R.attr.textSecondaryColor };
         TypedArray typedArray = obtainStyledAttributes(attrsArray);
         int color = typedArray.getColor(0,-1);
         typedArray.recycle();

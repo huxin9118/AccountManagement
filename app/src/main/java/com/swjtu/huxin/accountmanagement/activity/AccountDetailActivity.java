@@ -2,6 +2,7 @@ package com.swjtu.huxin.accountmanagement.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 import com.swjtu.huxin.accountmanagement.R;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
 import com.swjtu.huxin.accountmanagement.base.BaseRecyclerViewAdapter;
@@ -38,16 +40,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
+
 /**
  * Created by huxin on 2017/3/19.
  */
 
 public class AccountDetailActivity extends BaseAppCompatActivity {
-    private LinearLayout background;
+    private LinearLayout background_color;
 
     private LinearLayout back;
     private TextView title;
-    private ImageView setting;
+    private LinearLayout setting;
 
     private ImageView left;
     private ImageView right;
@@ -71,11 +75,24 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_detail);
+        initBackground();
         initView();
+    }
+    void initBackground(){
+        ImageView background = (ImageView)findViewById(R.id.background);
+        int[] attrsArray1 = { R.attr.mainBackgrount };
+        TypedArray typedArray1 = obtainStyledAttributes(attrsArray1);
+        int imgResID = typedArray1.getResourceId(0,-1);
+        typedArray1.recycle();
+        int[] attrsArray2 = { R.attr.theme_alpha };
+        TypedArray typedArray2 = obtainStyledAttributes(attrsArray2);
+        int alpha = typedArray2.getInteger(0,8);
+        typedArray2.recycle();
+        Glide.with(this).load(imgResID).dontAnimate().bitmapTransform(new BlurTransformation(this, alpha)).into(background);
     }
 
     private void initView(){
-        background = (LinearLayout) findViewById(R.id.background);
+        background_color = (LinearLayout) findViewById(R.id.background_color);
 
         back = (LinearLayout) findViewById(R.id.back);
         title = (TextView) findViewById(R.id.title);
@@ -88,7 +105,7 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
                 finish();
             }
         });
-        setting = (ImageView) findViewById(R.id.setting);
+        setting = (LinearLayout) findViewById(R.id.setting);
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,7 +156,7 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
         Intent intent = getIntent();
         account = (Account) intent.getSerializableExtra("account");
         title.setText(getTypeTextByType(account.getType()));
-        background.setBackgroundColor(Color.parseColor(account.getColor()));
+        background_color.setBackgroundColor(Color.parseColor(account.getColor()));
 
         numShouru = (TextView) findViewById(R.id.numShouru);
         numZhichu = (TextView) findViewById(R.id.numZhichu);
@@ -168,7 +185,7 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
                     new MaterialDialog.Builder(AccountDetailActivity.this).title("提示").content("确定删除该账目？")
                             .positiveText("是").negativeText("否")
                             .backgroundColorAttr( R.attr.popupwindow_backgound)
-                            .contentColorAttr(R.attr.textColor).titleColorAttr(R.attr.textColor)
+                            .contentColorAttr(R.attr.textSecondaryColor).titleColorAttr(R.attr.textColor)
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
                                 public void onClick(MaterialDialog dialog, DialogAction which) {
@@ -270,7 +287,7 @@ public class AccountDetailActivity extends BaseAppCompatActivity {
             case 1://账户设置
                 if(resultCode == RESULT_OK){
                     account = (Account) intent.getSerializableExtra("account");
-                    background.setBackgroundColor(Color.parseColor(account.getColor()));
+                    background_color.setBackgroundColor(Color.parseColor(account.getColor()));
                     AccountRecordService accountRecordService = new AccountRecordService();
                     String totalMoney = accountRecordService.getTotalMoneyByAccount(account);
                     numJieyu.setText(new BigDecimal(account.getMoney()).add(new BigDecimal(totalMoney)).toString());
@@ -387,6 +404,9 @@ class AccountDetailRecyclerAdapter extends BaseRecyclerViewAdapter  implements I
 
             if(record.getAccountbook() == null){
                 holder.item_edit.setVisibility(View.GONE);
+            }
+            else{
+                holder.item_edit.setVisibility(View.VISIBLE);
             }
 
             holder.item_content.setOnClickListener(new View.OnClickListener() {

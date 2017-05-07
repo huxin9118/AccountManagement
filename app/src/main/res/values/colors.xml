@@ -19,15 +19,15 @@
     <color name="listLine">#AAd6d6d6</color>
     <color name="colorLine">#55d6d6d6</color>
 
-    <color name="listBackgrount_white">#60F8F8F8</color>
+    <color name="listBackgrount_white">#18D3D3D3</color>
+    <color name="listBackgrount">#26FFFFFF</color>
     <color name="listBackgrount_middle_dark">#24000000</color>
     <color name="listBackgrount_middle_light">#44FFFFFF</color>
-    <color name="listBackgrount">#26FFFFFF</color>
 
-    <color name="listItem_white">#20FFFFFF</color>
+    <color name="listItem_white">#55F8F8F8</color>
+    <color name="listItem">#55F8F8F8</color>
     <color name="listItem_middle_dark">#30000000</color>
     <color name="listItem_middle_light">#88F8F8F8</color>
-    <color name="listItem">#55F8F8F8</color>
 
     <color name="numKey">#66BBBBBB</color>
     <color name="functionKey">#66777777</color>
@@ -42,6 +42,7 @@
     <color name="more_summary">#c5d78f</color>
     <color name="more_export">#82d1f1</color>
     <color name="more_skin">#f4b7d9</color>
+    <color name="more_our_information">#ffc688</color>
 
     <color name="account_color_0">#9361a2</color>
     <color name="account_color_1">#ab92ed</color>

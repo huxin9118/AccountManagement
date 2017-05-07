@@ -36,6 +36,11 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 public class MainActivity extends BaseAppCompatActivity implements BottomNavigationBar.OnTabSelectedListener{
     private ArrayList<Fragment> fragments;
     private long exitTime = 0;
+    private ImageView loading;
+
+    public ImageView getLoading() {
+        return loading;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,7 @@ public class MainActivity extends BaseAppCompatActivity implements BottomNavigat
         */
 
         Intent intent = getIntent();
+        final boolean isChangSkin = intent.getBooleanExtra("isChangSkin",false);
         setDefaultFragment(intent.getIntExtra("defaultPosition",0));
 
         int[] attrsArray = { R.attr.half_transparent_contrast };
@@ -87,11 +93,14 @@ public class MainActivity extends BaseAppCompatActivity implements BottomNavigat
 
         bottomNavigationBar.setTabSelectedListener(this);
 
+        initBackground(isChangSkin);
+    }
+
+    void initBackground(final boolean isChangSkin){
         ImageView background = (ImageView)findViewById(R.id.background);
-        final ImageView loading = (ImageView)findViewById(R.id.loading);
+        loading = (ImageView)findViewById(R.id.loading);
         loading.setImageResource(R.drawable.animation_list_loading_blue);
         final AnimationDrawable animationDrawable = (AnimationDrawable) loading.getDrawable();
-
         int[] attrsArray1 = { R.attr.mainBackgrount };
         TypedArray typedArray1 = obtainStyledAttributes(attrsArray1);
         int imgResID = typedArray1.getResourceId(0,-1);
@@ -106,8 +115,16 @@ public class MainActivity extends BaseAppCompatActivity implements BottomNavigat
                     public void onResourceReady(GlideDrawable drawable, GlideAnimation anim) {
                         super.onResourceReady(drawable, anim);
                         //在这里添加一些图片加载完成的操作
-                        animationDrawable.stop();
-                        loading.setVisibility(View.GONE);
+                        if(isChangSkin){
+                            showToast("皮肤更换成功~~",Toast.LENGTH_SHORT);
+                        }
+                        loading.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                animationDrawable.stop();
+                                loading.setVisibility(View.GONE);
+                            }
+                        },500);
                     }
                 });
         animationDrawable.start();
