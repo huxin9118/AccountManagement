@@ -19,9 +19,11 @@
             android:background="@null"
             android:hint="输入备注"
             android:inputType="textMultiLine"
+            android:imeOptions="actionDone"
             android:gravity="left|top"
             android:minLines="10"
             android:textSize="20sp"
+            android:textColor="?attr/textColor"
             android:textColorHint="?attr/textSecondaryColor"/>
         <LinearLayout
             android:layout_width="match_parent"

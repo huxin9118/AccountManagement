@@ -226,7 +226,7 @@ public class DetailFragment extends Fragment implements Observer{
                 if("item_delete".equals(viewName)){
                     new MaterialDialog.Builder(getActivity()).title("提示").content("确定删除该账目？")
                             .positiveText("是").negativeText("否")
-                            .backgroundColorAttr( R.attr.popupwindow_backgound)
+                            .backgroundColorAttr( R.attr.dialog_backgound)
                             .contentColorAttr(R.attr.textSecondaryColor).titleColorAttr(R.attr.textColor)
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override

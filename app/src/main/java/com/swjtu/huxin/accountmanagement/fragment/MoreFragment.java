@@ -101,7 +101,7 @@ public class MoreFragment extends Fragment {
                 new MaterialDialog.Builder(getActivity()).title("确定进行数据备份？").content(
                         "——备份账目、账户数据与预算设置\n——将覆盖掉上一次的备份\n——此操作不可逆转！！！")
                         .positiveText("是").negativeText("否")
-                        .backgroundColorAttr( R.attr.popupwindow_backgound)
+                        .backgroundColorAttr( R.attr.dialog_backgound)
                         .contentColorAttr(R.attr.textSecondaryColor).titleColorAttr(R.attr.textColor)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
@@ -124,7 +124,7 @@ public class MoreFragment extends Fragment {
                 new MaterialDialog.Builder(getActivity()).title("确定进行数据还原？").content(
                         "——恢复以前备份的数据\n——若无备份则不进行还原\n——现有数据将会被清除\n——此操作不可逆转！！！")
                         .positiveText("是").negativeText("否")
-                        .backgroundColorAttr( R.attr.popupwindow_backgound)
+                        .backgroundColorAttr( R.attr.dialog_backgound)
                         .contentColorAttr(R.attr.textSecondaryColor).titleColorAttr(R.attr.textColor)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
@@ -155,7 +155,7 @@ public class MoreFragment extends Fragment {
                 new MaterialDialog.Builder(getActivity()).title("确定清除缓存？").content(
                         "——导出数据的副本、分享截图、皮肤缩略图均会被清除。\n——此操作不可逆转！！！")
                         .positiveText("是").negativeText("否")
-                        .backgroundColorAttr( R.attr.popupwindow_backgound)
+                        .backgroundColorAttr( R.attr.dialog_backgound)
                         .contentColorAttr(R.attr.textSecondaryColor).titleColorAttr(R.attr.textColor)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
@@ -219,7 +219,7 @@ public class MoreFragment extends Fragment {
                                 "gpuimage-library\n"+
                                 "material-dialogs")
                         .positiveText("前往\"github.com\"获取源代码").negativeText("不感兴趣，返回")
-                        .backgroundColorAttr( R.attr.popupwindow_backgound)
+                        .backgroundColorAttr( R.attr.dialog_backgound)
                         .contentColorAttr(R.attr.textSecondaryColor).titleColorAttr(R.attr.textColor)
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override

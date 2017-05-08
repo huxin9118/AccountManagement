@@ -265,7 +265,7 @@ public class AccountTransferActivity extends BaseAppCompatActivity implements Da
     private void initDatePickerDialog(Date time){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(time);
-        int[] attrsArray = { R.attr.popupwindow_backgound };
+        int[] attrsArray = { R.attr.dialog_backgound };
         TypedArray typedArray = obtainStyledAttributes(attrsArray);
         int color = typedArray.getColor(0,-1);
         typedArray.recycle();
@@ -277,7 +277,7 @@ public class AccountTransferActivity extends BaseAppCompatActivity implements Da
     private void initTimePickerDialog(Date time){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(time);
-        int[] attrsArray = { R.attr.popupwindow_backgound };
+        int[] attrsArray = { R.attr.dialog_backgound };
         TypedArray typedArray = obtainStyledAttributes(attrsArray);
         int color = typedArray.getColor(0,-1);
         typedArray.recycle();
