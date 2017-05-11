@@ -15,7 +15,7 @@ public class DatabaseManager {
     private static SQLiteOpenHelper mDatabaseHelper;
     private SQLiteDatabase mDatabase;
 
-    public static synchronized void initializeInstance(SQLiteOpenHelper helper) {
+    private static synchronized void initializeInstance(SQLiteOpenHelper helper) {
         if (instance == null) {
             instance = new DatabaseManager();
             mDatabaseHelper = helper;
@@ -28,6 +28,8 @@ public class DatabaseManager {
         }
         return instance;
     }
+
+    private DatabaseManager(){}
 
     public synchronized SQLiteDatabase getWritableDatabase() {
         if (mOpenCounter.incrementAndGet() == 1) {

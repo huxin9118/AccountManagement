@@ -178,6 +178,7 @@ public class SplashActivity extends BaseAppCompatActivity {
             SharedPreferences sharedPreferences = this.getSharedPreferences("userData", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putStringSet("member",member);
+            editor.apply();
             app.setMembers(member);
         }
         else{
@@ -192,11 +193,17 @@ public class SplashActivity extends BaseAppCompatActivity {
             app.setAccounts(accounts);
 
             SharedPreferences sharedPreferences = this.getSharedPreferences("userData", MODE_PRIVATE);
-            Set<String> defaultMember = new TreeSet();
-            defaultMember.add("我");
-            defaultMember.add("爸爸");
-            defaultMember.add("妈妈");
-            Set<String> member = sharedPreferences.getStringSet("member",defaultMember);
+            Set<String> member = sharedPreferences.getStringSet("member",null);
+            if(member == null){
+                Set<String> defaultMember = new TreeSet();
+                defaultMember.add("我");
+                defaultMember.add("爸爸");
+                defaultMember.add("妈妈");
+                member = defaultMember;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putStringSet("member",member);
+                editor.apply();
+            }
             Set<String> sortMember = new TreeSet(new Comparator<String>() {
                 @Override
                 public int compare(String o1, String o2) {

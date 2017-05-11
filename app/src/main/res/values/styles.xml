@@ -32,7 +32,7 @@
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
         <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
-        <item name="dialog_backgound">@color/half_transparent_white</item>
+        <item name="dialog_backgound">@color/more_half_transparent_white</item>
     </style>
 
     <style name="MyTheme_Sea" parent="MyTheme">
@@ -48,7 +48,7 @@
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
         <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
-        <item name="dialog_backgound">@color/half_transparent_white</item>
+        <item name="dialog_backgound">@color/more_half_transparent_white</item>
     </style>
 
     <style name="MyTheme_Cat" parent="MyTheme">
@@ -64,7 +64,7 @@
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
         <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
-        <item name="dialog_backgound">@color/half_transparent_white</item>
+        <item name="dialog_backgound">@color/more_half_transparent_white</item>
     </style>
 
     <style name="MyTheme_Dog" parent="MyTheme">
@@ -80,7 +80,7 @@
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
         <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
-        <item name="dialog_backgound">@color/half_transparent_white</item>
+        <item name="dialog_backgound">@color/more_half_transparent_white</item>
     </style>
 
     <style name="MyTheme_Dark" parent="MyTheme">
@@ -198,7 +198,7 @@
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
         <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
-        <item name="dialog_backgound">@color/half_transparent_white</item>
+        <item name="dialog_backgound">@color/more_half_transparent_white</item>
     </style>
 
     <style name="MyTheme_Colorful" parent="MyTheme">
@@ -231,7 +231,7 @@
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
         <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
-        <item name="dialog_backgound">@color/half_transparent_white</item>
+        <item name="dialog_backgound">@color/more_half_transparent_white</item>
     </style>
 
     <style name="MyTheme_YourName_1" parent="MyTheme">
@@ -247,7 +247,7 @@
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
         <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
-        <item name="dialog_backgound">@color/half_transparent_white</item>
+        <item name="dialog_backgound">@color/more_half_transparent_white</item>
     </style>
 
     <style name="MyTheme_YourName_2" parent="MyTheme">
@@ -263,7 +263,7 @@
         <item name="half_transparent_contrast">@color/half_transparent_black</item>
         <item name="more_half_transparent_contrast">@color/more_half_transparent_black</item>
         <item name="popupwindow_backgound">@color/more_half_transparent_white</item>
-        <item name="dialog_backgound">@color/half_transparent_white</item>
+        <item name="dialog_backgound">@color/more_half_transparent_white</item>
     </style>
 
     <style name="MyTheme_YourName_3" parent="MyTheme">

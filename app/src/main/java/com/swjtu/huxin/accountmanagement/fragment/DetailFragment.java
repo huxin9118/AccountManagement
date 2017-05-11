@@ -380,7 +380,12 @@ public class DetailFragment extends Fragment implements Observer{
                 fragment.mRecyclerViewAdapter.notifyDataSetChanged();
                 fragment.updateHeader();
                 fragment.updateWAV();
-                fragment.mPtrFrameLayout.refreshComplete();
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        fragment.mPtrFrameLayout.refreshComplete();
+                    }
+                },500);
             }
         }
     }
@@ -416,8 +421,13 @@ public class DetailFragment extends Fragment implements Observer{
                     fragment.mRecyclerViewAdapter.getDatas("records").addAll(fragment.moreRecords);
                     fragment.mRecyclerViewAdapter.notifyDataSetChanged();
                     fragment.updateHeader();
-                    fragment.mPtrFrameLayout.refreshComplete();
-                    fragment.moreRecords = new ArrayList();
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fragment.mPtrFrameLayout.refreshComplete();
+                            fragment.isRecyclerViewBottom = false;
+                        }
+                    },1000);
                 }
             }
             else{//没有更多的数据了
@@ -427,7 +437,13 @@ public class DetailFragment extends Fragment implements Observer{
                     fragment.mRecyclerViewAdapter.notifyDataSetChanged();
                     fragment.updateHeader();
                     fragment.mFooterView.setLoadMoreFinish("没有更多记录了~~~");
-                    fragment.mPtrFrameLayout.refreshComplete();
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fragment.mPtrFrameLayout.refreshComplete();
+                            fragment.isRecyclerViewBottom = false;
+                        }
+                    },1000);
                 }
             }
         }
