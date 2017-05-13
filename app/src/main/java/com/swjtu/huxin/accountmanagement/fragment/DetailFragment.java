@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import android.content.res.TypedArray;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -55,7 +57,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-import in.srain.cube.views.ptr.PtrClassicDefaultFooter;
 import in.srain.cube.views.ptr.PtrDefaultHandler2;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 
@@ -81,6 +82,7 @@ public class DetailFragment extends Fragment implements Observer{
     private Long firstLoadTime;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
+    private View footer;
     private DetailRecyclerAdapter mRecyclerViewAdapter;
     private CustomPtrHeader mHeaderView;
     private CustomPtrFooter mFooterView;
@@ -204,12 +206,19 @@ public class DetailFragment extends Fragment implements Observer{
             }
         });
 
-        View footer = inflater.inflate(R.layout.item_recycler_detail_footer, container, false);
-        mRecyclerViewAdapter.setFooterView(footer);
+        footer = inflater.inflate(R.layout.item_recycler_detail_footer, container, false);
+//        mRecyclerViewAdapter.setFooterView(footer);
         long firstTimeMilliSeconds = sharedPreferences.getLong("firstTime", System.currentTimeMillis());
         firstTime = new Date(firstTimeMilliSeconds);
         textFooter = (TextView)footer.findViewById(R.id.text);
         textFooter.setText(new SimpleDateFormat("yyyy年MM月dd日").format(firstTime)+"\n你开启了记账之旅");
+        ImageView img = (ImageView)footer.findViewById(R.id.item_icon);
+        int[] attrsArray = { R.attr.half_transparent_contrast };
+        TypedArray typedArray = getActivity().obtainStyledAttributes(attrsArray);
+        int color = typedArray.getColor(0,-1);
+        typedArray.recycle();
+        img.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        img.invalidate();
 
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());//添加/删除item默认的动画效果
@@ -425,15 +434,15 @@ public class DetailFragment extends Fragment implements Observer{
                         @Override
                         public void run() {
                             fragment.mPtrFrameLayout.refreshComplete();
-                            fragment.isRecyclerViewBottom = false;
                         }
-                    },1000);
+                    },500);
                 }
             }
             else{//没有更多的数据了
                 final DetailFragment fragment = mFragmentReference.get();
                 if (fragment != null) {
                     fragment.mRecyclerViewAdapter.getDatas("records").addAll(fragment.moreRecords);
+                    fragment.mRecyclerViewAdapter.setFooterView(fragment.footer);
                     fragment.mRecyclerViewAdapter.notifyDataSetChanged();
                     fragment.updateHeader();
                     fragment.mFooterView.setLoadMoreFinish("没有更多记录了~~~");
@@ -441,9 +450,8 @@ public class DetailFragment extends Fragment implements Observer{
                         @Override
                         public void run() {
                             fragment.mPtrFrameLayout.refreshComplete();
-                            fragment.isRecyclerViewBottom = false;
                         }
-                    },1000);
+                    },500);
                 }
             }
         }
