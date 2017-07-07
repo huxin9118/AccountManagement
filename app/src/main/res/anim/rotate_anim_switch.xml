@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
     android:fillEnabled="true"
-    android:fillAfter="true"
-    android:fillBefore="false">
+    android:fillAfter="false"
+    android:fillBefore="true">
 <!--android:fillAfter	        setFillAfter(boolean)	        控件动画结束时是否保持动画最后的状态（只能应用在set中）
     android:fillBefore	        setFillBefore(boolean)	        控件动画结束时是否还原到开始动画前的状态（只能应用在set中）
     android:fillEnabled	        setFillEnabled(boolean)	        fillAfter与fillBefore是否生效（只能应用在set中）
@@ -15,18 +15,14 @@
     android:zAdjustment	        setZAdjustment(int)	            被设置动画的内容运行时在Z轴上的位置（top/bottom/normal），默认为normal
     -->
     <rotate
-        android:fromDegrees="-180"
-        android:toDegrees="0"
+        android:fromDegrees="0"
+        android:toDegrees="180"
+        android:repeatCount="infinite"
+        android:repeatMode="restart"
         android:interpolator="@android:anim/linear_interpolator"
         android:pivotX="50%"
         android:pivotY="50%"
-        android:duration = "1500"
-        android:repeatCount = "0">
+        android:duration = "500">
     </rotate>
 
-    <alpha
-        android:fromAlpha="0.5"
-        android:toAlpha="1"
-        android:duration="1500"
-        />
 </set>

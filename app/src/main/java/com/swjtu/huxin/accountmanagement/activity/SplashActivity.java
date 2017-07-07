@@ -261,7 +261,7 @@ public class SplashActivity extends BaseAppCompatActivity {
     static class RotateHandler extends Handler {
         WeakReference<SplashActivity> mActivityReference;
         RotateHandler(SplashActivity activity) {
-            mActivityReference= new WeakReference<SplashActivity>(activity);
+            mActivityReference= new WeakReference(activity);
         }
         @Override
         public void handleMessage(Message msg) {

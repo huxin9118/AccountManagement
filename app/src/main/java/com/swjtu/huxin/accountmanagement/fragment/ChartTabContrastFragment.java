@@ -17,6 +17,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -58,6 +60,7 @@ public class ChartTabContrastFragment extends Fragment implements Observer
     private String mArgument;
     public static final String ARGUMENT = "argument";
 
+    private DataChangeThread dataChangeThread;
     private Handler dataChangeHandler;
 
     private ImageView left;
@@ -108,8 +111,6 @@ public class ChartTabContrastFragment extends Fragment implements Observer
         left = (ImageView) view.findViewById(R.id.date_left);
         right = (ImageView) view.findViewById(R.id.date_right);
         year = (TextView) view.findViewById(R.id.date_picker);
-//        start = new Date(TimeUtils.getYearFirstMilliSeconds(TimeUtils.getTime(new Date(),TimeUtils.YEAR)));
-//        end = new Date(TimeUtils.getYearLastMilliSeconds(TimeUtils.getTime(new Date(),TimeUtils.YEAR)));
         date = TimeUtils.getTime(new Date(),TimeUtils.YEAR);
         year.setText(date+"年");
 
@@ -139,12 +140,18 @@ public class ChartTabContrastFragment extends Fragment implements Observer
         right.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         right.invalidate();
 
+        final Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_anim_switch);
         btnSwitch = (ImageView) view.findViewById(R.id.btnSwitch);
         btnSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isShouru = isShouru?false:true;
-                new DataChangeThread().start();
+                if(dataChangeThread == null||(dataChangeThread != null && !dataChangeThread.isAlive())) {
+                    btnSwitch.setAnimation(rotate);
+                    btnSwitch.startAnimation(rotate);
+                    isShouru = isShouru ? false : true;
+                    dataChangeThread = new DataChangeThread();
+                    dataChangeThread.start();
+                }
             }
         });
 
@@ -218,6 +225,7 @@ public class ChartTabContrastFragment extends Fragment implements Observer
         public void handleMessage(Message msg) {
             final ChartTabContrastFragment fragment = mFragmentReference.get();
             if (fragment != null) {
+                fragment.btnSwitch.clearAnimation();
                 if(fragment.records.size() == 0){
                     fragment.empty.setVisibility(View.VISIBLE);
                     fragment.content.setVisibility(View.GONE);
@@ -242,7 +250,7 @@ public class ChartTabContrastFragment extends Fragment implements Observer
         records = accountRecordService.getAccountRecordListGroupByRecordname(TimeUtils.getYearFirstMilliSeconds(date),
                 TimeUtils.getYearLastMilliSeconds(date),isShouru);
 
-        months = new ArrayList<Integer>();
+        months = new ArrayList<>();
         for(int j = 0;j < records.size();j++) {
             int month = 0;
             for (int i = 1; i <= 12; i++) {
@@ -262,6 +270,8 @@ public class ChartTabContrastFragment extends Fragment implements Observer
     }
 
     private void initRecyclerViewData(){
+        mRecyclerViewAdapter.selectPostionView = null;
+        mRecyclerViewAdapter.isFirstRun = true;
         mRecyclerViewAdapter.addDatas("records",records);
         mRecyclerViewAdapter.addDatas("months",months);
         mRecyclerViewAdapter.notifyDataSetChanged();
@@ -370,8 +380,8 @@ public class ChartTabContrastFragment extends Fragment implements Observer
 
 class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
     private Context mContext;
-    private boolean isFirstRun = true;
-    private View selectPostionView;
+    public boolean isFirstRun = true;
+    public View selectPostionView;
 
     public ChartTabContrastRecyclerAdapter(Context context) {
         super(context);
@@ -439,6 +449,7 @@ class ChartTabContrastRecyclerAdapter extends BaseRecyclerViewAdapter {
             holder.item_icon.setBackgroundResource(resID);
             holder.item_count.setText(count+"");
             holder.item_name.setText(record.getRecordname());
+            holder.background.setBackgroundColor(mContext.getResources().getColor(R.color.transparent));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -389,6 +389,8 @@ public class DetailFragment extends Fragment implements Observer{
                 fragment.mRecyclerViewAdapter.notifyDataSetChanged();
                 fragment.updateHeader();
                 fragment.updateWAV();
+                if( fragment.mRecyclerViewAdapter.getDatas("records").size() < 10)
+                    fragment.autoLoadMoreThread();
                 postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -397,6 +399,10 @@ public class DetailFragment extends Fragment implements Observer{
                 },500);
             }
         }
+    }
+
+    void autoLoadMoreThread(){
+        new LoadMoreThread().start();
     }
 
     class LoadMoreThread extends Thread{

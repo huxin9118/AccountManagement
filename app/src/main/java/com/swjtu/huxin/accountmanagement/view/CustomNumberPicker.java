@@ -2,6 +2,7 @@ package com.swjtu.huxin.accountmanagement.view;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -52,11 +53,15 @@ public class CustomNumberPicker extends NumberPicker {
     private void setNumberPickerText(View view) {
         if (view instanceof EditText) {
 //            这里修改字体的属性
-//            ((EditText) view).setTextColor(this.getResources().getColor());
+            int[] attrsArray = { R.attr.textSecondaryColor };
+            TypedArray typedArray = getContext().obtainStyledAttributes(attrsArray);
+            final int color = typedArray.getColor(0,-1);
+            typedArray.recycle();
+            ((EditText) view).setTextColor(color);
+
             ((EditText) view).setTextSize(18);
             ((EditText) view).setClickable(false);
             ((EditText) view).setFocusable(false);
-
         }
     }
 

@@ -18,6 +18,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -56,6 +58,7 @@ public class ChartTabSortFragment extends Fragment implements Observer
     private String mArgument;
     public static final String ARGUMENT = "argument";
 
+    private DataChangeThread dataChangeThread;
     private Handler dataChangeHandler;
 
     private ImageView left;
@@ -164,11 +167,17 @@ public class ChartTabSortFragment extends Fragment implements Observer
         chart = (RelativeLayout) view.findViewById(R.id.chart);
         pieChart = (PieChartView) view.findViewById(R.id.piechart);
 
+        final Animation rotate = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate_anim_switch);
         btnSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isShouru = isShouru?false:true;
-                new DataChangeThread().start();
+                if(dataChangeThread == null||(dataChangeThread != null && !dataChangeThread.isAlive())) {
+//                    btnSwitch.setAnimation(rotate);
+//                    btnSwitch.startAnimation(rotate);
+                    isShouru = isShouru ? false : true;
+                    dataChangeThread = new DataChangeThread();
+                    dataChangeThread.start();
+                }
             }
         });
 
@@ -218,6 +227,7 @@ public class ChartTabSortFragment extends Fragment implements Observer
         public void handleMessage(Message msg) {
             final ChartTabSortFragment fragment = mFragmentReference.get();
             if (fragment != null) {
+//                fragment.btnSwitch.clearAnimation();
                 if(fragment.records.size() == 0){
                     fragment.empty.setVisibility(View.VISIBLE);
                 }
