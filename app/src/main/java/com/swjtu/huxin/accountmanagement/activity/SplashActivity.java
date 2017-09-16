@@ -2,16 +2,20 @@ package com.swjtu.huxin.accountmanagement.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.RequiresApi;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.swjtu.huxin.accountmanagement.base.BaseAppCompatActivity;
@@ -43,6 +47,9 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  */
 
 public class SplashActivity extends BaseAppCompatActivity {
+    private final String PERMISSION_WRITE_EXTERNAL_STORAGE= "android.permission.WRITE_EXTERNAL_STORAGE";
+    private final int PERMISSION_REQUESTCODE = 0;
+
     private Handler rotateHandler = new RotateHandler(this);
     private Handler skipHandler = new SkipHandler(this);
     private ImageView imgXiaolian;
@@ -69,17 +76,50 @@ public class SplashActivity extends BaseAppCompatActivity {
         int dayDistance = TimeUtils.getTimeDistance(firstTime,new Date());
         if(dayDistance < 1) text2.setText("你今天刚刚开始记账");
         else text2.setText("你坚持记账 "+dayDistance+" 天了");
+    }
 
-        skipHandler.sendEmptyMessageDelayed(0, 2000);
-        rotateHandler.sendEmptyMessageDelayed(0, 800);
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (checkSelfPermission(PERMISSION_WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{PERMISSION_WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUESTCODE);
+        }
+        else {
+            skipHandler.sendEmptyMessageDelayed(0, 2000);
+            rotateHandler.sendEmptyMessageDelayed(0, 800);
 
-        loadDataThread = new Thread(){
-            @Override
-            public void run() {
-                initData();
-            }
-        };
-        loadDataThread.start();
+            loadDataThread = new Thread() {
+                @Override
+                public void run() {
+                    initData();
+                }
+            };
+            loadDataThread.start();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUESTCODE:
+                if ("android.permission.WRITE_EXTERNAL_STORAGE".equals(permissions[0])
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    skipHandler.sendEmptyMessageDelayed(0, 2000);
+                    rotateHandler.sendEmptyMessageDelayed(0, 800);
+
+                    loadDataThread = new Thread() {
+                        @Override
+                        public void run() {
+                            initData();
+                        }
+                    };
+                    loadDataThread.start();
+                }
+                else{
+                    showToast("请去“权限设置”界面开启读写权限，否则应用无法正常使用~~~", Toast.LENGTH_SHORT);
+                }
+        }
     }
 
     void initBackground(){

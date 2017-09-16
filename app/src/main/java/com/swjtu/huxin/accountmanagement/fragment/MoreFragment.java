@@ -170,11 +170,12 @@ public class MoreFragment extends Fragment {
                                     loading.postDelayed(new Runnable() {
                                         public void run() {
                                             loading.setImageResource(R.drawable.animation_list_loading_blue_success);
-                                            AnimationDrawable animationDrawable = (AnimationDrawable) loading.getDrawable();
+                                            final AnimationDrawable animationDrawable = (AnimationDrawable) loading.getDrawable();
                                             animationDrawable.start();
                                             loading.postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
+                                                    animationDrawable.stop();
                                                     loading.setVisibility(View.GONE);
                                                     try {
                                                         sumCache.setText(DataCacheUtils.getTotalCacheSize(getActivity()));
@@ -291,10 +292,9 @@ public class MoreFragment extends Fragment {
             File dbFile = mContext.getDatabasePath("accountmanagement.db");
             File spFile1 = new File("/data/data/com.swjtu.huxin.accountmanagement/shared_prefs/userData.xml");
             File spFile2 = new File("/data/data/com.swjtu.huxin.accountmanagement/shared_prefs/budgetData.xml");
-            File exportDir = new File(Environment.getExternalStorageDirectory(), "dataBackup_accountmanagement");
-            if (!exportDir.exists()) {
-                exportDir.mkdirs();
-            }
+            File exportDir = new File(Environment.getExternalStorageDirectory(), "backup/com.swjtu.huxin.accountmanagement");
+            exportDir.mkdirs();
+
             File backup1 = new File(exportDir, dbFile.getName());
             File backup2 = new File(exportDir, spFile1.getName());
             File backup3 = new File(exportDir, spFile2.getName());
@@ -302,12 +302,18 @@ public class MoreFragment extends Fragment {
             String command = params[0];
             if (command.equals(COMMAND_BACKUP)) {
                 try {
-                    backup1.createNewFile();
-                    backup2.createNewFile();
-                    backup3.createNewFile();
-                    fileCopy(dbFile, backup1);
-                    fileCopy(spFile1, backup2);
-                    fileCopy(spFile2, backup3);
+                    if(dbFile.exists()) {
+                        backup1.createNewFile();
+                        fileCopy(dbFile, backup1);
+                    }
+                    if(spFile1.exists()) {
+                        backup2.createNewFile();
+                        fileCopy(spFile1, backup2);
+                    }
+                    if(spFile2.exists()) {
+                        backup3.createNewFile();
+                        fileCopy(spFile2, backup3);
+                    }
                     return BACKUP_SUCCESS;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -316,9 +322,12 @@ public class MoreFragment extends Fragment {
             }
             else if (command.equals(COMMAND_RESTORE)) {
                 try {
-                    fileCopy(backup1, dbFile);
-                    fileCopy(backup2, spFile1);
-                    fileCopy(backup3, spFile2);
+                    if(backup1.exists())
+                        fileCopy(backup1, dbFile);
+                    if(backup2.exists())
+                        fileCopy(backup2, spFile1);
+                    if(backup3.exists())
+                        fileCopy(backup3, spFile2);
                     return RESTORE_SUCCESS;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -358,11 +367,12 @@ public class MoreFragment extends Fragment {
                             @Override
                             public void run() {
                                 loading.setImageResource(R.drawable.animation_list_loading_blue_success);
-                                AnimationDrawable animationDrawable = (AnimationDrawable) loading.getDrawable();
+                                final AnimationDrawable animationDrawable = (AnimationDrawable) loading.getDrawable();
                                 animationDrawable.start();
                                 loading.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
+                                        animationDrawable.stop();
                                         loading.setVisibility(View.GONE);
                                         MyApplication.getApplication().getDataChangeObservable().dataChange();
                                     }
@@ -381,12 +391,14 @@ public class MoreFragment extends Fragment {
                             @Override
                             public void run() {
                                 loading.setImageResource(R.drawable.animation_list_loading_blue_success);
-                                AnimationDrawable animationDrawable = (AnimationDrawable) loading.getDrawable();
+                                final AnimationDrawable animationDrawable = (AnimationDrawable) loading.getDrawable();
                                 animationDrawable.start();
                                 loading.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
+                                        animationDrawable.stop();
                                         loading.setVisibility(View.GONE);
+                                        MyApplication.getApplication().getDataChangeObservable().dataChange();
                                     }
                                 },1500);
                             }
